@@ -1,0 +1,29 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wareframes-statistic
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_SENTRY_DISABLED=true
+      # Clerk redirect URLs (keyless mode — no API keys required)
+      - NEXT_PUBLIC_CLERK_SIGN_IN_URL=/auth/sign-in
+      - NEXT_PUBLIC_CLERK_SIGN_UP_URL=/auth/sign-up
+      - NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard/overview
+      - NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard/overview
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/ || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
