@@ -28,7 +28,7 @@ import {
   IconMailForward,
   IconDeviceMobile,
   IconBell,
-  IconBrandViber,
+  IconMessage,
   IconMail,
   IconCheck,
   IconInfoCircle
@@ -81,7 +81,7 @@ const CHANNEL_ICONS: Record<string, React.ReactNode> = {
   Email: <IconMail className='size-3' />,
   SMS: <IconDeviceMobile className='size-3' />,
   Push: <IconBell className='size-3' />,
-  Viber: <IconBrandViber className='size-3' />,
+  Viber: <IconMessage className='size-3' />,
   Інше: <IconMailForward className='size-3' />
 };
 
@@ -780,6 +780,7 @@ function UploadCard({ onUpload }: { onUpload: () => void }) {
 export default function CommunicationsPage() {
   const [batches, setBatches] = useState<CommBatch[]>(MOCK_BATCHES);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showUpload, setShowUpload] = useState(false);
 
   function handleUpload() {
     if (batches.find((b) => b.id === EXTRA_MOCK_BATCH.id)) {
@@ -810,22 +811,34 @@ export default function CommunicationsPage() {
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-6'>
         {/* ── Header ── */}
-        <div>
-          <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-            Маркетинг · Канальні комунікації
-          </p>
-          <h2 className='text-2xl font-bold tracking-tight'>Комунікації</h2>
-          <p className='text-muted-foreground mt-0.5 text-sm'>
-            Завантажуйте звіти, аналізуйте конверсію та порівнюйте кампанії між
-            собою
-          </p>
+        <div className='flex items-start justify-between gap-4'>
+          <div>
+            <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
+              Маркетинг · Канальні комунікації
+            </p>
+            <h2 className='text-2xl font-bold tracking-tight'>Комунікації</h2>
+            <p className='text-muted-foreground mt-0.5 text-sm'>
+              Завантажуйте звіти, аналізуйте конверсію та порівнюйте кампанії
+              між собою
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowUpload((v) => !v)}
+            className='shrink-0 gap-2'
+            variant={showUpload ? 'outline' : 'default'}
+          >
+            <IconUpload className='size-4' />
+            {showUpload ? 'Сховати' : 'Завантажити проведені комунікації'}
+          </Button>
         </div>
 
         {/* ── Upload + Format ── */}
-        <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-          <UploadCard onUpload={handleUpload} />
-          <FormatCard />
-        </div>
+        {showUpload && (
+          <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+            <UploadCard onUpload={handleUpload} />
+            <FormatCard />
+          </div>
+        )}
 
         {/* ── History ── */}
         <div>

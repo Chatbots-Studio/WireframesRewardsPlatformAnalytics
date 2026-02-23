@@ -34,42 +34,9 @@ export default function PrivacyPolicyPage() {
             Data Collection
           </h2>
           <p className='text-muted-foreground text-base leading-relaxed'>
-            Our application collects minimal data necessary for authentication
-            purposes. When you sign in using our authentication provider, we
-            receive basic profile information such as your email address and
-            name. This data is used solely to identify you within the
-            application and provide personalized access to features.
-          </p>
-        </section>
-
-        {/* Auth handled by Clerk */}
-        <section>
-          <h2 className='text-foreground mb-3 text-xl font-semibold'>
-            Authentication by Clerk
-          </h2>
-          <p className='text-muted-foreground text-base leading-relaxed'>
-            Our application uses{' '}
-            <a
-              href='https://clerk.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-primary font-medium hover:underline'
-            >
-              Clerk
-            </a>{' '}
-            to handle user authentication securely. All authentication
-            processes, including sign-up, sign-in, and password management, are
-            managed by Clerk. For detailed information about how Clerk processes
-            and protects your data, please review their{' '}
-            <a
-              href='https://clerk.com/legal/privacy'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-primary font-medium hover:underline'
-            >
-              Privacy Policy
-            </a>
-            .
+            Our application collects minimal data necessary for its operation.
+            Information is used solely to provide the functionality of this
+            application and is never misused or shared with third parties.
           </p>
         </section>
 
