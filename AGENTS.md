@@ -38,12 +38,6 @@ The project follows a feature-based folder structure designed for scalability in
 - Nuqs for URL search params state management
 - React Hook Form + Zod for form handling
 
-### Authentication & Authorization
-- Clerk for authentication and user management
-- Clerk Organizations for multi-tenant workspaces
-- Clerk Billing for subscription management (B2B)
-- Client-side RBAC for navigation visibility
-
 ### Data & APIs
 - TanStack Table for data tables
 - Recharts for analytics/charts
@@ -116,13 +110,9 @@ The project follows a feature-based folder structure designed for scalability in
     └── themes/            # Individual theme files
 
 /docs                      # Documentation
-│   ├── clerk_setup.md     # Clerk configuration guide
 │   ├── nav-rbac.md        # Navigation RBAC documentation
 │   └── themes.md          # Theme customization guide
 
-/__CLEANUP__               # Feature removal scripts
-    ├── scripts/           # Cleanup automation
-    └── clerk/             # Templates after Clerk removal
 ```
 
 ---

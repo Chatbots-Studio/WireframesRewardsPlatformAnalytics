@@ -20,5 +20,13 @@ export const navItems: NavItem[] = [
     isActive: false,
     shortcut: ['p', 'p'],
     items: []
+  },
+  {
+    title: 'Комунікації',
+    url: '/dashboard/communications',
+    icon: 'communications',
+    isActive: false,
+    shortcut: ['c', 'c'],
+    items: []
   }
 ];
