@@ -421,7 +421,12 @@ export default function ABTestsPage() {
           <CardContent>
             <ResponsiveContainer width='100%' height={260}>
               <BarChart data={selectedTestData} barCategoryGap='35%'>
-                <CartesianGrid strokeDasharray='3 3' className='stroke-muted' />
+                <CartesianGrid
+                  strokeDasharray='3 3'
+                  className='stroke-muted'
+                  xAxisId={0}
+                  yAxisId={0}
+                />
                 <XAxis dataKey='metric' tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />

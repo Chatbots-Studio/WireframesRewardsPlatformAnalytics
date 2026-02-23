@@ -404,7 +404,12 @@ export default function ExecDashboard() {
                     barCategoryGap='20%'
                     barGap={4}
                   >
-                    <CartesianGrid strokeDasharray='3 3' stroke='#e2e8f0' />
+                    <CartesianGrid
+                      strokeDasharray='3 3'
+                      stroke='#e2e8f0'
+                      xAxisId={0}
+                      yAxisId={0}
+                    />
                     <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                     <YAxis
                       tick={{ fontSize: 11 }}
@@ -529,7 +534,7 @@ export default function ExecDashboard() {
                 </div>
                 <p className='text-muted-foreground rounded bg-slate-50 px-2 py-1.5 text-xs'>
                   ROI = Дохід / Нарахований кешбек × 100. Консервативна оцінка —
-                  враховує всі зобов'язання.
+                  враховує всі зобов&apos;язання.
                 </p>
               </div>
             </div>
@@ -567,7 +572,12 @@ export default function ExecDashboard() {
                       />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray='3 3' stroke='#e2e8f0' />
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='#e2e8f0'
+                    xAxisId={0}
+                    yAxisId={0}
+                  />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
                     tick={{ fontSize: 11 }}
@@ -623,7 +633,12 @@ export default function ExecDashboard() {
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
                   barCategoryGap='25%'
                 >
-                  <CartesianGrid strokeDasharray='3 3' stroke='#e2e8f0' />
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='#e2e8f0'
+                    xAxisId={0}
+                    yAxisId={0}
+                  />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
                     tick={{ fontSize: 11 }}
@@ -675,7 +690,12 @@ export default function ExecDashboard() {
                   data={revenuePerClient}
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray='3 3' stroke='#e2e8f0' />
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='#e2e8f0'
+                    xAxisId={0}
+                    yAxisId={0}
+                  />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
                     tick={{ fontSize: 11 }}
@@ -735,7 +755,12 @@ export default function ExecDashboard() {
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
                   barCategoryGap='20%'
                 >
-                  <CartesianGrid strokeDasharray='3 3' stroke='#e2e8f0' />
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='#e2e8f0'
+                    xAxisId={0}
+                    yAxisId={0}
+                  />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
                     tick={{ fontSize: 11 }}

@@ -90,7 +90,6 @@ function FormDatePicker<
                     (disabledDate) => date.getTime() === disabledDate.getTime()
                   );
                 }}
-                initialFocus
               />
             </PopoverContent>
           </Popover>
