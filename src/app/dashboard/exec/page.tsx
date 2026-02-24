@@ -584,8 +584,8 @@ export default function ExecDashboard() {
                     tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
                   />
                   <Tooltip
-                    formatter={(v: number) => [
-                      `${v.toLocaleString('uk-UA')} клієнтів`,
+                    formatter={(v?: number) => [
+                      `${(v ?? 0).toLocaleString('uk-UA')} клієнтів`,
                       'Активні'
                     ]}
                   />
