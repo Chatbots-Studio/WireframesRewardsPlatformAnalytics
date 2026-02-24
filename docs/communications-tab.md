@@ -30,9 +30,9 @@ const [batches, setBatches] = useState<CommBatch[]>(MOCK_BATCHES);
 
 ```typescript
 interface CommRow {
-  name: string;      // назва комунікації
-  channel: string;   // Email | SMS | Push | Viber | Інше
-  segment: string;   // сегмент аудиторії
+  customerId: string; // унікальний ID клієнта для звʼязування з внутрішньою системою
+  name: string;       // назва комунікації
+  channel: string;    // Email | SMS | Push | Viber | Інше
   sent: number;
   delivered: number;
   opened: number;
@@ -52,16 +52,18 @@ interface CommBatch {
 
 ## Очікуваний формат CSV (показується користувачу)
 
-| Колонка     | Тип   | Приклад         | Обов. |
-| ----------- | ----- | --------------- | ----- |
-| `name`      | рядок | Email про акцію | ✓     |
-| `channel`   | рядок | Email           | ✓     |
-| `segment`   | рядок | Молодь 18-35    | —     |
-| `sent`      | число | 15000           | ✓     |
-| `delivered` | число | 14200           | ✓     |
-| `opened`    | число | 5680            | ✓     |
-| `clicked`   | число | 1136            | ✓     |
-| `converted` | число | 284             | ✓     |
+| Колонка       | Тип   | Приклад         | Обов. |
+| ------------- | ----- | --------------- | ----- |
+| `customer_id` | рядок | CL-00142        | ✓     |
+| `name`        | рядок | Email про акцію | ✓     |
+| `channel`     | рядок | Email           | ✓     |
+| `sent`        | дата  | 18.02.2025      | ✓     |
+| `delivered`   | дата  | 18.02.2025      | —     |
+| `opened`      | дата  | 19.02.2025      | —     |
+| `clicked`     | дата  | 19.02.2025      | —     |
+| `company`     | рядок | Rozetka         | —     |
+
+Один рядок = один клієнт. `customer_id` — унікальний ідентифікатор клієнта для звʼязування з внутрішньою системою (перевірка покупок з кешбеком / без). `sent` — дата надсилання (обов'язково); `delivered`, `opened`, `clicked` — дати подій (порожньо, якщо не відбулось). `converted` не потрібен — розраховується на бекенді.
 
 Допустимі значення каналу: `Email`, `SMS`, `Push`, `Viber`, `Інше`
 
