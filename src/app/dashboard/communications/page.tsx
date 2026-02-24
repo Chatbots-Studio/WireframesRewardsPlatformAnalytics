@@ -1021,7 +1021,7 @@ function BatchCard({
 }) {
   const s = batchStats(batch.rows);
   const overallConv = pct(s.converted, s.sent);
-  const channels = [...new Set(batch.rows.map((r) => r.channel))];
+  const channels = Array.from(new Set(batch.rows.map((r) => r.channel)));
 
   return (
     <div
