@@ -115,7 +115,7 @@ interface ChannelStat {
 
 function getChannelStats(batches: CommBatch[]): ChannelStat[] {
   const allRows = batches.flatMap((b) => b.rows);
-  const channels = [...new Set(allRows.map((r) => r.channel))];
+  const channels = Array.from(new Set(allRows.map((r) => r.channel)));
 
   return channels
     .map((channel) => {
