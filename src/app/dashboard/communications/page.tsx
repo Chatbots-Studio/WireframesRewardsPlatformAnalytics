@@ -47,6 +47,7 @@ interface CashbackSegment {
 
 interface CommRow {
   customerId: string;
+  campaignId?: string;
   name: string;
   channel: string;
   sent: number;
@@ -1284,6 +1285,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
 function FormatCard() {
   const columns = [
     { col: 'customer_id', type: 'рядок', example: 'CL-00142', required: true },
+    { col: 'campaign_id', type: 'рядок', example: 'CMP-001', required: true },
     { col: 'name', type: 'рядок', example: 'Email про акцію', required: true },
     { col: 'channel', type: 'рядок', example: 'Email', required: true },
     { col: 'sent', type: 'дата', example: '18.02.2025', required: true },
@@ -1295,12 +1297,12 @@ function FormatCard() {
 
   function downloadSample() {
     const header =
-      'customer_id,name,channel,sent,delivered,opened,clicked,company';
+      'customer_id,campaign_id,name,channel,sent,delivered,opened,clicked,company';
     const rows = [
-      'CL-00142,Email про акцію,Email,18.02.2025,18.02.2025,19.02.2025,19.02.2025,Rozetka',
-      'CL-00298,SMS нагадування,SMS,20.02.2025,20.02.2025,21.02.2025,,WOG АЗС',
-      'CL-00415,Push — Rozetka,Push,22.02.2025,22.02.2025,,,Rozetka',
-      'CL-00533,Viber преміум,Viber,23.02.2025,23.02.2025,23.02.2025,24.02.2025,Преміум клуб'
+      'CL-00142,CMP-001,Email про акцію,Email,18.02.2025,18.02.2025,19.02.2025,19.02.2025,Rozetka',
+      'CL-00298,CMP-002,SMS нагадування,SMS,20.02.2025,20.02.2025,21.02.2025,,WOG АЗС',
+      'CL-00415,CMP-001,Push — Rozetka,Push,22.02.2025,22.02.2025,,,Rozetka',
+      'CL-00533,CMP-003,Viber преміум,Viber,23.02.2025,23.02.2025,23.02.2025,24.02.2025,Преміум клуб'
     ];
     const csv = [header, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1374,9 +1376,10 @@ function FormatCard() {
           <IconInfoCircle className='mt-0.5 size-3.5 shrink-0 text-slate-400' />
           <p className='text-xs text-slate-400'>
             Один рядок = один клієнт. <strong>customer_id</strong> — унікальний
-            ідентифікатор клієнта для звʼязування з внутрішньою системою та
-            перевірки покупок. <strong>sent</strong> — дата надсилання
-            (обов'язково); <strong>delivered</strong>, <strong>opened</strong>,{' '}
+            ідентифікатор клієнта; <strong>campaign_id</strong> — унікальний
+            ідентифікатор маркетингової кампанії (обовʼязково).{' '}
+            <strong>sent</strong> — дата надсилання (обов'язково);{' '}
+            <strong>delivered</strong>, <strong>opened</strong>,{' '}
             <strong>clicked</strong> — дати подій (порожньо, якщо не відбулось).
             Значення каналу: <strong>Email</strong>, <strong>SMS</strong>,{' '}
             <strong>Push</strong>, <strong>Viber</strong> або{' '}
