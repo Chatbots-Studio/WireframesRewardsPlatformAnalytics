@@ -50,11 +50,24 @@
 
 ## Traceability
 
-| Requirement | Phase |
-|-------------|-------|
-| NAV-01 | Phase 1 |
-| KPI-01..06 | Phase 2 |
-| ROI-01..03 | Phase 3 |
-| CONV-01..03 | Phase 2 |
-| INC-01..03 | Phase 3 |
-| UX-01..03 | Phase 2 |
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| NAV-01 | Phase 1 | Pending |
+| KPI-01 | Phase 2 | Pending |
+| KPI-02 | Phase 2 | Pending |
+| KPI-03 | Phase 2 | Pending |
+| KPI-04 | Phase 2 | Pending |
+| KPI-05 | Phase 2 | Pending |
+| KPI-06 | Phase 2 | Pending |
+| UX-01 | Phase 2 | Pending |
+| UX-02 | Phase 2 | Pending |
+| UX-03 | Phase 2 | Pending |
+| CONV-03 | Phase 2 | Pending |
+| ROI-01 | Phase 3 | Pending |
+| ROI-02 | Phase 3 | Pending |
+| ROI-03 | Phase 3 | Pending |
+| CONV-01 | Phase 4 | Pending |
+| CONV-02 | Phase 4 | Pending |
+| INC-01 | Phase 5 | Pending |
+| INC-02 | Phase 5 | Pending |
+| INC-03 | Phase 5 | Pending |
