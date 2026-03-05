@@ -10,7 +10,7 @@
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Navigation Restructuring** - «Топ-менеджмент» стає collapsible-групою з двома підпунктами
+- [x] **Phase 1: Navigation Restructuring** - «Топ-менеджмент» стає collapsible-групою з двома підпунктами
 - [ ] **Phase 2: Page Scaffold + KPI + Filters** - Сторінка з 6 KPI-картками, фільтрами та блоком нульової конверсії
 - [ ] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
 - [ ] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
@@ -26,7 +26,7 @@
   1. User sees «Топ-менеджмент» as a collapsible group in sidebar
   2. User can expand/collapse and see two items: «Загальний ROI» (/dashboard/exec) and «Вплив кешбеків» (/dashboard/exec/cashback-impact)
   3. User can click «Вплив кешбеків» and navigate to the new page
-**Plans**: TBD
+**Plans**: `.planning/phases/01-navigation-restructuring/PLAN.md` (3 tasks)
 
 ### Phase 2: Page Scaffold + KPI + Filters
 **Goal**: Сторінка існує з KPI summary, фільтрами та блоком категорій з нульовою конверсією
@@ -76,7 +76,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Navigation Restructuring | 0/0 | Not started | - |
+| 1. Navigation Restructuring | 3/3 | Done | 2026-03-05 |
 | 2. Page Scaffold + KPI + Filters | 0/0 | Not started | - |
 | 3. ROI Charts | 0/0 | Not started | - |
 | 4. Conversion Funnel Block | 0/0 | Not started | - |

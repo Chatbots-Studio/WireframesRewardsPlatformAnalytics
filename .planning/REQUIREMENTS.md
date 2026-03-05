@@ -3,7 +3,7 @@
 ## v1 Requirements
 
 ### Navigation
-- [ ] **NAV-01**: «Топ-менеджмент» у sidebar стає collapsible-групою з двома підпунктами: «Загальний ROI» (`/dashboard/exec`) та «Вплив кешбеків» (`/dashboard/exec/cashback-impact`)
+- [x] **NAV-01**: «Топ-менеджмент» у sidebar стає collapsible-групою з двома підпунктами: «Загальний ROI» (`/dashboard/exec`) та «Вплив кешбеків» (`/dashboard/exec/cashback-impact`)
 
 ### KPI Summary
 - [ ] **KPI-01**: Картка «Конверсія активації кешбеку» — % нових клієнтів з обраними категоріями протягом 24 год після отримання картки
@@ -52,7 +52,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Done |
 | KPI-01 | Phase 2 | Pending |
 | KPI-02 | Phase 2 | Pending |
 | KPI-03 | Phase 2 | Pending |

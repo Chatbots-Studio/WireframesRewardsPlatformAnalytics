@@ -2,6 +2,7 @@
 
 import { IconChevronRight } from '@tabler/icons-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
   Collapsible,
@@ -35,6 +36,8 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const pathname = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -42,34 +45,9 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => {
             const hasSubItems = item.items && item.items.length > 0;
-
-            // #region agent log
-            if (typeof window !== 'undefined') {
-              fetch(
-                'http://127.0.0.1:7883/ingest/ac2d30c9-3822-41bb-957a-030f1b6e9773',
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'X-Debug-Session-Id': 'c6c71b'
-                  },
-                  body: JSON.stringify({
-                    sessionId: 'c6c71b',
-                    location: 'nav-main.tsx:render',
-                    message: 'NavMain item render',
-                    data: {
-                      title: item.title,
-                      url: item.url,
-                      hasSubItems,
-                      itemsCount: item.items?.length ?? 0
-                    },
-                    timestamp: Date.now(),
-                    hypothesisId: 'H-A'
-                  })
-                }
-              ).catch(() => {});
-            }
-            // #endregion
+            const isOpen =
+              item.isActive ||
+              (item.items?.some((sub) => pathname === sub.url) ?? false);
 
             if (!hasSubItems) {
               return (
@@ -92,7 +70,7 @@ export function NavMain({
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={item.isActive}
+                defaultOpen={isOpen}
                 className='group/collapsible'
               >
                 <SidebarMenuItem>

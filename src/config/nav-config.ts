@@ -9,9 +9,12 @@ export const navItems: NavItem[] = [
     title: 'Топ-менеджмент',
     url: '/dashboard/exec',
     icon: 'exec',
-    isActive: false,
+    isActive: true,
     shortcut: ['t', 't'],
-    items: []
+    items: [
+      { title: 'Загальний ROI', url: '/dashboard/exec' },
+      { title: 'Вплив кешбеків', url: '/dashboard/exec/cashback-impact' }
+    ]
   },
   {
     title: 'Продакт-менеджер',
