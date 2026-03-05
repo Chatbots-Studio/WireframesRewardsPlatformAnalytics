@@ -1,0 +1,294 @@
+/* ============================================================
+   42Flows Theme — based on 42Flows Design System
+   Primary: vivid violet-purple (#7B5FFF)
+   Style: dark-first, deep space, high contrast accents
+   ============================================================ */
+
+/* ──────────────── LIGHT MODE ──────────────── */
+[data-theme='42flows'] {
+  --background: oklch(0.98 0.003 280);
+  --foreground: oklch(0.13 0.025 278);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.025 278);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.025 278);
+
+  --primary: oklch(0.55 0.25 278);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.93 0.025 278);
+  --secondary-foreground: oklch(0.28 0.05 278);
+
+  --muted: oklch(0.94 0.012 278);
+  --muted-foreground: oklch(0.52 0.04 278);
+
+  --accent: oklch(0.93 0.025 278);
+  --accent-foreground: oklch(0.28 0.05 278);
+
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.87 0.02 278);
+  --input: oklch(0.87 0.02 278);
+  --ring: oklch(0.55 0.25 278);
+
+  /* Semantic functional colors */
+  --success: oklch(0.6 0.18 150);
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.65 0.18 55);
+  --warning-foreground: oklch(1 0 0);
+
+  /* Channel badge accent colors */
+  --channel-email: oklch(0.52 0.2 232);
+  --channel-sms: oklch(0.55 0.25 278);
+  --channel-push: oklch(0.65 0.19 55);
+  --channel-viber: oklch(0.52 0.15 175);
+
+  /* Charts — brand gradient palette */
+  --chart-1: oklch(0.55 0.25 278);
+  --chart-2: oklch(0.52 0.19 232);
+  --chart-3: oklch(0.72 0.18 150);
+  --chart-4: oklch(0.7 0.16 55);
+  --chart-5: oklch(0.56 0.2 15);
+
+  /* Chart semantic tokens */
+  --chart-success: oklch(0.6 0.18 150);
+  --chart-warning: oklch(0.65 0.18 55);
+  --chart-danger: oklch(0.55 0.2 27);
+
+  /* Chart primary tints — violet hue 278, dark → light */
+  --chart-primary: oklch(0.55 0.25 278);
+  --chart-primary-light: oklch(0.64 0.22 278);
+  --chart-primary-lighter: oklch(0.73 0.17 278);
+  --chart-primary-lightest: oklch(0.82 0.11 278);
+
+  /* Chart neutral tints — low chroma, dark → light */
+  --chart-neutral: oklch(0.55 0.02 278);
+  --chart-neutral-light: oklch(0.67 0.015 278);
+  --chart-neutral-lighter: oklch(0.78 0.01 278);
+  --chart-neutral-lightest: oklch(0.88 0.005 278);
+
+  /* Sidebar */
+  --sidebar: oklch(0.96 0.008 278);
+  --sidebar-foreground: oklch(0.13 0.025 278);
+  --sidebar-primary: oklch(0.55 0.25 278);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.91 0.02 278);
+  --sidebar-accent-foreground: oklch(0.28 0.05 278);
+  --sidebar-border: oklch(0.87 0.02 278);
+  --sidebar-ring: oklch(0.55 0.25 278);
+
+  /* Typography — Pixel Display (custom), Inter as fallback */
+  --font-sans:
+    'Pixel Display', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+
+  --radius: 0.625rem;
+
+  --shadow-color: oklch(0.55 0.25 278);
+  --shadow-2xs: 0 1px 3px 0px oklch(0.55 0.25 278 / 0.06);
+  --shadow-xs: 0 1px 4px 0px oklch(0.55 0.25 278 / 0.08);
+  --shadow-sm:
+    0 1px 4px 0px oklch(0.55 0.25 278 / 0.08),
+    0 1px 2px -1px oklch(0.55 0.25 278 / 0.06);
+  --shadow:
+    0 2px 8px 0px oklch(0.55 0.25 278 / 0.1),
+    0 1px 2px -1px oklch(0.55 0.25 278 / 0.08);
+  --shadow-md:
+    0 4px 12px 0px oklch(0.55 0.25 278 / 0.12),
+    0 2px 4px -1px oklch(0.55 0.25 278 / 0.08);
+  --shadow-lg:
+    0 8px 24px 0px oklch(0.55 0.25 278 / 0.14),
+    0 4px 8px -2px oklch(0.55 0.25 278 / 0.1);
+  --shadow-xl:
+    0 16px 40px 0px oklch(0.55 0.25 278 / 0.16),
+    0 8px 16px -4px oklch(0.55 0.25 278 / 0.12);
+  --shadow-2xl: 0 24px 64px 0px oklch(0.55 0.25 278 / 0.22);
+
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+/* ──────────────── DARK MODE ──────────────── */
+[data-theme='42flows'].dark {
+  /* Background — deep space dark with subtle purple tint */
+  --background: oklch(0.09 0.015 280);
+  --foreground: oklch(0.93 0.006 265);
+
+  --card: oklch(0.13 0.018 278);
+  --card-foreground: oklch(0.93 0.006 265);
+
+  --popover: oklch(0.15 0.022 278);
+  --popover-foreground: oklch(0.93 0.006 265);
+
+  /* Primary — vivid violet, slightly lighter for dark-mode contrast */
+  --primary: oklch(0.62 0.24 278);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.22 0.05 278);
+  --secondary-foreground: oklch(0.88 0.01 270);
+
+  --muted: oklch(0.17 0.025 278);
+  --muted-foreground: oklch(0.58 0.04 275);
+
+  --accent: oklch(0.2 0.04 278);
+  --accent-foreground: oklch(0.93 0.006 265);
+
+  --destructive: oklch(0.6 0.2 27);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.24 0.03 278);
+  --input: oklch(0.2 0.028 278);
+  --ring: oklch(0.62 0.24 278);
+
+  /* Semantic functional colors */
+  --success: oklch(0.7 0.19 150);
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.76 0.18 55);
+  --warning-foreground: oklch(1 0 0);
+
+  /* Channel badge accent colors (brighter for dark bg) */
+  --channel-email: oklch(0.68 0.2 232);
+  --channel-sms: oklch(0.68 0.22 278);
+  --channel-push: oklch(0.76 0.18 55);
+  --channel-viber: oklch(0.68 0.16 175);
+
+  /* Charts */
+  --chart-1: oklch(0.62 0.24 278);
+  --chart-2: oklch(0.58 0.19 232);
+  --chart-3: oklch(0.72 0.18 150);
+  --chart-4: oklch(0.72 0.16 55);
+  --chart-5: oklch(0.62 0.2 15);
+
+  /* Chart semantic tokens */
+  --chart-success: oklch(0.7 0.19 150);
+  --chart-warning: oklch(0.76 0.18 55);
+  --chart-danger: oklch(0.62 0.22 27);
+
+  /* Chart primary tints — violet hue 278, dark → light (adjusted for dark bg) */
+  --chart-primary: oklch(0.62 0.24 278);
+  --chart-primary-light: oklch(0.7 0.21 278);
+  --chart-primary-lighter: oklch(0.77 0.16 278);
+  --chart-primary-lightest: oklch(0.84 0.1 278);
+
+  /* Chart neutral tints — low chroma, dark → light */
+  --chart-neutral: oklch(0.4 0.025 278);
+  --chart-neutral-light: oklch(0.5 0.02 278);
+  --chart-neutral-lighter: oklch(0.6 0.015 278);
+  --chart-neutral-lightest: oklch(0.7 0.01 278);
+
+  /* Sidebar — slightly different from main bg */
+  --sidebar: oklch(0.11 0.016 280);
+  --sidebar-foreground: oklch(0.93 0.006 265);
+  --sidebar-primary: oklch(0.62 0.24 278);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.18 0.03 278);
+  --sidebar-accent-foreground: oklch(0.93 0.006 265);
+  --sidebar-border: oklch(0.22 0.025 278);
+  --sidebar-ring: oklch(0.62 0.24 278);
+
+  --font-sans:
+    'Pixel Display', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+
+  --radius: 0.625rem;
+
+  --shadow-color: oklch(0 0 0);
+  --shadow-2xs: 0 1px 3px 0px oklch(0 0 0 / 0.3);
+  --shadow-xs: 0 1px 4px 0px oklch(0 0 0 / 0.35);
+  --shadow-sm:
+    0 1px 4px 0px oklch(0 0 0 / 0.35), 0 1px 2px -1px oklch(0 0 0 / 0.3);
+  --shadow: 0 2px 8px 0px oklch(0 0 0 / 0.4), 0 1px 2px -1px oklch(0 0 0 / 0.3);
+  --shadow-md:
+    0 4px 12px 0px oklch(0 0 0 / 0.45), 0 2px 4px -1px oklch(0 0 0 / 0.35);
+  --shadow-lg:
+    0 8px 24px 0px oklch(0 0 0 / 0.5), 0 4px 8px -2px oklch(0 0 0 / 0.4);
+  --shadow-xl:
+    0 16px 40px 0px oklch(0 0 0 / 0.55), 0 8px 16px -4px oklch(0 0 0 / 0.45);
+  --shadow-2xl: 0 24px 64px 0px oklch(0 0 0 / 0.65);
+}
+
+/* ──────────────── TAILWIND v4 TOKEN BRIDGE ──────────────── */
+[data-theme='42flows'] {
+  @theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-channel-email: var(--channel-email);
+    --color-channel-sms: var(--channel-sms);
+    --color-channel-push: var(--channel-push);
+    --color-channel-viber: var(--channel-viber);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-chart-success: var(--chart-success);
+    --color-chart-warning: var(--chart-warning);
+    --color-chart-danger: var(--chart-danger);
+    --color-chart-primary: var(--chart-primary);
+    --color-chart-primary-light: var(--chart-primary-light);
+    --color-chart-primary-lighter: var(--chart-primary-lighter);
+    --color-chart-primary-lightest: var(--chart-primary-lightest);
+    --color-chart-neutral: var(--chart-neutral);
+    --color-chart-neutral-light: var(--chart-neutral-light);
+    --color-chart-neutral-lighter: var(--chart-neutral-lighter);
+    --color-chart-neutral-lightest: var(--chart-neutral-lightest);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
+  }
+}

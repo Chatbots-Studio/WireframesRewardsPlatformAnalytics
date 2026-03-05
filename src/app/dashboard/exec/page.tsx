@@ -40,21 +40,21 @@ import {
   Legend,
   ReferenceLine
 } from 'recharts';
+import { chartPalette, chartGradientId } from '@/lib/chart-theme';
 
 // ─── Palette ────────────────────────────────────────────────
 const C = {
-  active: '#6366f1', // клієнти з кешбеком
-  noProgram: '#cbd5e1', // без кешбеку
-  revenue: '#10b981', // дохід банку
-  accrued: '#f59e0b', // нарахований кешбек (витрата)
-  paid: '#ef4444', // виплачений кешбек (витрата)
-  balance: '#fbbf24', // залишок на рахунках
-  roi: '#10b981',
-  // Структура доходу — відтінки indigo для "з кешбеком"
-  interchange: '#6366f1',
-  commission: '#8b5cf6',
-  credit: '#a78bfa',
-  other: '#c4b5fd'
+  active: chartPalette.primary,
+  noProgram: chartPalette.neutral,
+  revenue: chartPalette.primary,
+  accrued: chartPalette.primaryLighter,
+  paid: chartPalette.neutral,
+  balance: chartPalette.neutralLight,
+  roi: chartPalette.primary,
+  interchange: chartPalette.primary,
+  commission: chartPalette.primaryLight,
+  credit: chartPalette.primaryLighter,
+  other: chartPalette.primaryLightest
 };
 
 // ─── Mock data ───────────────────────────────────────────────
@@ -250,9 +250,11 @@ const signals: {
 ];
 
 const signalIcon = {
-  ok: <IconCircleCheck className='mt-0.5 size-4 shrink-0 text-emerald-500' />,
-  warn: <IconAlertTriangle className='mt-0.5 size-4 shrink-0 text-amber-500' />,
-  info: <IconInfoCircle className='mt-0.5 size-4 shrink-0 text-blue-500' />
+  ok: <IconCircleCheck className='text-primary mt-0.5 size-4 shrink-0' />,
+  warn: (
+    <IconAlertTriangle className='text-muted-foreground mt-0.5 size-4 shrink-0' />
+  ),
+  info: <IconInfoCircle className='text-primary mt-0.5 size-4 shrink-0' />
 };
 
 // ─── Tooltips ────────────────────────────────────────────────
@@ -265,20 +267,33 @@ function RoiBarTooltip({ active, payload, label }: any) {
   const roi = Math.round((rev / acc) * 100);
   const fmt = (v: number) => `${v.toLocaleString('uk-UA')} тис. ₴`;
   return (
-    <div className='min-w-[200px] space-y-1 rounded-lg border bg-white px-3 py-2 text-xs shadow-md'>
-      <p className='mb-1 text-sm font-semibold text-slate-700'>{label}</p>
-      <p className='font-semibold text-emerald-600'>Дохід банку: {fmt(rev)}</p>
+    <div className='bg-card text-card-foreground min-w-[200px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 text-sm font-semibold'>{label}</p>
+      <p className='text-primary font-semibold'>Дохід банку: {fmt(rev)}</p>
       <Separator />
-      <p className='font-medium text-slate-600'>Витрати (кешбек):</p>
-      <p className='pl-2 text-amber-600'>· Нараховано: {fmt(acc)}</p>
-      <p className='pl-2 text-red-500'>
+      <p className='text-muted-foreground font-medium'>Витрати (кешбек):</p>
+      <p className='text-muted-foreground pl-2'>· Нараховано: {fmt(acc)}</p>
+      <p className='text-muted-foreground pl-2'>
         · Виплачено: {fmt(paid)} ({Math.round((paid / acc) * 100)}%)
       </p>
-      <p className='pl-2 text-slate-400'>
+      <p className='text-muted-foreground pl-2'>
         · Залишок на рахунках: {fmt(bal)} ({Math.round((bal / acc) * 100)}%)
       </p>
       <Separator />
-      <p className='font-bold text-slate-700'>ROI місяця: {roi}%</p>
+      <p className='font-bold'>ROI місяця: {roi}%</p>
+    </div>
+  );
+}
+
+function ActiveClientsTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  const val = payload[0]?.value ?? 0;
+  return (
+    <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 font-semibold'>{label}</p>
+      <p style={{ color: C.active }}>
+        Активних клієнтів: <strong>{val.toLocaleString('uk-UA')}</strong>
+      </p>
     </div>
   );
 }
@@ -289,14 +304,14 @@ function TurnoverTooltip({ active, payload, label }: any) {
   const nc = payload.find((p: any) => p.dataKey === 'noCashback')?.value ?? 0;
   const fmt = (v: number) => `${(v / 1000).toFixed(1)} млн ₴`;
   return (
-    <div className='space-y-1 rounded-lg border bg-white px-3 py-2 text-sm shadow-md'>
-      <p className='mb-1 font-semibold text-slate-700'>{label}</p>
+    <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
         З кешбеком: <strong>{fmt(wb)}</strong>
       </p>
-      <p className='text-slate-400'>Без програми: {fmt(nc)}</p>
+      <p className='text-muted-foreground'>Без програми: {fmt(nc)}</p>
       <Separator />
-      <p className='font-semibold text-slate-700'>Тотал: {fmt(wb + nc)}</p>
+      <p className='font-semibold'>Тотал: {fmt(wb + nc)}</p>
     </div>
   );
 }
@@ -306,14 +321,14 @@ function RevenuePerClientTooltip({ active, payload, label }: any) {
   const wb = payload.find((p: any) => p.dataKey === 'withCashback')?.value ?? 0;
   const nc = payload.find((p: any) => p.dataKey === 'noCashback')?.value ?? 0;
   return (
-    <div className='space-y-1 rounded-lg border bg-white px-3 py-2 text-sm shadow-md'>
-      <p className='mb-1 font-semibold text-slate-700'>{label}</p>
+    <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
         З кешбеком: <strong>{wb} ₴</strong>
       </p>
-      <p className='text-slate-400'>Без програми: {nc} ₴</p>
+      <p className='text-muted-foreground'>Без програми: {nc} ₴</p>
       <Separator />
-      <p className='font-semibold text-emerald-600'>
+      <p className='text-primary font-semibold'>
         +{wb - nc} ₴ / клієнт (+{Math.round((wb / nc - 1) * 100)}%)
       </p>
     </div>
@@ -328,23 +343,37 @@ function BreakdownTooltip({ active, payload, label }: any) {
   const nc = g('nc_i') + g('nc_c') + g('nc_cr') + g('nc_o');
   const fmt = (v: number) => `${v.toLocaleString('uk-UA')} тис. ₴`;
   return (
-    <div className='min-w-[210px] space-y-0.5 rounded-lg border bg-white px-3 py-2 text-xs shadow-md'>
-      <p className='mb-1 text-sm font-semibold text-slate-700'>{label}</p>
+    <div className='bg-card text-card-foreground min-w-[210px] space-y-0.5 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p className='font-medium' style={{ color: C.active }}>
         З кешбеком: {fmt(wb)}
       </p>
-      <p className='pl-2 text-slate-500'>· Інтерчендж: {fmt(g('wb_i'))}</p>
-      <p className='pl-2 text-slate-500'>· Комісійний: {fmt(g('wb_c'))}</p>
-      <p className='pl-2 text-slate-500'>· % кред. ліміту: {fmt(g('wb_cr'))}</p>
-      <p className='pl-2 text-slate-500'>· Інші: {fmt(g('wb_o'))}</p>
+      <p className='text-muted-foreground pl-2'>
+        · Інтерчендж: {fmt(g('wb_i'))}
+      </p>
+      <p className='text-muted-foreground pl-2'>
+        · Комісійний: {fmt(g('wb_c'))}
+      </p>
+      <p className='text-muted-foreground pl-2'>
+        · % кред. ліміту: {fmt(g('wb_cr'))}
+      </p>
+      <p className='text-muted-foreground pl-2'>· Інші: {fmt(g('wb_o'))}</p>
       <Separator />
-      <p className='font-medium text-slate-400'>Без програми: {fmt(nc)}</p>
-      <p className='pl-2 text-slate-300'>· Інтерчендж: {fmt(g('nc_i'))}</p>
-      <p className='pl-2 text-slate-300'>· Комісійний: {fmt(g('nc_c'))}</p>
-      <p className='pl-2 text-slate-300'>· % кред. ліміту: {fmt(g('nc_cr'))}</p>
-      <p className='pl-2 text-slate-300'>· Інші: {fmt(g('nc_o'))}</p>
+      <p className='text-muted-foreground/70 font-medium'>
+        Без програми: {fmt(nc)}
+      </p>
+      <p className='text-muted-foreground/50 pl-2'>
+        · Інтерчендж: {fmt(g('nc_i'))}
+      </p>
+      <p className='text-muted-foreground/50 pl-2'>
+        · Комісійний: {fmt(g('nc_c'))}
+      </p>
+      <p className='text-muted-foreground/50 pl-2'>
+        · % кред. ліміту: {fmt(g('nc_cr'))}
+      </p>
+      <p className='text-muted-foreground/50 pl-2'>· Інші: {fmt(g('nc_o'))}</p>
       <Separator />
-      <p className='font-bold text-slate-700'>Тотал: {fmt(wb + nc)}</p>
+      <p className='font-bold'>Тотал: {fmt(wb + nc)}</p>
     </div>
   );
 }
@@ -383,14 +412,14 @@ export default function ExecDashboard() {
         </div>
 
         {/* ── ROI Hero блок — дохід vs витрати ── */}
-        <Card className='ring-2 ring-emerald-400 ring-offset-2'>
+        <Card className='ring-primary/20 ring-1'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-base'>
               Дохід vs Витрати на кешбек · по місяцях
             </CardTitle>
             <CardDescription>
-              Тис. ₴ · Зелений = дохід банку · Жовтий = нарахований кешбек ·
-              Червоний = виплачений кешбек
+              Тис. ₴ · Фіолетовий = дохід банку · Світлий = нарахований кешбек ·
+              Нейтральний = виплачений кешбек
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -401,22 +430,29 @@ export default function ExecDashboard() {
                   <BarChart
                     data={roiTable}
                     margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
-                    barCategoryGap='20%'
+                    barCategoryGap='25%'
                     barGap={4}
                   >
                     <CartesianGrid
                       strokeDasharray='3 3'
-                      stroke='#e2e8f0'
+                      stroke='var(--border)'
                       xAxisId={0}
                       yAxisId={0}
                     />
                     <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                     <YAxis
-                      tick={{ fontSize: 11 }}
+                      tick={{ fontSize: 12 }}
                       tickFormatter={(v) => `${v}k`}
                     />
                     <Tooltip content={<RoiBarTooltip />} />
                     <Legend
+                      iconSize={8}
+                      iconType='square'
+                      wrapperStyle={{
+                        fontSize: '12px',
+                        color: 'var(--muted-foreground)',
+                        fontFamily: 'var(--font-sans)'
+                      }}
                       formatter={(v) =>
                         v === 'revenue'
                           ? 'Дохід банку'
@@ -460,9 +496,11 @@ export default function ExecDashboard() {
                       className='size-3 rounded-sm'
                       style={{ backgroundColor: C.revenue }}
                     />
-                    <span className='text-sm text-slate-600'>Дохід банку</span>
+                    <span className='text-foreground/80 text-sm'>
+                      Дохід банку
+                    </span>
                   </div>
-                  <span className='font-bold text-emerald-600 tabular-nums'>
+                  <span className='text-primary font-bold tabular-nums'>
                     {curr.revenue.toLocaleString('uk-UA')} тис. ₴
                   </span>
                 </div>
@@ -475,11 +513,11 @@ export default function ExecDashboard() {
                       className='size-3 rounded-sm'
                       style={{ backgroundColor: C.accrued }}
                     />
-                    <span className='text-sm text-slate-600'>
+                    <span className='text-foreground/80 text-sm'>
                       Нараховано кешбеку
                     </span>
                   </div>
-                  <span className='font-semibold text-amber-600 tabular-nums'>
+                  <span className='text-muted-foreground font-semibold tabular-nums'>
                     {curr.accrued.toLocaleString('uk-UA')} тис. ₴
                   </span>
                 </div>
@@ -491,11 +529,11 @@ export default function ExecDashboard() {
                       className='size-2.5 rounded-sm'
                       style={{ backgroundColor: C.paid }}
                     />
-                    <span className='text-xs text-slate-500'>
+                    <span className='text-muted-foreground text-xs'>
                       з них виплачено
                     </span>
                   </div>
-                  <span className='text-sm font-medium text-red-500 tabular-nums'>
+                  <span className='text-muted-foreground text-sm font-medium tabular-nums'>
                     {curr.paid.toLocaleString('uk-UA')} тис. ₴ ({paidPct}%)
                   </span>
                 </div>
@@ -503,12 +541,12 @@ export default function ExecDashboard() {
                 {/* Залишок */}
                 <div className='flex items-center justify-between pl-3'>
                   <div className='flex items-center gap-2'>
-                    <div className='size-2.5 rounded-sm bg-slate-200' />
-                    <span className='text-xs text-slate-500'>
+                    <div className='bg-muted-foreground/20 size-2.5 rounded-sm' />
+                    <span className='text-muted-foreground text-xs'>
                       залишок на рахунках
                     </span>
                   </div>
-                  <span className='text-sm font-medium text-slate-500 tabular-nums'>
+                  <span className='text-muted-foreground text-sm font-medium tabular-nums'>
                     {curr.balance.toLocaleString('uk-UA')} тис. ₴ ({balancePct}
                     %)
                   </span>
@@ -517,22 +555,22 @@ export default function ExecDashboard() {
 
                 {/* ROI */}
                 <div className='flex items-center justify-between'>
-                  <span className='text-sm font-semibold text-slate-700'>
+                  <span className='text-foreground text-sm font-semibold'>
                     ROI місяця
                   </span>
                   <div className='text-right'>
-                    <span className='text-2xl font-black text-emerald-600 tabular-nums'>
+                    <span className='text-primary text-2xl font-black tabular-nums'>
                       {curr.roi}%
                     </span>
                     <p className='text-muted-foreground text-xs'>
                       vs {prev.roi}% у січні{' '}
-                      <span className='font-medium text-emerald-600'>
+                      <span className='text-primary font-medium'>
                         +{curr.roi - prev.roi}pp
                       </span>
                     </p>
                   </div>
                 </div>
-                <p className='text-muted-foreground rounded bg-slate-50 px-2 py-1.5 text-xs'>
+                <p className='text-muted-foreground bg-muted rounded-md px-2 py-1.5 text-xs'>
                   ROI = Дохід / Нарахований кешбек × 100. Консервативна оцінка —
                   враховує всі зобов&apos;язання.
                 </p>
@@ -559,7 +597,13 @@ export default function ExecDashboard() {
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
                 >
                   <defs>
-                    <linearGradient id='ag' x1='0' y1='0' x2='0' y2='1'>
+                    <linearGradient
+                      id={chartGradientId('primary')}
+                      x1='0'
+                      y1='0'
+                      x2='0'
+                      y2='1'
+                    >
                       <stop
                         offset='5%'
                         stopColor={C.active}
@@ -574,27 +618,22 @@ export default function ExecDashboard() {
                   </defs>
                   <CartesianGrid
                     strokeDasharray='3 3'
-                    stroke='#e2e8f0'
+                    stroke='var(--border)'
                     xAxisId={0}
                     yAxisId={0}
                   />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12 }}
                     tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
                   />
-                  <Tooltip
-                    formatter={(v?: number) => [
-                      `${(v ?? 0).toLocaleString('uk-UA')} клієнтів`,
-                      'Активні'
-                    ]}
-                  />
+                  <Tooltip content={<ActiveClientsTooltip />} />
                   <Area
                     type='monotone'
                     dataKey='active'
                     name='Активні'
                     stroke={C.active}
-                    fill='url(#ag)'
+                    fill={`url(#${chartGradientId('primary')})`}
                     strokeWidth={2.5}
                     dot={(p: any) => (
                       <circle
@@ -604,7 +643,9 @@ export default function ExecDashboard() {
                         r={p.index === activeTrend.length - 1 ? 5 : 3}
                         fill={C.active}
                         stroke={
-                          p.index === activeTrend.length - 1 ? 'white' : 'none'
+                          p.index === activeTrend.length - 1
+                            ? 'var(--background)'
+                            : 'none'
                         }
                         strokeWidth={2}
                       />
@@ -615,7 +656,7 @@ export default function ExecDashboard() {
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
               +91% за 6 місяців · Частка охопленої бази:{' '}
-              <strong className='text-slate-700'>57%</strong>
+              <strong className='text-foreground'>57%</strong>
             </CardFooter>
           </Card>
 
@@ -632,20 +673,28 @@ export default function ExecDashboard() {
                   data={turnoverTrend}
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
                   barCategoryGap='25%'
+                  barGap={4}
                 >
                   <CartesianGrid
                     strokeDasharray='3 3'
-                    stroke='#e2e8f0'
+                    stroke='var(--border)'
                     xAxisId={0}
                     yAxisId={0}
                   />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12 }}
                     tickFormatter={(v) => `${(v / 1000).toFixed(0)}м`}
                   />
                   <Tooltip content={<TurnoverTooltip />} />
                   <Legend
+                    iconSize={8}
+                    iconType='square'
+                    wrapperStyle={{
+                      fontSize: '12px',
+                      color: 'var(--muted-foreground)',
+                      fontFamily: 'var(--font-sans)'
+                    }}
                     formatter={(v) =>
                       v === 'withCashback' ? 'З кешбеком' : 'Без програми'
                     }
@@ -668,7 +717,7 @@ export default function ExecDashboard() {
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
               Оберти з кешбеком +177% за 6 міс · Тотал лютий:{' '}
-              <strong className='text-slate-700'>191 млн ₴</strong>
+              <strong className='text-foreground'>191 млн ₴</strong>
             </CardFooter>
           </Card>
         </div>
@@ -692,18 +741,25 @@ export default function ExecDashboard() {
                 >
                   <CartesianGrid
                     strokeDasharray='3 3'
-                    stroke='#e2e8f0'
+                    stroke='var(--border)'
                     xAxisId={0}
                     yAxisId={0}
                   />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12 }}
                     tickFormatter={(v) => `${v}₴`}
                     domain={[80, 240]}
                   />
                   <Tooltip content={<RevenuePerClientTooltip />} />
                   <Legend
+                    iconSize={8}
+                    iconType='square'
+                    wrapperStyle={{
+                      fontSize: '12px',
+                      color: 'var(--muted-foreground)',
+                      fontFamily: 'var(--font-sans)'
+                    }}
                     formatter={(v) =>
                       v === 'withCashback' ? 'З кешбеком' : 'Без програми'
                     }
@@ -730,9 +786,9 @@ export default function ExecDashboard() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              Лютий: <strong className='text-indigo-600'>218 ₴</strong> з
-              кешбеком vs <strong className='text-slate-400'>93 ₴</strong> без ·{' '}
-              <strong className='text-emerald-600'>+134%</strong>
+              Лютий: <strong className='text-primary'>218 ₴</strong> з кешбеком
+              vs <strong className='text-muted-foreground'>93 ₴</strong> без ·{' '}
+              <strong className='text-primary'>+134%</strong>
             </CardFooter>
           </Card>
 
@@ -744,8 +800,8 @@ export default function ExecDashboard() {
               <CardDescription>
                 Тис. ₴ · <span style={{ color: C.active }}>■</span> З кешбеком
                 &nbsp;
-                <span className='text-slate-300'>■</span> Без програми · Hover =
-                деталі
+                <span className='text-muted-foreground/40'>■</span> Без програми
+                · Hover = деталі
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -753,43 +809,44 @@ export default function ExecDashboard() {
                 <BarChart
                   data={revenueBreakdown}
                   margin={{ top: 4, right: 8, left: 0, bottom: 0 }}
-                  barCategoryGap='20%'
+                  barCategoryGap='25%'
+                  barGap={4}
                 >
                   <CartesianGrid
                     strokeDasharray='3 3'
-                    stroke='#e2e8f0'
+                    stroke='var(--border)'
                     xAxisId={0}
                     yAxisId={0}
                   />
                   <XAxis dataKey='month' tick={{ fontSize: 12 }} />
                   <YAxis
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 12 }}
                     tickFormatter={(v) => `${v}k`}
                   />
                   <Tooltip content={<BreakdownTooltip />} />
-                  {/* Без програми — сірі */}
+                  {/* Без програми — neutral tints */}
                   <Bar
                     dataKey='nc_i'
                     stackId='nc'
-                    fill='#94a3b8'
+                    fill={chartPalette.neutral}
                     legendType='none'
                   />
                   <Bar
                     dataKey='nc_c'
                     stackId='nc'
-                    fill='#b0bec5'
+                    fill={chartPalette.neutralLight}
                     legendType='none'
                   />
                   <Bar
                     dataKey='nc_cr'
                     stackId='nc'
-                    fill='#cfd8dc'
+                    fill={chartPalette.neutralLighter}
                     legendType='none'
                   />
                   <Bar
                     dataKey='nc_o'
                     stackId='nc'
-                    fill='#e0e7ef'
+                    fill={chartPalette.neutralLightest}
                     radius={[3, 3, 0, 0]}
                     legendType='none'
                   />
@@ -848,8 +905,11 @@ export default function ExecDashboard() {
                     Без програми:
                   </span>
                   <span className='flex items-center gap-1'>
-                    <span className='inline-block size-2.5 rounded-sm bg-slate-300' />
-                    аналогічна структура (сірий)
+                    <span
+                      className='inline-block size-2.5 rounded-sm'
+                      style={{ backgroundColor: chartPalette.neutralLight }}
+                    />
+                    аналогічна структура (нейтральний)
                   </span>
                 </div>
               </div>

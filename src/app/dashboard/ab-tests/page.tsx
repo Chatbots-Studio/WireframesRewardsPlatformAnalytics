@@ -51,14 +51,27 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts';
+import { chartPalette } from '@/lib/chart-theme';
+
+// --- Tooltip ---
+function ABTestTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className='bg-card text-card-foreground min-w-[200px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+      <p className='mb-1 text-sm font-semibold'>{label}</p>
+      {payload.map((p: any) => (
+        <p key={p.dataKey} style={{ color: p.fill }}>
+          {p.name}: <strong>{p.value}</strong>
+        </p>
+      ))}
+    </div>
+  );
+}
 
 // --- Palette ---
 const C = {
-  control: '#94a3b8',
-  test: '#6366f1',
-  ok: '#10b981',
-  warn: '#f59e0b',
-  danger: '#ef4444'
+  control: chartPalette.neutral,
+  test: chartPalette.primary
 };
 
 // --- Mock Data ---
@@ -148,12 +161,12 @@ const selectedTestData = [
 function StatusBadge({ status }: { status: string }) {
   if (status === 'active')
     return (
-      <Badge className='bg-blue-100 text-blue-700 hover:bg-blue-100'>
+      <Badge className='bg-primary/10 text-primary hover:bg-primary/10'>
         <IconClock className='mr-1 size-3' /> Активний
       </Badge>
     );
   return (
-    <Badge className='bg-green-100 text-green-700 hover:bg-green-100'>
+    <Badge className='bg-success/10 text-success hover:bg-success/10'>
       <IconCircleCheck className='mr-1 size-3' /> Завершений
     </Badge>
   );
@@ -196,11 +209,13 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
           <div className='text-right'>
             <p className='text-muted-foreground text-xs'>Впевненість</p>
             <p
-              className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-green-600' : test.confidence >= 80 ? 'text-yellow-600' : 'text-muted-foreground'}`}
+              className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-chart-success' : test.confidence >= 80 ? 'text-chart-warning' : 'text-muted-foreground'}`}
             >
               {test.confidence}%
             </p>
-            <p className='text-muted-foreground text-xs'>
+            <p
+              className={`text-xs ${test.confidence >= 95 ? 'text-chart-success' : 'text-muted-foreground'}`}
+            >
               {test.confidence >= 95
                 ? '✓ Статистично значимо'
                 : 'Збираємо дані'}
@@ -212,12 +227,12 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
         <div className='grid grid-cols-2 gap-4'>
           {/* Control */}
           <div
-            className={`rounded-lg border p-3 ${isWinnerControl ? 'border-green-500 bg-green-50 dark:bg-green-950' : ''}`}
+            className={`rounded-lg border p-3 ${isWinnerControl ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
               <span className='text-sm font-semibold'>Контрольна група</span>
               {isWinnerControl && (
-                <Badge className='bg-green-600 text-xs text-white'>
+                <Badge className='bg-success text-success-foreground text-xs'>
                   Переможець
                 </Badge>
               )}
@@ -249,12 +264,12 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
 
           {/* Test */}
           <div
-            className={`rounded-lg border p-3 ${isWinnerTest ? 'border-green-500 bg-green-50 dark:bg-green-950' : ''}`}
+            className={`rounded-lg border p-3 ${isWinnerTest ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
               <span className='text-sm font-semibold'>Тестова група</span>
               {isWinnerTest && (
-                <Badge className='bg-green-600 text-xs text-white'>
+                <Badge className='bg-success text-success-foreground text-xs'>
                   Переможець
                 </Badge>
               )}
@@ -268,7 +283,7 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
                 <span className='font-semibold'>
                   {test.testGroup.conversion}%
                   <span
-                    className={`ml-1 text-xs ${lift > 0 ? 'text-green-600' : 'text-red-600'}`}
+                    className={`ml-1 text-xs ${lift > 0 ? 'text-chart-success' : 'text-chart-danger'}`}
                   >
                     ({lift > 0 ? '+' : ''}
                     {lift}pp)
@@ -313,7 +328,7 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
 export default function ABTestsPage() {
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col space-y-4'>
+      <div className='flex flex-1 flex-col space-y-5'>
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div>
@@ -344,19 +359,19 @@ export default function ABTestsPage() {
               label: 'Активних тестів',
               value: '2',
               icon: <IconFlask className='size-4' />,
-              color: 'text-blue-600'
+              color: 'text-primary'
             },
             {
               label: 'Завершених (міс.)',
               value: '3',
               icon: <IconCircleCheck className='size-4' />,
-              color: 'text-green-600'
+              color: 'text-chart-success'
             },
             {
               label: 'Підтверджених гіпотез',
               value: '2 / 3',
               icon: <IconTrendingUp className='size-4' />,
-              color: 'text-green-600'
+              color: 'text-chart-success'
             },
             {
               label: 'Середній ліфт конверсії',
@@ -385,7 +400,7 @@ export default function ABTestsPage() {
           <TabsList>
             <TabsTrigger value='active'>
               Активні{' '}
-              <Badge className='ml-2 bg-blue-600 text-white'>
+              <Badge className='bg-primary text-primary-foreground ml-2'>
                 {activeTests.length}
               </Badge>
             </TabsTrigger>
@@ -420,29 +435,37 @@ export default function ABTestsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width='100%' height={260}>
-              <BarChart data={selectedTestData} barCategoryGap='35%'>
+              <BarChart data={selectedTestData} barCategoryGap='25%' barGap={4}>
                 <CartesianGrid
                   strokeDasharray='3 3'
-                  className='stroke-muted'
+                  stroke='var(--border)'
                   xAxisId={0}
                   yAxisId={0}
                 />
                 <XAxis dataKey='metric' tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Legend />
-                <ReferenceLine y={0} stroke='hsl(var(--border))' />
+                <Tooltip content={<ABTestTooltip />} />
+                <Legend
+                  iconSize={8}
+                  iconType='square'
+                  wrapperStyle={{
+                    fontSize: '12px',
+                    color: 'var(--muted-foreground)',
+                    fontFamily: 'var(--font-sans)'
+                  }}
+                />
+                <ReferenceLine y={0} stroke='var(--border)' />
                 <Bar
                   dataKey='control'
                   name='Контрольна група'
                   fill={C.control}
-                  radius={[4, 4, 0, 0]}
+                  radius={[3, 3, 0, 0]}
                 />
                 <Bar
                   dataKey='test'
                   name='Тестова група'
                   fill={C.test}
-                  radius={[4, 4, 0, 0]}
+                  radius={[3, 3, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>

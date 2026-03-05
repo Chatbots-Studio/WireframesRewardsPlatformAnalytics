@@ -30,6 +30,8 @@ import {
   IconBell,
   IconMessage,
   IconMail,
+  IconMailOpened,
+  IconTag,
   IconCheck,
   IconInfoCircle,
   IconChevronDown,
@@ -185,11 +187,11 @@ function getChannelStats(batches: CommBatch[]): ChannelStat[] {
 }
 
 const CHANNEL_COLORS: Record<string, string> = {
-  Email: 'bg-blue-100 text-blue-700 border-blue-200',
-  SMS: 'bg-purple-100 text-purple-700 border-purple-200',
-  Push: 'bg-orange-100 text-orange-700 border-orange-200',
-  Viber: 'bg-teal-100 text-teal-700 border-teal-200',
-  Інше: 'bg-slate-100 text-slate-600 border-slate-200'
+  Email: 'bg-channel-email/15 text-channel-email border-channel-email/30',
+  SMS: 'bg-channel-sms/15 text-channel-sms border-channel-sms/30',
+  Push: 'bg-channel-push/15 text-channel-push border-channel-push/30',
+  Viber: 'bg-channel-viber/15 text-channel-viber border-channel-viber/30',
+  Інше: 'bg-muted text-muted-foreground border-border'
 };
 
 const CHANNEL_ICONS: Record<string, React.ReactNode> = {
@@ -209,12 +211,12 @@ const CHANNEL_ICON_LG: Record<string, React.ReactNode> = {
 };
 
 const BATCH_COLORS = [
-  '#6366f1',
-  '#10b981',
-  '#f59e0b',
-  '#ef4444',
-  '#8b5cf6',
-  '#0ea5e9'
+  'var(--chart-1)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+  'var(--chart-primary-light)',
+  'var(--chart-2)'
 ];
 
 // ─── Mock Data ───────────────────────────────────────────────
@@ -492,13 +494,18 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
 
   return (
     <div>
-      <p className='mb-2 truncate text-sm font-semibold text-slate-700'>
+      <p className='text-foreground mb-2 truncate text-sm font-semibold'>
         {batch.name}
       </p>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         width='100%'
-        style={{ maxWidth: W, display: 'block', margin: '0 auto' }}
+        style={{
+          maxWidth: W,
+          display: 'block',
+          margin: '0 auto',
+          fontFamily: 'var(--font-sans)'
+        }}
       >
         {steps.map((step, i) => {
           const pctVal = step.value / maxVal;
@@ -517,17 +524,16 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
             <g key={i}>
               <path
                 d={path}
-                fill='#f8faff'
+                fill='var(--card)'
                 stroke={color}
-                strokeWidth={1.5}
-                opacity={0.95}
+                strokeWidth={2}
               />
               <text
                 x={W / 2}
                 y={y + 17}
                 textAnchor='middle'
-                fontSize={10}
-                fill='#475569'
+                fontSize={11}
+                fill='var(--foreground)'
                 fontWeight={500}
               >
                 {step.label}
@@ -536,7 +542,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                 x={W / 2}
                 y={y + 32}
                 textAnchor='middle'
-                fontSize={13}
+                fontSize={12}
                 fill={color}
                 fontWeight={700}
               >
@@ -548,8 +554,8 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                 x={W / 2}
                 y={y + 45}
                 textAnchor='middle'
-                fontSize={9}
-                fill='#94a3b8'
+                fontSize={10}
+                fill='var(--muted-foreground)'
               >
                 {Math.round(pctVal * 100)}% від початку
               </text>
@@ -561,15 +567,20 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                     width={66}
                     height={13}
                     rx={2}
-                    fill={dropPct > 30 ? '#fee2e2' : '#f1f5f9'}
+                    fill={dropPct > 30 ? 'var(--destructive)' : 'var(--muted)'}
+                    fillOpacity={dropPct > 30 ? 0.1 : 1}
                   />
                   <text
                     x={W - 39}
                     y={y - 3}
                     textAnchor='middle'
-                    fontSize={8.5}
+                    fontSize={9}
                     fontWeight={600}
-                    fill={dropPct > 30 ? '#ef4444' : '#64748b'}
+                    fill={
+                      dropPct > 30
+                        ? 'var(--destructive)'
+                        : 'var(--muted-foreground)'
+                    }
                   >
                     -{dropPct}% відвалилось
                   </text>
@@ -589,36 +600,36 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
 
   return (
     <div className='px-4 py-3'>
-      <p className='mb-2.5 text-xs font-semibold tracking-wide text-slate-400 uppercase'>
+      <p className='text-muted-foreground mb-2.5 text-xs font-semibold tracking-wide uppercase'>
         Деталізація по сегментах
       </p>
       <div className='grid grid-cols-2 gap-3'>
         {/* З кешбеком */}
         {cashback ? (
-          <div className='rounded-lg border border-emerald-200 bg-emerald-50/60 p-3'>
+          <div className='border-primary/30 bg-primary/10 rounded-lg border p-3'>
             <div className='mb-2 flex items-center gap-1.5'>
-              <span className='inline-flex size-5 items-center justify-center rounded-full bg-emerald-100 text-xs'>
-                🏷️
+              <span className='bg-primary/15 inline-flex size-5 items-center justify-center rounded-full'>
+                <IconTag className='text-primary size-3' />
               </span>
-              <span className='text-xs font-semibold text-emerald-700'>
+              <span className='text-primary text-xs font-semibold'>
                 З кешбеком
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-slate-500'>Клієнтів</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Клієнтів</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.customers)}
               </span>
-              <span className='text-slate-500'>Покупок</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Покупок</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.purchases)}
               </span>
-              <span className='text-slate-500'>Загальна сума</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Загальна сума</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(cashback.revenue)}
               </span>
-              <span className='text-slate-500'>Середній чек</span>
-              <span className='text-right font-semibold text-emerald-600 tabular-nums'>
+              <span className='text-muted-foreground'>Середній чек</span>
+              <span className='text-primary text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   cashback.purchases > 0
                     ? Math.round(cashback.revenue / cashback.purchases)
@@ -628,37 +639,37 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
             </div>
           </div>
         ) : (
-          <div className='flex items-center justify-center rounded-lg border border-dashed border-slate-200 p-3'>
-            <span className='text-xs text-slate-400'>Немає даних</span>
+          <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
+            <span className='text-muted-foreground text-xs'>Немає даних</span>
           </div>
         )}
 
         {/* Без кешбеку */}
         {noCashback ? (
-          <div className='rounded-lg border border-slate-200 bg-slate-50/80 p-3'>
+          <div className='border-border bg-muted/50 rounded-lg border p-3'>
             <div className='mb-2 flex items-center gap-1.5'>
-              <span className='inline-flex size-5 items-center justify-center rounded-full bg-slate-100 text-xs'>
-                📩
+              <span className='bg-muted inline-flex size-5 items-center justify-center rounded-full'>
+                <IconMailOpened className='text-muted-foreground size-3' />
               </span>
-              <span className='text-xs font-semibold text-slate-600'>
+              <span className='text-muted-foreground text-xs font-semibold'>
                 Без кешбеку (отримали повідомлення)
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-slate-500'>Клієнтів</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Клієнтів</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.customers)}
               </span>
-              <span className='text-slate-500'>Покупок</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Покупок</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.purchases)}
               </span>
-              <span className='text-slate-500'>Загальна сума</span>
-              <span className='text-right font-medium text-slate-700 tabular-nums'>
+              <span className='text-muted-foreground'>Загальна сума</span>
+              <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(noCashback.revenue)}
               </span>
-              <span className='text-slate-500'>Середній чек</span>
-              <span className='text-right font-semibold text-slate-600 tabular-nums'>
+              <span className='text-muted-foreground'>Середній чек</span>
+              <span className='text-muted-foreground text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   noCashback.purchases > 0
                     ? Math.round(noCashback.revenue / noCashback.purchases)
@@ -668,8 +679,8 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
             </div>
           </div>
         ) : (
-          <div className='flex items-center justify-center rounded-lg border border-dashed border-slate-200 p-3'>
-            <span className='text-xs text-slate-400'>Немає даних</span>
+          <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
+            <span className='text-muted-foreground text-xs'>Немає даних</span>
           </div>
         )}
       </div>
@@ -704,10 +715,10 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
     (hasSegments ? 1 : 0);
 
   return (
-    <div className='overflow-x-auto rounded-xl border border-slate-200'>
+    <div className='border-border overflow-x-auto rounded-xl border'>
       <Table>
         <TableHeader>
-          <TableRow className='bg-slate-50'>
+          <TableRow className='bg-muted'>
             <TableHead className='pl-4'>Назва кампанії</TableHead>
             <TableHead>Канал</TableHead>
             {hasCompany && <TableHead>Компанія</TableHead>}
@@ -741,8 +752,8 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                 <TableRow
                   className={cn(
                     hasDetail && 'cursor-pointer select-none',
-                    isTop && !isExpanded && 'bg-emerald-50/60',
-                    isExpanded && 'bg-indigo-50/50'
+                    isTop && !isExpanded && 'bg-primary/10',
+                    isExpanded && 'bg-primary/10'
                   )}
                   onClick={() =>
                     hasDetail
@@ -753,9 +764,9 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                   <TableCell className='pl-4'>
                     <div className='flex items-center gap-1.5'>
                       {isTop && (
-                        <IconTrophy className='size-3.5 shrink-0 text-amber-500' />
+                        <IconTrophy className='text-primary size-3.5 shrink-0' />
                       )}
-                      <span className='text-sm font-medium text-slate-700'>
+                      <span className='text-foreground text-sm font-medium'>
                         {r.name}
                       </span>
                     </div>
@@ -772,16 +783,16 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                     </span>
                   </TableCell>
                   {hasCompany && (
-                    <TableCell className='text-xs text-slate-500'>
+                    <TableCell className='text-muted-foreground text-xs'>
                       {r.company ?? '—'}
                     </TableCell>
                   )}
                   {hasDate && (
-                    <TableCell className='text-xs text-slate-500 tabular-nums'>
+                    <TableCell className='text-muted-foreground text-xs tabular-nums'>
                       {r.date ?? '—'}
                     </TableCell>
                   )}
-                  <TableCell className='text-right text-xs text-slate-600 tabular-nums'>
+                  <TableCell className='text-muted-foreground text-right text-xs tabular-nums'>
                     {fmtNum(r.sent)}
                   </TableCell>
                   <TableCell className='text-right'>
@@ -789,20 +800,20 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                       className={cn(
                         'text-sm font-bold tabular-nums',
                         isTop
-                          ? 'text-emerald-600'
+                          ? 'text-primary'
                           : rowConv >= 0.02
-                            ? 'text-indigo-600'
-                            : 'text-slate-600'
+                            ? 'text-primary'
+                            : 'text-muted-foreground'
                       )}
                     >
                       {pct(r.converted, r.sent)}%
                     </span>
                   </TableCell>
-                  <TableCell className='text-right text-xs text-slate-600 tabular-nums'>
+                  <TableCell className='text-muted-foreground text-right text-xs tabular-nums'>
                     {fmtNum(r.converted)}
                   </TableCell>
                   {hasRevenue && (
-                    <TableCell className='text-right text-xs text-slate-600 tabular-nums'>
+                    <TableCell className='text-muted-foreground text-right text-xs tabular-nums'>
                       {r.revenue !== undefined && r.converted > 0
                         ? fmtMoney(Math.round(r.revenue / r.converted))
                         : '—'}
@@ -811,7 +822,7 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                   {hasRevenue && (
                     <TableCell
                       className={cn(
-                        'text-right text-xs font-medium text-slate-600 tabular-nums',
+                        'text-muted-foreground text-right text-xs font-medium tabular-nums',
                         !hasSegments && 'pr-4'
                       )}
                     >
@@ -825,8 +836,8 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                           className={cn(
                             'inline-flex size-6 items-center justify-center rounded-md transition-colors',
                             isExpanded
-                              ? 'bg-indigo-100 text-indigo-600'
-                              : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                              ? 'bg-primary/15 text-primary'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                           )}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -845,7 +856,7 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                   )}
                 </TableRow>
                 {isExpanded && (
-                  <TableRow className='bg-slate-50/60 hover:bg-slate-50/60'>
+                  <TableRow className='bg-muted/50 hover:bg-muted/50'>
                     <TableCell colSpan={colCount} className='p-0'>
                       <CashbackDetailPanel row={r} />
                     </TableCell>
@@ -869,7 +880,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
   return (
     <div>
       <div className='mb-3'>
-        <p className='text-sm font-semibold text-slate-800'>
+        <p className='text-foreground text-sm font-semibold'>
           Ефективність каналів
         </p>
         <p className='text-muted-foreground text-xs'>
@@ -895,13 +906,13 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
               className={cn(
                 'relative rounded-xl border p-4 transition-all',
                 isTop
-                  ? 'border-emerald-300 bg-emerald-50/50'
-                  : 'border-slate-200 bg-white'
+                  ? 'border-primary/40 bg-primary/10'
+                  : 'border-border bg-card'
               )}
             >
               {isTop && (
                 <div className='absolute top-3 right-3'>
-                  <IconTrophy className='size-4 text-amber-400' />
+                  <IconTrophy className='text-primary size-4' />
                 </div>
               )}
 
@@ -911,8 +922,8 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                   className={cn(
                     'rounded-full px-1.5 py-0.5 text-[10px] font-bold',
                     isTop
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-slate-100 text-slate-500'
+                      ? 'bg-primary/15 text-primary'
+                      : 'bg-muted text-muted-foreground'
                   )}
                 >
                   #{idx + 1}
@@ -926,23 +937,23 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                   {CHANNEL_ICON_LG[s.channel] ?? CHANNEL_ICON_LG['Інше']}
                   {s.channel}
                 </span>
-                <span className='text-xs text-slate-400'>
+                <span className='text-muted-foreground text-xs'>
                   {s.campaigns} кампаній
                 </span>
               </div>
 
               {/* Hero: Зробили покупку */}
               <div className='mb-3'>
-                <p className='text-xs text-slate-400'>Зробили покупку</p>
+                <p className='text-muted-foreground text-xs'>Зробили покупку</p>
                 <p
                   className={cn(
                     'text-3xl leading-none font-black tabular-nums',
-                    isTop ? 'text-emerald-600' : 'text-slate-800'
+                    isTop ? 'text-primary' : 'text-foreground'
                   )}
                 >
                   {s.overallConv}%
                 </p>
-                <p className='mt-0.5 text-xs text-slate-400'>
+                <p className='text-muted-foreground mt-0.5 text-xs'>
                   {fmtNum(s.converted)} з {fmtNum(s.sent)} отримали повідомлення
                 </p>
               </div>
@@ -950,34 +961,34 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
               {/* Lift */}
               {s.hasLift && (
                 <>
-                  <div className='mb-2 rounded-lg bg-emerald-50 px-2.5 py-2.5'>
-                    <p className='text-[10px] text-slate-400'>
+                  <div className='bg-primary/10 mb-2 rounded-lg px-2.5 py-2'>
+                    <p className='text-muted-foreground text-[10px]'>
                       Приріст обороту на учасника
                     </p>
                     <p
                       className={cn(
                         'text-lg font-black tabular-nums',
                         s.liftPerUser > 0
-                          ? 'text-emerald-700'
-                          : 'text-slate-500'
+                          ? 'text-primary'
+                          : 'text-muted-foreground'
                       )}
                     >
                       +{fmtNum(s.liftPerUser)} ₴/міс
                     </p>
-                    <p className='mt-0.5 text-[10px] text-slate-400'>
+                    <p className='text-muted-foreground mt-0.5 text-[10px]'>
                       {fmtNum(s.avgSpendWithComm)} ₴ з комунікацією ·{' '}
                       {fmtNum(s.avgSpendControl)} ₴ без
                     </p>
                   </div>
 
-                  <div className='mb-3 rounded-lg bg-indigo-50 px-2.5 py-2'>
-                    <p className='text-[10px] text-slate-400'>
+                  <div className='bg-primary/10 mb-3 rounded-lg px-2.5 py-2'>
+                    <p className='text-muted-foreground text-[10px]'>
                       Загальний приріст обороту
                     </p>
-                    <p className='text-sm font-bold text-indigo-700 tabular-nums'>
+                    <p className='text-primary text-sm font-bold tabular-nums'>
                       {fmtMoney(s.totalLift)}
                     </p>
-                    <p className='mt-0.5 text-[10px] text-slate-400'>
+                    <p className='text-muted-foreground mt-0.5 text-[10px]'>
                       по {fmtNum(s.converted)} учасниках
                     </p>
                   </div>
@@ -985,9 +996,11 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
               )}
 
               {/* Best campaign */}
-              <div className='border-t border-slate-100 pt-2'>
-                <p className='text-[10px] text-slate-400'>Топ-кампанія</p>
-                <p className='mt-0.5 truncate text-xs font-medium text-slate-600'>
+              <div className='border-border/50 border-t pt-2'>
+                <p className='text-muted-foreground text-[10px]'>
+                  Топ-кампанія
+                </p>
+                <p className='text-muted-foreground mt-0.5 truncate text-xs font-medium'>
                   {s.bestCampaign}
                 </p>
               </div>
@@ -996,7 +1009,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
         })}
       </div>
 
-      <p className='mt-2 text-[11px] text-slate-400'>
+      <p className='text-muted-foreground mt-2 text-[11px]'>
         * Приріст обороту — порівняння середнього місячного обороту тих, хто
         отримав повідомлення, з клієнтами без будь-яких комунікацій і кешбеків
       </p>
@@ -1030,10 +1043,10 @@ function BatchCard({
       className={cn(
         'cursor-pointer rounded-xl border transition-all',
         expanded
-          ? 'border-indigo-400 ring-2 ring-indigo-300 ring-offset-1'
+          ? 'border-primary ring-primary/30 ring-2 ring-offset-1'
           : selected
-            ? 'border-indigo-300 bg-indigo-50/60 ring-2 ring-indigo-400 ring-offset-1'
-            : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
+            ? 'border-primary/50 bg-primary/10 ring-primary/30 ring-2 ring-offset-1'
+            : 'border-border bg-card hover:border-border/60 hover:shadow-sm'
       )}
     >
       <div className='p-4'>
@@ -1047,26 +1060,26 @@ function BatchCard({
               />
             </div>
             <div className='min-w-0'>
-              <p className='truncate text-sm font-semibold text-slate-800'>
+              <p className='text-foreground truncate text-sm font-semibold'>
                 {batch.name}
               </p>
-              <p className='mt-0.5 text-xs text-slate-400'>
+              <p className='text-muted-foreground mt-0.5 text-xs'>
                 {batch.uploadedAt}
               </p>
             </div>
           </div>
           <div className='flex items-center gap-1'>
             {expanded ? (
-              <IconChevronUp className='size-3.5 text-indigo-400' />
+              <IconChevronUp className='text-primary size-3.5' />
             ) : (
-              <IconChevronDown className='size-3.5 text-slate-300' />
+              <IconChevronDown className='text-muted-foreground/40 size-3.5' />
             )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete();
               }}
-              className='shrink-0 rounded p-1 text-slate-300 transition-colors hover:bg-red-50 hover:text-red-500'
+              className='text-muted-foreground/40 hover:bg-destructive/10 hover:text-destructive shrink-0 rounded p-1 transition-colors'
             >
               <IconTrash className='size-3.5' />
             </button>
@@ -1074,22 +1087,22 @@ function BatchCard({
         </div>
 
         <div className='mb-3 grid grid-cols-2 gap-2'>
-          <div className='rounded-lg bg-slate-50 px-3 py-2'>
-            <p className='text-xs text-slate-400'>Надіслано</p>
-            <p className='text-base font-bold text-slate-700 tabular-nums'>
+          <div className='bg-muted rounded-lg px-3 py-2'>
+            <p className='text-muted-foreground text-xs'>Надіслано</p>
+            <p className='text-foreground text-base font-bold tabular-nums'>
               {fmtNum(s.sent)}
             </p>
           </div>
-          <div className='rounded-lg bg-indigo-50 px-3 py-2'>
-            <p className='text-xs text-slate-400'>Зробили покупку</p>
+          <div className='bg-primary/10 rounded-lg px-3 py-2'>
+            <p className='text-muted-foreground text-xs'>Зробили покупку</p>
             <p
               className={cn(
                 'text-base font-bold tabular-nums',
                 overallConv >= 3
-                  ? 'text-emerald-600'
+                  ? 'text-primary'
                   : overallConv >= 1.5
-                    ? 'text-amber-600'
-                    : 'text-red-500'
+                    ? 'text-muted-foreground'
+                    : 'text-destructive'
               )}
             >
               {overallConv}%
@@ -1098,11 +1111,11 @@ function BatchCard({
         </div>
 
         {s.revenue > 0 && (
-          <div className='mb-3 rounded-lg bg-emerald-50 px-3 py-2'>
-            <p className='text-xs text-slate-400'>
+          <div className='bg-primary/10 mb-3 rounded-lg px-3 py-2'>
+            <p className='text-muted-foreground text-xs'>
               Згенеровані оберти по покупках
             </p>
-            <p className='text-base font-bold text-emerald-700 tabular-nums'>
+            <p className='text-primary text-base font-bold tabular-nums'>
               {fmtMoney(s.revenue)}
             </p>
           </div>
@@ -1115,19 +1128,19 @@ function BatchCard({
             { label: 'Переходи', val: pct(s.clicked, s.opened), ref: 20 }
           ].map((m) => (
             <div key={m.label} className='flex items-center gap-2'>
-              <span className='w-16 shrink-0 text-xs text-slate-400'>
+              <span className='text-muted-foreground w-16 shrink-0 text-xs'>
                 {m.label}
               </span>
-              <div className='h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100'>
+              <div className='bg-muted h-1.5 flex-1 overflow-hidden rounded-full'>
                 <div
                   className={cn(
                     'h-full rounded-full transition-all',
-                    m.val >= m.ref ? 'bg-emerald-400' : 'bg-amber-400'
+                    m.val >= m.ref ? 'bg-primary' : 'bg-muted-foreground/40'
                   )}
                   style={{ width: `${Math.min(m.val, 100)}%` }}
                 />
               </div>
-              <span className='w-8 shrink-0 text-right text-xs font-medium text-slate-600 tabular-nums'>
+              <span className='text-muted-foreground w-8 shrink-0 text-right text-xs font-medium tabular-nums'>
                 {m.val}%
               </span>
             </div>
@@ -1147,7 +1160,7 @@ function BatchCard({
               {ch}
             </span>
           ))}
-          <span className='inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs text-slate-500'>
+          <span className='border-border bg-muted text-muted-foreground inline-flex items-center rounded-full border px-2 py-0.5 text-xs'>
             {batch.rows.length} кампаній
           </span>
         </div>
@@ -1223,7 +1236,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
   ];
 
   return (
-    <div className='overflow-x-auto rounded-xl border border-slate-200'>
+    <div className='border-border overflow-x-auto rounded-xl border'>
       <Table>
         <TableHeader>
           <TableRow>
@@ -1262,7 +1275,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
                     <span
                       className={cn(
                         'inline-flex items-center justify-end gap-1 text-sm font-semibold tabular-nums',
-                        isBest ? 'text-emerald-600' : 'text-slate-700'
+                        isBest ? 'text-primary' : 'text-foreground'
                       )}
                     >
                       {isBest && <IconCheck className='size-3' />}
@@ -1349,7 +1362,7 @@ function FormatCard() {
             {columns.map((c) => (
               <TableRow key={c.col}>
                 <TableCell className='pl-6'>
-                  <code className='rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs text-slate-700'>
+                  <code className='bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-xs'>
                     {c.col}
                   </code>
                 </TableCell>
@@ -1361,24 +1374,22 @@ function FormatCard() {
                 </TableCell>
                 <TableCell className='pr-6 text-right'>
                   {c.required ? (
-                    <span className='text-xs font-medium text-emerald-600'>
-                      ✓
-                    </span>
+                    <span className='text-primary text-xs font-medium'>✓</span>
                   ) : (
-                    <span className='text-xs text-slate-300'>—</span>
+                    <span className='text-muted-foreground/40 text-xs'>—</span>
                   )}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        <div className='flex items-start gap-2 border-t border-slate-100 px-6 py-3'>
-          <IconInfoCircle className='mt-0.5 size-3.5 shrink-0 text-slate-400' />
-          <p className='text-xs text-slate-400'>
+        <div className='border-border/50 flex items-start gap-2 border-t px-6 py-3'>
+          <IconInfoCircle className='text-muted-foreground mt-0.5 size-3.5 shrink-0' />
+          <p className='text-muted-foreground text-xs'>
             Один рядок = один клієнт. <strong>customer_id</strong> — унікальний
             ідентифікатор клієнта; <strong>campaign_id</strong> — унікальний
             ідентифікатор маркетингової кампанії (обовʼязково).{' '}
-            <strong>sent</strong> — дата надсилання (обов'язково);{' '}
+            <strong>sent</strong> — дата надсилання (обов&apos;язково);{' '}
             <strong>delivered</strong>, <strong>opened</strong>,{' '}
             <strong>clicked</strong> — дати подій (порожньо, якщо не відбулось).
             Значення каналу: <strong>Email</strong>, <strong>SMS</strong>,{' '}
@@ -1418,18 +1429,18 @@ function UploadCard({ onUpload }: { onUpload: () => void }) {
           className={cn(
             'flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-10 transition-all',
             dragging
-              ? 'border-indigo-400 bg-indigo-50'
-              : 'border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50/40'
+              ? 'border-primary bg-primary/10'
+              : 'border-border bg-muted hover:border-primary/50 hover:bg-primary/10'
           )}
           onClick={onUpload}
         >
-          <div className='mb-3 flex size-12 items-center justify-center rounded-full bg-indigo-100'>
-            <IconUpload className='size-6 text-indigo-500' />
+          <div className='bg-primary/15 mb-3 flex size-12 items-center justify-center rounded-full'>
+            <IconUpload className='text-primary size-6' />
           </div>
-          <p className='text-sm font-medium text-slate-700'>
+          <p className='text-foreground text-sm font-medium'>
             Перетягніть CSV сюди
           </p>
-          <p className='mt-1 text-xs text-slate-400'>
+          <p className='text-muted-foreground mt-1 text-xs'>
             або натисніть для вибору
           </p>
           <Badge variant='outline' className='mt-3 text-xs'>
@@ -1443,9 +1454,9 @@ function UploadCard({ onUpload }: { onUpload: () => void }) {
             { label: 'Рядків', value: 'Без обмежень' },
             { label: 'Формат', value: 'CSV (UTF-8)' }
           ].map((item) => (
-            <div key={item.label} className='rounded-lg bg-slate-50 px-2 py-2'>
-              <p className='text-[10px] text-slate-400'>{item.label}</p>
-              <p className='mt-0.5 text-xs font-medium text-slate-600'>
+            <div key={item.label} className='bg-muted rounded-lg px-2 py-2'>
+              <p className='text-muted-foreground text-[10px]'>{item.label}</p>
+              <p className='text-foreground mt-0.5 text-xs font-medium'>
                 {item.value}
               </p>
             </div>
@@ -1533,7 +1544,7 @@ export default function CommunicationsPage() {
         <div>
           <div className='mb-3 flex items-center justify-between gap-2'>
             <div>
-              <p className='text-sm font-semibold text-slate-800'>
+              <p className='text-foreground text-sm font-semibold'>
                 Завантажені кампанії
               </p>
               <p className='text-muted-foreground text-xs'>
@@ -1548,12 +1559,12 @@ export default function CommunicationsPage() {
             )}
           </div>
           {batches.length === 0 ? (
-            <div className='flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-16 text-center'>
-              <IconMailForward className='mb-3 size-10 text-slate-300' />
-              <p className='text-sm font-medium text-slate-500'>
+            <div className='border-border flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-16 text-center'>
+              <IconMailForward className='text-muted-foreground/40 mb-3 size-10' />
+              <p className='text-muted-foreground text-sm font-medium'>
                 Немає завантажених даних
               </p>
-              <p className='mt-1 text-xs text-slate-400'>
+              <p className='text-muted-foreground mt-1 text-xs'>
                 Завантажте перший CSV-файл щоб розпочати
               </p>
             </div>
@@ -1578,10 +1589,10 @@ export default function CommunicationsPage() {
                   const b = batches.find((x) => x.id === expandedBatchId);
                   if (!b) return null;
                   return (
-                    <div className='mt-3 overflow-hidden rounded-xl border border-indigo-200 bg-white'>
-                      <div className='flex items-center justify-between border-b border-slate-100 px-4 py-3'>
+                    <div className='border-primary/30 bg-card mt-3 overflow-hidden rounded-xl border'>
+                      <div className='border-border/50 flex items-center justify-between border-b px-4 py-3'>
                         <div>
-                          <p className='text-sm font-semibold text-slate-800'>
+                          <p className='text-foreground text-sm font-semibold'>
                             {b.name}
                           </p>
                           <p className='text-muted-foreground text-xs'>
@@ -1590,7 +1601,7 @@ export default function CommunicationsPage() {
                         </div>
                         <button
                           onClick={() => setExpandedBatchId(null)}
-                          className='rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600'
+                          className='text-muted-foreground hover:bg-muted hover:text-foreground rounded p-1 transition-colors'
                         >
                           <IconChevronUp className='size-4' />
                         </button>
@@ -1607,11 +1618,11 @@ export default function CommunicationsPage() {
         {canCompare && (
           <div className='space-y-4'>
             <div className='flex items-center gap-3'>
-              <div className='h-px flex-1 bg-slate-200' />
-              <p className='shrink-0 text-xs font-semibold tracking-widest text-slate-500 uppercase'>
+              <div className='bg-border h-px flex-1' />
+              <p className='text-muted-foreground shrink-0 text-xs font-semibold tracking-widest uppercase'>
                 Порівняння {selectedBatches.length} завантажень
               </p>
-              <div className='h-px flex-1 bg-slate-200' />
+              <div className='bg-border h-px flex-1' />
             </div>
 
             <ComparisonTable batches={selectedBatches} />
@@ -1673,23 +1684,23 @@ export default function CommunicationsPage() {
                             ].map((m) => (
                               <div
                                 key={m.label}
-                                className='rounded-lg bg-slate-50 px-2.5 py-2 text-center'
+                                className='bg-muted rounded-lg px-2.5 py-2 text-center'
                               >
-                                <p className='text-xs font-bold text-indigo-600 tabular-nums'>
+                                <p className='text-primary text-xs font-bold tabular-nums'>
                                   {m.val}%
                                 </p>
-                                <p className='mt-0.5 text-[10px] text-slate-500'>
+                                <p className='text-muted-foreground mt-0.5 text-[10px]'>
                                   {m.label}
                                 </p>
                               </div>
                             ))}
                           </div>
                           {s.revenue > 0 && (
-                            <div className='mt-2 rounded-lg bg-emerald-50 px-2.5 py-2 text-center'>
-                              <p className='text-xs font-bold text-emerald-700 tabular-nums'>
+                            <div className='bg-primary/10 mt-2 rounded-lg px-2.5 py-2 text-center'>
+                              <p className='text-primary text-xs font-bold tabular-nums'>
                                 {fmtMoney(s.revenue)}
                               </p>
-                              <p className='mt-0.5 text-[10px] text-slate-500'>
+                              <p className='text-muted-foreground mt-0.5 text-[10px]'>
                                 Згенеровані оберти
                               </p>
                             </div>
@@ -1705,7 +1716,7 @@ export default function CommunicationsPage() {
         )}
 
         {!canCompare && selectedIds.length === 1 && (
-          <div className='flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-700'>
+          <div className='border-primary/30 bg-primary/10 text-primary flex items-center gap-2 rounded-lg border px-4 py-3 text-sm'>
             <IconInfoCircle className='size-4 shrink-0' />
             Оберіть ще одне завантаження для порівняння
           </div>

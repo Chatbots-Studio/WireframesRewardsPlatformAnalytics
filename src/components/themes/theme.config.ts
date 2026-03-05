@@ -28,5 +28,9 @@ export const THEMES = [
   {
     name: 'Notebook',
     value: 'notebook'
+  },
+  {
+    name: '42Flows',
+    value: '42flows'
   }
 ];

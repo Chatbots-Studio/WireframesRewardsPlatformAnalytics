@@ -28,5 +28,18 @@ export const navItems: NavItem[] = [
     isActive: false,
     shortcut: ['c', 'c'],
     items: []
+  },
+  {
+    title: 'Звіти',
+    url: '/dashboard/reports/quick-cashback-refund',
+    icon: 'reports',
+    isActive: false,
+    shortcut: ['z', 'v'],
+    items: [
+      {
+        title: 'Швидкий вивід + повернення',
+        url: '/dashboard/reports/quick-cashback-refund'
+      }
+    ]
   }
 ];

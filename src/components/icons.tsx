@@ -87,5 +87,6 @@ export const Icons = {
   cashback: IconGift,
   abtest: IconTestPipe,
   exec: IconPresentation,
-  communications: IconMailForward
+  communications: IconMailForward,
+  reports: IconFileText
 };

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PageContainer from '@/components/layout/page-container';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -32,6 +33,8 @@ import {
   IconCircleX,
   IconArrowUpRight,
   IconArrowDownRight,
+  IconCheck,
+  IconX,
   IconEye,
   IconClick,
   IconCreditCard,
@@ -39,15 +42,6 @@ import {
 } from '@tabler/icons-react';
 
 // ─── Palette ────────────────────────────────────────────────
-const C = {
-  default: '#6366f1',
-  partner: '#8b5cf6',
-  personal: '#10b981',
-  danger: '#ef4444',
-  warn: '#f59e0b',
-  ok: '#10b981',
-  control: '#94a3b8'
-};
 
 // ─── Types ──────────────────────────────────────────────────
 type Status = 'ok' | 'warn' | 'critical';
@@ -213,25 +207,25 @@ const typeVariant: Record<CashbackType, 'secondary' | 'outline' | 'default'> = {
   personal: 'default'
 };
 const typeColor: Record<CashbackType, string> = {
-  default: C.default,
-  partner: C.partner,
-  personal: C.personal
+  default: 'var(--chart-primary)',
+  partner: 'var(--chart-2)',
+  personal: 'var(--chart-3)'
 };
 
 const statusIcon = {
-  ok: <IconCircleCheck className='size-4 shrink-0 text-emerald-500' />,
-  warn: <IconAlertTriangle className='size-4 shrink-0 text-amber-500' />,
-  critical: <IconCircleX className='size-4 shrink-0 text-red-500' />
+  ok: <IconCircleCheck className='text-primary size-4 shrink-0' />,
+  warn: <IconAlertTriangle className='text-muted-foreground size-4 shrink-0' />,
+  critical: <IconCircleX className='text-destructive size-4 shrink-0' />
 };
 const statusBg = {
-  ok: 'bg-emerald-50 border-emerald-200',
-  warn: 'bg-amber-50 border-amber-200',
-  critical: 'bg-red-50 border-red-200'
+  ok: 'bg-primary/10 border-primary/30',
+  warn: 'bg-muted border-border',
+  critical: 'bg-destructive/10 border-destructive/30'
 };
 const statusText = {
-  ok: 'text-emerald-700',
-  warn: 'text-amber-700',
-  critical: 'text-red-700'
+  ok: 'text-primary',
+  warn: 'text-muted-foreground',
+  critical: 'text-destructive'
 };
 
 // ─── SVG Funnel ─────────────────────────────────────────────
@@ -248,7 +242,12 @@ function SvgFunnel({ cat }: { cat: Category }) {
     <svg
       viewBox={`0 0 ${W} ${H}`}
       width='100%'
-      style={{ maxWidth: W, display: 'block', margin: '0 auto' }}
+      style={{
+        maxWidth: W,
+        display: 'block',
+        margin: '0 auto',
+        fontFamily: 'var(--font-sans)'
+      }}
     >
       {steps.map((step, i) => {
         const pct = step.value / maxVal;
@@ -272,8 +271,9 @@ function SvgFunnel({ cat }: { cat: Category }) {
           <g key={i}>
             <path
               d={path}
-              fill={isFinalBad ? '#fef2f2' : '#f8faff'}
-              stroke={isFinalBad ? C.danger : color}
+              fill={isFinalBad ? 'var(--destructive)' : 'var(--card)'}
+              fillOpacity={isFinalBad ? 0.1 : 1}
+              stroke={isFinalBad ? 'var(--destructive)' : color}
               strokeWidth={isFinalBad ? 2 : 1.5}
               opacity={0.95}
             />
@@ -283,7 +283,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
               y={y + 20}
               textAnchor='middle'
               fontSize={11}
-              fill='#475569'
+              fill='var(--foreground)'
               fontWeight={500}
             >
               {step.label}
@@ -305,7 +305,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
               y={y + 52}
               textAnchor='middle'
               fontSize={10}
-              fill='#94a3b8'
+              fill='var(--muted-foreground)'
             >
               {Math.round(pct * 100)}% від початку
             </text>
@@ -318,7 +318,8 @@ function SvgFunnel({ cat }: { cat: Category }) {
                   width={82}
                   height={16}
                   rx={3}
-                  fill={dropPct > 25 ? '#fee2e2' : '#f1f5f9'}
+                  fill={dropPct > 25 ? 'var(--destructive)' : 'var(--muted)'}
+                  fillOpacity={dropPct > 25 ? 0.1 : 1}
                 />
                 <text
                   x={W - 47}
@@ -326,7 +327,11 @@ function SvgFunnel({ cat }: { cat: Category }) {
                   textAnchor='middle'
                   fontSize={10}
                   fontWeight={600}
-                  fill={dropPct > 25 ? C.danger : '#64748b'}
+                  fill={
+                    dropPct > 25
+                      ? 'var(--destructive)'
+                      : 'var(--muted-foreground)'
+                  }
                 >
                   -{dropPct}% відвалилось
                 </text>
@@ -354,15 +359,17 @@ function HealthCard({
   return (
     <button
       onClick={onClick}
-      className={`w-full rounded-lg border p-3 text-left transition-all hover:shadow-md ${
-        selected ? 'ring-2 ring-indigo-500 ring-offset-1' : ''
-      } ${statusBg[status]}`}
+      className={cn(
+        'w-full rounded-lg border p-3 text-left transition-all hover:shadow-sm',
+        statusBg[status],
+        selected && 'ring-primary ring-2 ring-offset-1'
+      )}
     >
       <div className='flex items-start justify-between gap-2'>
         <div className='flex min-w-0 items-start gap-2'>
           {statusIcon[status]}
           <div className='min-w-0'>
-            <p className='truncate text-sm leading-tight font-semibold text-slate-800'>
+            <p className='text-foreground truncate text-sm leading-tight font-semibold'>
               {cat.name}
             </p>
             <Badge
@@ -380,23 +387,23 @@ function HealthCard({
             {cat.convRate}%
           </p>
           <p
-            className={`text-xs font-medium ${diff >= 0 ? 'text-emerald-600' : 'text-red-500'}`}
+            className={`text-xs font-medium ${diff >= 0 ? 'text-primary' : 'text-destructive'}`}
           >
             {diff >= 0 ? '+' : ''}
             {diff}pp vs ціль
           </p>
         </div>
       </div>
-      <div className='mt-2 flex items-center gap-1 text-xs text-slate-400'>
+      <div className='text-muted-foreground mt-2 flex items-center gap-1 text-xs'>
         {cat.trend !== 0 && (
           <>
             {cat.trend > 0 ? (
-              <IconArrowUpRight className='size-3 text-emerald-500' />
+              <IconArrowUpRight className='text-primary size-3' />
             ) : (
-              <IconArrowDownRight className='size-3 text-red-500' />
+              <IconArrowDownRight className='text-destructive size-3' />
             )}
             <span
-              className={cat.trend > 0 ? 'text-emerald-600' : 'text-red-500'}
+              className={cat.trend > 0 ? 'text-primary' : 'text-destructive'}
             >
               {cat.trend > 0 ? '+' : ''}
               {cat.trend}pp
@@ -465,7 +472,7 @@ export default function ProductDashboard() {
 
   return (
     <PageContainer>
-      <div className='flex flex-1 flex-col space-y-5'>
+      <div className='flex flex-1 flex-col space-y-6'>
         {/* ── Header ── */}
         <div className='flex flex-wrap items-start justify-between gap-4'>
           <div>
@@ -530,33 +537,34 @@ export default function ProductDashboard() {
               {/* Пункт «Всі» — зведена воронка */}
               <button
                 onClick={() => setSelectedId('all')}
-                className={`w-full rounded-lg border p-3 text-left transition-all hover:shadow-md ${
+                className={cn(
+                  'w-full rounded-lg border p-3 text-left transition-all hover:shadow-sm',
                   isAll
-                    ? 'border-indigo-200 bg-indigo-50 ring-2 ring-indigo-500 ring-offset-1'
-                    : 'border-slate-200 bg-slate-50'
-                }`}
+                    ? 'border-primary/30 bg-primary/10 ring-primary ring-2 ring-offset-1'
+                    : 'border-primary/20 bg-primary/5'
+                )}
               >
                 <div className='flex items-center justify-between gap-2'>
                   <div className='flex min-w-0 items-center gap-2'>
-                    <div className='flex size-4 shrink-0 items-center justify-center rounded-full bg-indigo-500'>
-                      <span className='text-[8px] leading-none font-black text-white'>
+                    <div className='bg-primary flex size-4 shrink-0 items-center justify-center rounded-full'>
+                      <span className='text-primary-foreground text-[10px] leading-none font-black'>
                         ∑
                       </span>
                     </div>
                     <div className='min-w-0'>
-                      <p className='text-sm leading-tight font-semibold text-slate-800'>
+                      <p className='text-foreground text-sm leading-tight font-semibold'>
                         Всі категорії та пропозиції
                       </p>
-                      <p className='mt-0.5 text-xs text-slate-400'>
+                      <p className='text-muted-foreground mt-0.5 text-xs'>
                         {filtered.length} категорій · зведена воронка
                       </p>
                     </div>
                   </div>
                   <div className='shrink-0 text-right'>
-                    <p className='text-lg font-black text-indigo-600 tabular-nums'>
+                    <p className='text-primary text-lg font-black tabular-nums'>
                       {avgConv}%
                     </p>
-                    <p className='text-xs text-slate-400'>заг. конв.</p>
+                    <p className='text-muted-foreground text-xs'>заг. конв.</p>
                   </div>
                 </div>
               </button>
@@ -574,7 +582,14 @@ export default function ProductDashboard() {
 
           {/* Воронка вибраної категорії */}
           <Card
-            className={`lg:col-span-3 ${!isAll && status === 'critical' ? 'ring-2 ring-red-400 ring-offset-2' : !isAll && status === 'warn' ? 'ring-1 ring-amber-300' : isAll ? 'ring-1 ring-indigo-200' : ''}`}
+            className={cn(
+              'lg:col-span-3',
+              !isAll &&
+                status === 'critical' &&
+                'ring-destructive ring-2 ring-offset-2',
+              !isAll && status === 'warn' && 'ring-border ring-1',
+              isAll && 'ring-primary/30 ring-1'
+            )}
           >
             <CardHeader className='pb-2'>
               <div className='flex items-start justify-between gap-2'>
@@ -601,7 +616,7 @@ export default function ProductDashboard() {
                 </div>
                 <div className='shrink-0 text-right'>
                   <p
-                    className={`text-2xl font-black tabular-nums ${isAll ? 'text-indigo-600' : statusText[status]}`}
+                    className={`text-2xl font-black tabular-nums ${isAll ? 'text-primary' : statusText[status]}`}
                   >
                     {selectedCat.convRate}%
                   </p>
@@ -646,18 +661,33 @@ export default function ProductDashboard() {
                   return (
                     <div
                       key={i}
-                      className={`rounded-lg px-3 py-2 text-center ${ok ? 'bg-emerald-50' : 'bg-red-50'}`}
+                      className={cn(
+                        'rounded-lg border px-3 py-2 text-center',
+                        ok
+                          ? 'border-primary/30 bg-primary/10'
+                          : 'border-destructive/30 bg-destructive/10'
+                      )}
                     >
                       <p
-                        className={`text-xl font-bold tabular-nums ${ok ? 'text-emerald-700' : 'text-red-600'}`}
+                        className={`text-xl font-bold tabular-nums ${ok ? 'text-primary' : 'text-destructive'}`}
                       >
                         {m.val}%
                       </p>
-                      <p className='mt-0.5 text-xs text-slate-500'>{m.label}</p>
+                      <p className='text-muted-foreground mt-0.5 text-xs'>
+                        {m.label}
+                      </p>
                       <p
-                        className={`mt-0.5 text-xs font-medium ${ok ? 'text-emerald-600' : 'text-red-500'}`}
+                        className={cn(
+                          'mt-0.5 flex items-center justify-center gap-0.5 text-xs font-medium',
+                          ok ? 'text-primary' : 'text-destructive'
+                        )}
                       >
-                        ціль {m.ref}% {ok ? '✓' : '✗'}
+                        ціль {m.ref}%{' '}
+                        {ok ? (
+                          <IconCheck className='size-3' />
+                        ) : (
+                          <IconX className='size-3' />
+                        )}
                       </p>
                     </div>
                   );
@@ -670,8 +700,8 @@ export default function ProductDashboard() {
                 <div
                   className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-xs ${
                     status === 'critical'
-                      ? 'bg-red-50 text-red-700'
-                      : 'bg-amber-50 text-amber-700'
+                      ? 'bg-destructive/10 text-destructive'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   {status === 'critical' ? (
@@ -726,13 +756,13 @@ export default function ProductDashboard() {
                   return (
                     <TableRow
                       key={cat.id}
-                      className={`hover:bg-muted/50 cursor-pointer transition-colors ${
-                        s === 'critical'
-                          ? 'bg-red-50/60'
-                          : s === 'warn'
-                            ? 'bg-amber-50/40'
-                            : ''
-                      } ${selectedId === cat.id ? 'ring-1 ring-indigo-300 ring-inset' : ''}`}
+                      className={cn(
+                        'hover:bg-muted/50 cursor-pointer transition-colors',
+                        s === 'critical' && 'bg-destructive/5',
+                        s === 'warn' && 'bg-muted/50',
+                        selectedId === cat.id &&
+                          'ring-primary/30 ring-1 ring-inset'
+                      )}
                       onClick={() => setSelectedId(cat.id)}
                     >
                       <TableCell>
@@ -771,10 +801,10 @@ export default function ProductDashboard() {
                         <span
                           className={`text-sm font-bold ${
                             s === 'critical'
-                              ? 'text-red-600'
+                              ? 'text-destructive'
                               : s === 'warn'
-                                ? 'text-amber-600'
-                                : 'text-emerald-600'
+                                ? 'text-muted-foreground'
+                                : 'text-primary'
                           }`}
                         >
                           {cat.convRate}%
@@ -785,7 +815,7 @@ export default function ProductDashboard() {
                       </TableCell>
                       <TableCell className='text-right'>
                         <span
-                          className={`text-sm font-semibold ${diff >= 0 ? 'text-emerald-600' : 'text-red-500'}`}
+                          className={`text-sm font-semibold ${diff >= 0 ? 'text-primary' : 'text-destructive'}`}
                         >
                           {diff >= 0 ? '+' : ''}
                           {diff}pp
@@ -795,10 +825,10 @@ export default function ProductDashboard() {
                         <span
                           className={`flex items-center justify-end gap-0.5 text-sm font-medium ${
                             cat.trend > 0
-                              ? 'text-emerald-600'
+                              ? 'text-primary'
                               : cat.trend < 0
-                                ? 'text-red-500'
-                                : 'text-slate-400'
+                                ? 'text-destructive'
+                                : 'text-muted-foreground'
                           }`}
                         >
                           {cat.trend > 0 && (
