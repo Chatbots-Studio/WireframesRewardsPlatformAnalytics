@@ -215,17 +215,17 @@ const typeColor: Record<CashbackType, string> = {
 const statusIcon = {
   ok: <IconCircleCheck className='text-primary size-4 shrink-0' />,
   warn: <IconAlertTriangle className='text-muted-foreground size-4 shrink-0' />,
-  critical: <IconCircleX className='text-destructive size-4 shrink-0' />
+  critical: <IconCircleX className='text-muted-foreground size-4 shrink-0' />
 };
 const statusBg = {
   ok: 'bg-primary/10 border-primary/30',
   warn: 'bg-muted border-border',
-  critical: 'bg-destructive/10 border-destructive/30'
+  critical: 'bg-muted border-border'
 };
 const statusText = {
   ok: 'text-primary',
   warn: 'text-muted-foreground',
-  critical: 'text-destructive'
+  critical: 'text-muted-foreground'
 };
 
 // ─── SVG Funnel ─────────────────────────────────────────────
@@ -387,7 +387,7 @@ function HealthCard({
             {cat.convRate}%
           </p>
           <p
-            className={`text-xs font-medium ${diff >= 0 ? 'text-primary' : 'text-destructive'}`}
+            className={`text-xs font-medium ${diff >= 0 ? 'text-primary' : 'text-muted-foreground'}`}
           >
             {diff >= 0 ? '+' : ''}
             {diff}pp vs ціль
@@ -400,10 +400,12 @@ function HealthCard({
             {cat.trend > 0 ? (
               <IconArrowUpRight className='text-primary size-3' />
             ) : (
-              <IconArrowDownRight className='text-destructive size-3' />
+              <IconArrowDownRight className='text-muted-foreground size-3' />
             )}
             <span
-              className={cat.trend > 0 ? 'text-primary' : 'text-destructive'}
+              className={
+                cat.trend > 0 ? 'text-primary' : 'text-muted-foreground'
+              }
             >
               {cat.trend > 0 ? '+' : ''}
               {cat.trend}pp
@@ -665,11 +667,11 @@ export default function ProductDashboard() {
                         'rounded-lg border px-3 py-2 text-center',
                         ok
                           ? 'border-primary/30 bg-primary/10'
-                          : 'border-destructive/30 bg-destructive/10'
+                          : 'border-border bg-muted'
                       )}
                     >
                       <p
-                        className={`text-xl font-bold tabular-nums ${ok ? 'text-primary' : 'text-destructive'}`}
+                        className={`text-xl font-bold tabular-nums ${ok ? 'text-primary' : 'text-muted-foreground'}`}
                       >
                         {m.val}%
                       </p>
@@ -679,7 +681,7 @@ export default function ProductDashboard() {
                       <p
                         className={cn(
                           'mt-0.5 flex items-center justify-center gap-0.5 text-xs font-medium',
-                          ok ? 'text-primary' : 'text-destructive'
+                          ok ? 'text-primary' : 'text-muted-foreground'
                         )}
                       >
                         ціль {m.ref}%{' '}
@@ -700,7 +702,7 @@ export default function ProductDashboard() {
                 <div
                   className={`flex w-full items-start gap-2 rounded-lg px-3 py-2 text-xs ${
                     status === 'critical'
-                      ? 'bg-destructive/10 text-destructive'
+                      ? 'bg-muted text-muted-foreground'
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
@@ -801,7 +803,7 @@ export default function ProductDashboard() {
                         <span
                           className={`text-sm font-bold ${
                             s === 'critical'
-                              ? 'text-destructive'
+                              ? 'text-muted-foreground'
                               : s === 'warn'
                                 ? 'text-muted-foreground'
                                 : 'text-primary'
@@ -815,7 +817,7 @@ export default function ProductDashboard() {
                       </TableCell>
                       <TableCell className='text-right'>
                         <span
-                          className={`text-sm font-semibold ${diff >= 0 ? 'text-primary' : 'text-destructive'}`}
+                          className={`text-sm font-semibold ${diff >= 0 ? 'text-primary' : 'text-muted-foreground'}`}
                         >
                           {diff >= 0 ? '+' : ''}
                           {diff}pp
@@ -827,7 +829,7 @@ export default function ProductDashboard() {
                             cat.trend > 0
                               ? 'text-primary'
                               : cat.trend < 0
-                                ? 'text-destructive'
+                                ? 'text-muted-foreground'
                                 : 'text-muted-foreground'
                           }`}
                         >

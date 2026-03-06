@@ -209,12 +209,12 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
           <div className='text-right'>
             <p className='text-muted-foreground text-xs'>Впевненість</p>
             <p
-              className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-chart-success' : test.confidence >= 80 ? 'text-chart-warning' : 'text-muted-foreground'}`}
+              className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-primary' : test.confidence >= 80 ? 'text-chart-warning' : 'text-muted-foreground'}`}
             >
               {test.confidence}%
             </p>
             <p
-              className={`text-xs ${test.confidence >= 95 ? 'text-chart-success' : 'text-muted-foreground'}`}
+              className={`text-xs ${test.confidence >= 95 ? 'text-primary' : 'text-muted-foreground'}`}
             >
               {test.confidence >= 95
                 ? '✓ Статистично значимо'
@@ -283,7 +283,7 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
                 <span className='font-semibold'>
                   {test.testGroup.conversion}%
                   <span
-                    className={`ml-1 text-xs ${lift > 0 ? 'text-chart-success' : 'text-chart-danger'}`}
+                    className={`ml-1 text-xs ${lift > 0 ? 'text-primary' : 'text-muted-foreground'}`}
                   >
                     ({lift > 0 ? '+' : ''}
                     {lift}pp)
@@ -365,13 +365,13 @@ export default function ABTestsPage() {
               label: 'Завершених (міс.)',
               value: '3',
               icon: <IconCircleCheck className='size-4' />,
-              color: 'text-chart-success'
+              color: 'text-primary'
             },
             {
               label: 'Підтверджених гіпотез',
               value: '2 / 3',
               icon: <IconTrendingUp className='size-4' />,
-              color: 'text-chart-success'
+              color: 'text-primary'
             },
             {
               label: 'Середній ліфт конверсії',

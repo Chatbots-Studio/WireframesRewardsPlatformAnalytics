@@ -10,16 +10,16 @@ When adding a new theme, follow this journey:
 2. **Import theme** → Add `@import` to `src/styles/theme.css`
 3. **Register theme** → Add to `THEMES` array in `src/components/themes/theme.config.ts`
 4. **Add fonts (if needed)** → Import fonts in `src/components/themes/font.config.ts` if using custom Google Fonts
-5. **Set as default (optional)** → Update `DEFAULT_THEME` in `src/components/themes/active-theme.tsx`
+5. **Set as default (optional)** → Update `DEFAULT_THEME` in `src/components/themes/theme.config.ts`
 
 See the **Step-by-Step Guide** section below for detailed instructions.
 
 ## Quick Start: Set Your Theme as Default
 
-To make your new theme the default (so it loads automatically without the theme switcher):
+To make your new theme the default (so it loads automatically):
 
-1. Open `src/components/themes/active-theme.tsx`
-2. Change line 12: `const DEFAULT_THEME = 'your-theme-name';`
+1. Open `src/components/themes/theme.config.ts`
+2. Change `DEFAULT_THEME = 'your-theme-name';`
 3. Save and restart your dev server
 
 That's it! Your theme will now be the default for all new users.
@@ -323,10 +323,10 @@ export const fontVariables = cn(
 - You can use any Google Font available in `next/font/google`
 - Check existing fonts in `font.config.ts` before adding new ones - you might be able to reuse them
 
-**Example:** The `notebook` theme uses `Architects Daughter`:
+**Example:** A theme using `Architects Daughter`:
 
 - Imported in `font.config.ts` as `Architects_Daughter`
-- Used in `notebook.css` as `'Architects Daughter'` (with quotes and space)
+- Used in theme CSS as `'Architects Daughter'` (with quotes and space)
 
 ### Step 6: Set as Default Theme (Optional)
 
@@ -352,10 +352,9 @@ export const DEFAULT_THEME = 'your-theme-name'; // Change from 'vercel' to your 
 ### Step 7: Test Your Theme
 
 1. Start your development server
-2. Open the theme selector in the UI
-3. Select your new theme
-4. Verify it works in both light and dark modes
-5. Test scaled variant by selecting "Your Theme Name (Scaled)"
+2. Set your theme as default in `theme.config.ts` or select it via the theme selector (if available)
+3. Verify it works in both light and dark modes
+5. Test scaled variant if applicable
 6. If you set it as default, clear your browser cookies and refresh to see it load automatically
 
 ## Quick Reference: File Locations
@@ -366,7 +365,7 @@ When adding a new theme, you'll work with these files in this order:
 2. ✅ `src/styles/theme.css` - Import your theme file
 3. ✅ `src/components/themes/theme.config.ts` - Add theme to `THEMES` array
 4. ⚠️ `src/components/themes/font.config.ts` - Add fonts only if needed
-5. ⚠️ `src/components/themes/active-theme.tsx` - Set as default only if desired
+5. ⚠️ `src/components/themes/theme.config.ts` - Set as default only if desired
 
 ## Required Tokens
 
@@ -401,7 +400,7 @@ These can be omitted if not needed:
 
 ## Example: Complete Theme
 
-See `src/styles/themes/claude.css` for a complete example with all tokens defined.
+See `src/styles/themes/42flows.css` for a complete example with all tokens defined.
 
 ## Example: Minimal Theme
 
@@ -458,7 +457,7 @@ All themes automatically support scaled variants. When a user selects "Theme Nam
 ### Theme Not Appearing
 
 - Check that the file is imported in `src/styles/theme.css`
-- Verify the theme name matches in both CSS file and theme-selector.tsx
+- Verify the theme name matches in both CSS file and theme.config.ts
 - Ensure the file is saved and the dev server has reloaded
 
 ### Colors Not Applying
@@ -475,7 +474,7 @@ All themes automatically support scaled variants. When a user selects "Theme Nam
 
 ## Setting a Default Theme
 
-By default, the application uses the `vercel` theme. To change the default theme that loads for new users:
+By default, the application uses the `42flows` theme. To change the default theme that loads for new users:
 
 ### Change Default Theme Constant
 
@@ -561,9 +560,7 @@ export const fontVariables = cn(
 - **Automatic application**: Font variables are automatically applied to the body element via `layout.tsx`
 - **Available fonts**: Check [Next.js Font Optimization](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) for available Google Fonts
 
-### Example: Notebook Theme
-
-The `notebook` theme uses `Architects Daughter`:
+### Example: Custom Font in Theme
 
 **In `font.config.ts`:**
 
@@ -582,19 +579,18 @@ export const fontVariables = cn(
 );
 ```
 
-**In `notebook.css`:**
+**In theme CSS:**
 
 ```css
-[data-theme='notebook'] {
+[data-theme='your-theme'] {
   --font-sans: 'Architects Daughter', sans-serif;
 }
 ```
 
 ## Reference Files
 
-- **Complete theme example**: `src/styles/themes/claude.css`
+- **Complete theme example**: `src/styles/themes/42flows.css`
 - **Theme aggregator**: `src/styles/theme.css`
-- **Theme selector component**: `src/components/themes/theme-selector.tsx`
 - **Theme provider**: `src/components/themes/active-theme.tsx`
 - **Theme configuration** (includes default theme): `src/components/themes/theme.config.ts`
 - **Font configuration**: `src/components/themes/font.config.ts`

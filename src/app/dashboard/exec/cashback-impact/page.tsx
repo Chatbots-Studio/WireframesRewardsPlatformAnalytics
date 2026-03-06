@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import PageContainer from '@/components/layout/page-container';
 import { cn } from '@/lib/utils';
+import { getMetricById } from '@/features/exec/cashback-impact/data/metric-catalog';
+import { MetricInsightDrawer } from '@/features/exec/cashback-impact/components/metric-insight-drawer';
+import { KpiMetricCard } from '@/features/exec/cashback-impact/components/kpi-metric-card';
+import type { KpiDelta } from '@/features/exec/cashback-impact/components/kpi-metric-card';
 import {
   Card,
   CardContent,
@@ -36,6 +40,9 @@ import {
   Legend
 } from 'recharts';
 import { chartPalette } from '@/lib/chart-theme';
+
+const CHART_TOOLTIP_CLASS =
+  'bg-card/95 text-card-foreground backdrop-blur-sm min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md';
 
 const CATEGORIES = [
   'Усі категорії',
@@ -318,11 +325,11 @@ const HEATMAP_DATA = [
 ];
 
 function getHeatColor(pct: number): string {
-  if (pct < 20) return 'bg-red-100 dark:bg-red-950/30';
-  if (pct < 40) return 'bg-yellow-100 dark:bg-yellow-900/30';
-  if (pct < 60) return 'bg-green-100 dark:bg-green-900/30';
-  if (pct < 80) return 'bg-green-200 dark:bg-green-800/40';
-  return 'bg-green-300 dark:bg-green-700/50';
+  if (pct < 20) return 'bg-chart-danger/15';
+  if (pct < 40) return 'bg-chart-warning/15';
+  if (pct < 60) return 'bg-chart-primary/10';
+  if (pct < 80) return 'bg-chart-primary/20';
+  return 'bg-chart-success/20';
 }
 
 const BEFORE_AFTER_DATA = [
@@ -384,6 +391,59 @@ const CANNIBALIZATION_DATA = [
   { month: 'Лют', cashbackCats: 1890, otherCats: 562, total: 2452 }
 ];
 
+interface KpiCardData {
+  metricId: string;
+  value: string;
+  delta: KpiDelta;
+  subtitle?: string;
+}
+
+const KPI_CARDS: KpiCardData[] = [
+  {
+    metricId: 'activation_conversion',
+    value: '61.4%',
+    delta: { value: '+3.1pp', comparison: 'vs попередній місяць', trend: 'up' }
+  },
+  {
+    metricId: 'time_to_first_tx',
+    value: '2.3 дн',
+    delta: {
+      value: '−0.2 дн',
+      comparison: 'vs попередній місяць',
+      trend: 'up'
+    }
+  },
+  {
+    metricId: 'reactivation_rate',
+    value: '18.7%',
+    delta: { value: '+1.2pp', comparison: 'vs попередній місяць', trend: 'up' }
+  },
+  {
+    metricId: 'transaction_frequency',
+    value: '4.2',
+    subtitle: 'vs 2.1 без кешбеку',
+    delta: {
+      value: '+2.1 транз./міс',
+      comparison: 'до контрольної групи',
+      trend: 'up'
+    }
+  },
+  {
+    metricId: 'avg_check_delta',
+    value: '+23.4%',
+    delta: { value: '+2.1pp', comparison: 'vs попередній місяць', trend: 'up' }
+  },
+  {
+    metricId: 'credit_utilization',
+    value: '34.8%',
+    delta: {
+      value: '−1.5pp',
+      comparison: 'vs попередній місяць',
+      trend: 'down'
+    }
+  }
+];
+
 function BeforeAfterTooltip({
   active,
   payload,
@@ -396,7 +456,7 @@ function BeforeAfterTooltip({
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   return (
-    <div className='bg-card text-card-foreground min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
         До: <strong>{row?.before?.toLocaleString('uk-UA')} тис. ₴</strong>
@@ -423,7 +483,7 @@ function CohortTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className='bg-card text-card-foreground min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       {payload.map((p) => (
         <p key={p.name}>
@@ -446,7 +506,7 @@ function CannibalizationTooltip({
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   return (
-    <div className='bg-card text-card-foreground min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
         Кешбек-категорії:{' '}
@@ -474,7 +534,7 @@ function ROIBarTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className='bg-card text-card-foreground min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p className='font-bold'>ROI: {payload[0]?.value ?? 0}x</p>
     </div>
@@ -498,7 +558,7 @@ function ROIScatterTooltip({
   const d = payload[0]?.payload;
   if (!d) return null;
   return (
-    <div className='bg-card text-card-foreground min-w-[200px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={cn(CHART_TOOLTIP_CLASS, 'min-w-[200px]')}>
       <p className='mb-1 text-sm font-semibold'>{d.name}</p>
       <p>Оборот: {d.turnover.toLocaleString('uk-UA')} тис. ₴</p>
       <p>Кешбек: {d.cashback.toLocaleString('uk-UA')} тис. ₴</p>
@@ -523,7 +583,7 @@ function ROILineTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className='bg-card text-card-foreground min-w-[180px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
+    <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       {payload.map((p) => (
         <p key={p.name}>
@@ -537,6 +597,17 @@ function ROILineTooltip({
 export default function CashbackImpactPage() {
   const [selectedFunnelCategory, setSelectedFunnelCategory] =
     useState<string>('all');
+  const [isMetricDrawerOpen, setIsMetricDrawerOpen] = useState(false);
+  const [selectedMetricId, setSelectedMetricId] = useState<string>(
+    'activation_conversion'
+  );
+
+  const openMetricDetail = (metricId: string) => {
+    setSelectedMetricId(metricId);
+    setIsMetricDrawerOpen(true);
+  };
+
+  const selectedMetric = getMetricById(selectedMetricId);
 
   return (
     <PageContainer>
@@ -579,85 +650,17 @@ export default function CashbackImpactPage() {
           </div>
         </div>
 
-        <div className='grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6'>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Конверсія активації кешбеку
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>61.4%</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                +3.1pp vs попередній місяць
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Час до першої транзакції
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>2.3 дн</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                −0.2 дн vs попередній місяць
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Reactivation Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>18.7%</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                +1.2pp vs попередній місяць
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Транзакційність
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>4.2</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                vs 2.1 без кешбеку · +2.1 транз./міс
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Зміна середнього чека
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>+23.4%</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                +2.1pp vs попередній місяць
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className='pb-2'>
-              <CardTitle className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                Credit Utilization
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>34.8%</div>
-              <p className='text-muted-foreground mt-1 text-xs'>
-                −1.5pp vs попередній місяць
-              </p>
-            </CardContent>
-          </Card>
+        <div className='grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6'>
+          {KPI_CARDS.map((item) => (
+            <KpiMetricCard
+              key={item.metricId}
+              metric={getMetricById(item.metricId)}
+              value={item.value}
+              delta={item.delta}
+              subtitle={item.subtitle}
+              onInfoOpen={openMetricDetail}
+            />
+          ))}
         </div>
 
         <Card className='border-muted-foreground/20 bg-muted/30'>
@@ -675,14 +678,16 @@ export default function CashbackImpactPage() {
               {ZERO_CONVERSION_CATEGORIES.map((item) => (
                 <div
                   key={item.name}
-                  className='border-muted-foreground/10 bg-background/50 flex items-center justify-between gap-4 rounded-md border px-3 py-2 text-sm'
+                  className='border-primary/20 bg-background/50 border-l-primary/40 flex flex-col gap-0.5 rounded-md border-l-4 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4'
                 >
-                  <span className='font-medium'>{item.name}</span>
-                  <span className='text-muted-foreground tabular-nums'>
+                  <div className='flex flex-col gap-0.5'>
+                    <span className='font-medium'>{item.name}</span>
+                    <span className='text-muted-foreground text-xs'>
+                      {item.cause}
+                    </span>
+                  </div>
+                  <span className='text-muted-foreground font-medium tabular-nums'>
                     {item.conversion}%
-                  </span>
-                  <span className='text-muted-foreground text-xs'>
-                    {item.cause}
                   </span>
                 </div>
               ))}
@@ -691,7 +696,7 @@ export default function CashbackImpactPage() {
         </Card>
 
         <div className='space-y-6'>
-          <div>
+          <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
               Блок 1: ROI по категоріях
             </h3>
@@ -892,7 +897,7 @@ export default function CashbackImpactPage() {
             </CardContent>
           </Card>
 
-          <div>
+          <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
               Блок 2: Конверсійна воронка
             </h3>
@@ -935,11 +940,17 @@ export default function CashbackImpactPage() {
                           {step.pct < 100 ? ` (${step.pct}%)` : ''}
                         </span>
                       </div>
-                      <div className='bg-muted h-8 w-full overflow-hidden rounded-md'>
+                      <div className='bg-muted relative h-8 w-full overflow-hidden rounded-md'>
                         <div
-                          className='bg-primary/80 h-full rounded-md transition-all'
+                          className='bg-primary/80 relative flex h-full items-center rounded-md transition-all'
                           style={{ width: `${step.pct}%` }}
-                        />
+                        >
+                          {step.pct < 100 && step.pct >= 15 && (
+                            <span className='text-primary-foreground px-2 text-xs font-medium'>
+                              {step.pct}%
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )
@@ -1000,7 +1011,7 @@ export default function CashbackImpactPage() {
             </CardContent>
           </Card>
 
-          <div>
+          <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
               Блок 3: Інкрементальність
             </h3>
@@ -1232,6 +1243,11 @@ export default function CashbackImpactPage() {
             </CardFooter>
           </Card>
         </div>
+        <MetricInsightDrawer
+          metric={selectedMetric}
+          open={isMetricDrawerOpen}
+          onOpenChange={setIsMetricDrawerOpen}
+        />
       </div>
     </PageContainer>
   );

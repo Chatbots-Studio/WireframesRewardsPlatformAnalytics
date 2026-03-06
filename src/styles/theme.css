@@ -1,10 +1,4 @@
-/* Import individual theme files */
-@import './themes/claude.css';
-@import './themes/neobrutualism.css';
-@import './themes/supabase.css';
-@import './themes/vercel.css';
-@import './themes/mono.css';
-@import './themes/notebook.css';
+/* Import theme file */
 @import './themes/42flows.css';
 
 body {

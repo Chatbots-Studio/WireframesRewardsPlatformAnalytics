@@ -212,22 +212,15 @@ NEXT_PUBLIC_SENTRY_DISABLED="false"  # Set to "true" to disable in dev
 
 ## Theming System
 
-The project uses a sophisticated multi-theme system with 6 built-in themes:
-
-- `vercel` (default)
-- `claude`
-- `neobrutualism`
-- `supabase`
-- `mono`
-- `notebook`
+The project uses a single theme: **42flows**.
 
 ### Theme Files
-- CSS files: `src/styles/themes/{theme-name}.css`
-- Theme registry: `src/components/themes/theme.config.ts`
+- CSS file: `src/styles/themes/42flows.css`
+- Theme config: `src/components/themes/theme.config.ts`
 - Font config: `src/components/themes/font.config.ts`
 - Active theme provider: `src/components/themes/active-theme.tsx`
 
-### Adding a New Theme
+### Adding a New Theme (if needed in future)
 1. Create `src/styles/themes/your-theme.css` with `[data-theme='your-theme']` selector
 2. Import in `src/styles/theme.css`
 3. Add to `THEMES` array in `src/components/themes/theme.config.ts`
