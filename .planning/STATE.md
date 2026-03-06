@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-05)
 ## Current Position
 
 Phase: 1 of 5 (Navigation Restructuring)
-Plan: 3 of 3 in current phase
-Status: Complete — ready to verify
-Last activity: 2026-03-05 — Phase 1 executed (all 3 tasks done)
+Plan: All phases complete
+Status: All 5 phases executed
+Last activity: 2026-03-05 — Phases 2–5 implemented
 
 Progress: [░░░░░░░░░░] 0%
 

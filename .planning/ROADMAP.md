@@ -11,10 +11,10 @@
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Navigation Restructuring** - «Топ-менеджмент» стає collapsible-групою з двома підпунктами
-- [ ] **Phase 2: Page Scaffold + KPI + Filters** - Сторінка з 6 KPI-картками, фільтрами та блоком нульової конверсії
-- [ ] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
-- [ ] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
-- [ ] **Phase 5: Incrementality Block** - Before/after, cohort, canibalization
+- [x] **Phase 2: Page Scaffold + KPI + Filters** - Сторінка з 6 KPI-картками, фільтрами та блоком нульової конверсії
+- [x] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
+- [x] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
+- [x] **Phase 5: Incrementality Block** - Before/after, cohort, canibalization
 
 ## Phase Details
 
@@ -37,7 +37,7 @@
   2. User can filter by category (Select) and period (6m / 3m / YTD) in header
   3. User sees all 6 KPI metrics with realistic mock values (~17 categories)
   4. User sees zero-conversion categories block with explanation of possible causes
-**Plans**: TBD
+**Plans**: `.planning/phases/02-page-scaffold-kpi-filters/PLAN.md` (1 task)
 
 ### Phase 3: ROI Charts
 **Goal**: ROI-аналіз доступний через три візуалізації
@@ -47,7 +47,7 @@
   1. User sees horizontal bar chart of categories sorted by ROI with color zones (red <50x, yellow 50–200x, green >200x)
   2. User sees scatter plot «Оборот vs Кешбек» with bubble size = transaction count; anomalies highlighted in tooltip
   3. User sees line chart of ROI dynamics for top-5 categories over 6 months
-**Plans**: TBD
+**Plans**: `.planning/phases/03-roi-charts/PLAN.md` (1 task)
 
 ### Phase 4: Conversion Funnel Block
 **Goal**: Конверсійна воронка та теплова карта доступні
@@ -57,7 +57,7 @@
   1. User sees funnel diagram with steps: Transactions → Saw offer → Chose category → Activated (with % conversion per step)
   2. User can switch funnel between categories when category filter is applied
   3. User sees heatmap «Конверсія vs Середній чек» — categories as rows, check ranges as columns, color = % conversion
-**Plans**: TBD
+**Plans**: `.planning/phases/04-conversion-funnel/PLAN.md` (1 task)
 
 ### Phase 5: Incrementality Block
 **Goal**: Інкрементальність та canibalization доступні
@@ -67,7 +67,7 @@
   1. User sees before/after chart: turnover and transactions 3 months before vs 3 months after offer launch per category
   2. User sees cohort line chart: activated vs control group over 6 months (avg turnover per client)
   3. User sees cannibalization chart: whether spending grew or just redistributed between categories
-**Plans**: TBD
+**Plans**: `.planning/phases/05-incrementality/PLAN.md` (1 task)
 
 ## Progress
 
@@ -77,7 +77,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Navigation Restructuring | 3/3 | Done | 2026-03-05 |
-| 2. Page Scaffold + KPI + Filters | 0/0 | Not started | - |
-| 3. ROI Charts | 0/0 | Not started | - |
-| 4. Conversion Funnel Block | 0/0 | Not started | - |
-| 5. Incrementality Block | 0/0 | Not started | - |
+| 2. Page Scaffold + KPI + Filters | 1/1 | Done | 2026-03-05 |
+| 3. ROI Charts | 1/1 | Done | 2026-03-05 |
+| 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
+| 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
