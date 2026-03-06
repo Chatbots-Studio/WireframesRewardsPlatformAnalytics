@@ -57,28 +57,32 @@ export function KpiMetricCard({
         </div>
       </CardHeader>
 
-      <CardContent className='mt-auto px-4 pb-0'>
+      <CardContent className='flex flex-1 flex-col px-4 pb-0'>
+        <div className='flex-1' />
+
         <div className='text-2xl font-semibold tracking-tight tabular-nums'>
           {value}
         </div>
 
-        {subtitle && (
-          <p className='text-muted-foreground mt-0.5 text-[11px] leading-snug'>
-            {subtitle}
-          </p>
-        )}
+        <div className='min-h-[3.25rem]'>
+          {subtitle && (
+            <p className='text-muted-foreground mt-0.5 text-[11px] leading-snug'>
+              {subtitle}
+            </p>
+          )}
 
-        <div className={cn('mt-1 flex items-center gap-0.5', deltaColor)}>
-          {delta.trend === 'up' && (
-            <TrendingUp className='h-3 w-3 shrink-0' aria-hidden />
-          )}
-          {delta.trend === 'down' && (
-            <TrendingDown className='h-3 w-3 shrink-0' aria-hidden />
-          )}
-          <p className='text-[11px] leading-snug'>
-            <span className='font-medium'>{delta.value}</span>{' '}
-            <span className='text-muted-foreground'>{delta.comparison}</span>
-          </p>
+          <div className={cn('mt-1 flex items-center gap-0.5', deltaColor)}>
+            {delta.trend === 'up' && (
+              <TrendingUp className='h-3 w-3 shrink-0' aria-hidden />
+            )}
+            {delta.trend === 'down' && (
+              <TrendingDown className='h-3 w-3 shrink-0' aria-hidden />
+            )}
+            <p className='text-[11px] leading-snug'>
+              <span className='font-medium'>{delta.value}</span>{' '}
+              <span className='text-muted-foreground'>{delta.comparison}</span>
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
