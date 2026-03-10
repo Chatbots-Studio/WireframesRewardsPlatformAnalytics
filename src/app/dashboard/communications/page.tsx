@@ -38,6 +38,17 @@ import {
   IconChevronUp,
   IconTrophy
 } from '@tabler/icons-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import {
+  PRODUCT_DICTIONARY,
+  type ProductDictionaryEntry
+} from '@/features/cashback/data/analytics-dictionaries.mock';
 import { cn } from '@/lib/utils';
 
 // ─── Types ──────────────────────────────────────────────────
@@ -70,6 +81,8 @@ interface CommBatch {
   id: string;
   name: string;
   uploadedAt: string;
+  productId?: string;
+  targetActionId?: string;
   rows: CommRow[];
 }
 
@@ -219,12 +232,27 @@ const BATCH_COLORS = [
   'var(--chart-2)'
 ];
 
+// ─── Target action lookup ────────────────────────────────────
+function getTargetActionLabel(
+  productId?: string,
+  targetActionId?: string
+): { productName: string; actionName: string } | null {
+  if (!productId || !targetActionId) return null;
+  const product = PRODUCT_DICTIONARY.find((p) => p.id === productId);
+  if (!product) return null;
+  const action = product.targetActions.find((ta) => ta.id === targetActionId);
+  if (!action) return null;
+  return { productName: product.name, actionName: action.name };
+}
+
 // ─── Mock Data ───────────────────────────────────────────────
 const MOCK_BATCHES: CommBatch[] = [
   {
     id: '1',
     name: 'Лютий 2025 — Email + Push',
     uploadedAt: '23.02.2025',
+    productId: 'PRD-RADA-CARD',
+    targetActionId: 'TA-RADA-CB-TX',
     rows: [
       {
         customerId: 'CL-00142',
@@ -300,6 +328,8 @@ const MOCK_BATCHES: CommBatch[] = [
     id: '2',
     name: 'Січень 2025 — SMS-кампанія',
     uploadedAt: '31.01.2025',
+    productId: 'PRD-RADA-CARD',
+    targetActionId: 'TA-RADA-CATEGORY-SELECT',
     rows: [
       {
         customerId: 'CL-00672',
@@ -358,6 +388,8 @@ const MOCK_BATCHES: CommBatch[] = [
     id: '3',
     name: 'Грудень 2024 — Новорічна кампанія',
     uploadedAt: '01.12.2024',
+    productId: 'PRD-DEPOSIT',
+    targetActionId: 'TA-DEP-OPEN',
     rows: [
       {
         customerId: 'CL-01023',
@@ -427,6 +459,8 @@ const EXTRA_MOCK_BATCH: CommBatch = {
   id: 'extra',
   name: 'Новий імпорт — Березень 2025',
   uploadedAt: '01.03.2025',
+  productId: 'PRD-SALARY',
+  targetActionId: 'TA-SAL-ACTIVE-CARD-TX',
   rows: [
     {
       customerId: 'CL-01530',
@@ -1164,6 +1198,27 @@ function BatchCard({
             {batch.rows.length} кампаній
           </span>
         </div>
+
+        {(() => {
+          const label = getTargetActionLabel(
+            batch.productId,
+            batch.targetActionId
+          );
+          if (!label) return null;
+          return (
+            <div className='border-border/50 mt-3 flex items-start gap-1.5 border-t pt-3'>
+              <IconTag className='text-muted-foreground mt-0.5 size-3 shrink-0' />
+              <div className='min-w-0'>
+                <p className='text-muted-foreground truncate text-[10px] leading-none'>
+                  {label.productName}
+                </p>
+                <p className='text-foreground mt-0.5 truncate text-xs font-medium'>
+                  {label.actionName}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
@@ -1403,45 +1458,135 @@ function FormatCard() {
 }
 
 // ─── Upload Card ─────────────────────────────────────────────
-function UploadCard({ onUpload }: { onUpload: () => void }) {
+function UploadCard({
+  onUpload
+}: {
+  onUpload: (productId: string, targetActionId: string) => void;
+}) {
   const [dragging, setDragging] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState('');
+  const [selectedTargetActionId, setSelectedTargetActionId] = useState('');
+
+  const selectedProduct: ProductDictionaryEntry | undefined =
+    PRODUCT_DICTIONARY.find((p) => p.id === selectedProductId);
+  const canUpload = !!selectedProductId && !!selectedTargetActionId;
+
+  function handleProductChange(value: string) {
+    setSelectedProductId(value);
+    setSelectedTargetActionId('');
+  }
+
+  function triggerUpload() {
+    if (!canUpload) return;
+    onUpload(selectedProductId, selectedTargetActionId);
+  }
 
   return (
     <Card className='h-full'>
       <CardHeader className='pb-3'>
         <CardTitle className='text-base'>Завантажити комунікації</CardTitle>
         <CardDescription>
-          Додайте нові дані для аналізу конверсії
+          Оберіть продукт та цільову дію, потім завантажте CSV
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
+        <div className='grid gap-3'>
+          <div className='grid gap-1.5'>
+            <label className='text-foreground text-xs font-medium'>
+              Продукт
+            </label>
+            <Select
+              value={selectedProductId}
+              onValueChange={handleProductChange}
+            >
+              <SelectTrigger className='w-full text-sm'>
+                <SelectValue placeholder='Оберіть продукт...' />
+              </SelectTrigger>
+              <SelectContent>
+                {PRODUCT_DICTIONARY.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className='grid gap-1.5'>
+            <label
+              className={cn(
+                'text-xs font-medium transition-colors',
+                selectedProductId
+                  ? 'text-foreground'
+                  : 'text-muted-foreground/50'
+              )}
+            >
+              Цільова дія
+            </label>
+            <Select
+              value={selectedTargetActionId}
+              onValueChange={setSelectedTargetActionId}
+              disabled={!selectedProductId}
+            >
+              <SelectTrigger className='w-full text-sm'>
+                <SelectValue
+                  placeholder={
+                    selectedProductId
+                      ? 'Оберіть цільову дію...'
+                      : 'Спочатку оберіть продукт'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedProduct?.targetActions.map((ta) => (
+                  <SelectItem key={ta.id} value={ta.id}>
+                    {ta.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         <div
           onDragOver={(e) => {
             e.preventDefault();
-            setDragging(true);
+            if (canUpload) setDragging(true);
           }}
           onDragLeave={() => setDragging(false)}
           onDrop={(e) => {
             e.preventDefault();
             setDragging(false);
-            onUpload();
+            triggerUpload();
           }}
           className={cn(
-            'flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-10 transition-all',
-            dragging
-              ? 'border-primary bg-primary/10'
-              : 'border-border bg-muted hover:border-primary/50 hover:bg-primary/10'
+            'flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 transition-all',
+            canUpload
+              ? dragging
+                ? 'border-primary bg-primary/10 cursor-pointer'
+                : 'border-border bg-muted hover:border-primary/50 hover:bg-primary/10 cursor-pointer'
+              : 'border-border/40 bg-muted/40 cursor-not-allowed opacity-50'
           )}
-          onClick={onUpload}
+          onClick={triggerUpload}
         >
-          <div className='bg-primary/15 mb-3 flex size-12 items-center justify-center rounded-full'>
-            <IconUpload className='text-primary size-6' />
+          <div
+            className={cn(
+              'mb-3 flex size-12 items-center justify-center rounded-full',
+              canUpload ? 'bg-primary/15' : 'bg-muted'
+            )}
+          >
+            <IconUpload
+              className={cn(
+                'size-6',
+                canUpload ? 'text-primary' : 'text-muted-foreground/40'
+              )}
+            />
           </div>
           <p className='text-foreground text-sm font-medium'>
             Перетягніть CSV сюди
           </p>
           <p className='text-muted-foreground mt-1 text-xs'>
-            або натисніть для вибору
+            {canUpload ? 'або натисніть для вибору' : 'оберіть продукт та дію'}
           </p>
           <Badge variant='outline' className='mt-3 text-xs'>
             .csv · UTF-8
@@ -1474,12 +1619,15 @@ export default function CommunicationsPage() {
   const [showUpload, setShowUpload] = useState(false);
   const [expandedBatchId, setExpandedBatchId] = useState<string | null>(null);
 
-  function handleUpload() {
+  function handleUpload(productId: string, targetActionId: string) {
     if (batches.find((b) => b.id === EXTRA_MOCK_BATCH.id)) {
       toast.info('Це завантаження вже є в списку');
       return;
     }
-    setBatches((prev) => [{ ...EXTRA_MOCK_BATCH }, ...prev]);
+    setBatches((prev) => [
+      { ...EXTRA_MOCK_BATCH, productId, targetActionId },
+      ...prev
+    ]);
     toast.success('Файл успішно завантажено', {
       description: `${EXTRA_MOCK_BATCH.name} · ${EXTRA_MOCK_BATCH.rows.length} кампанії`
     });
@@ -1598,6 +1746,27 @@ export default function CommunicationsPage() {
                           <p className='text-muted-foreground text-xs'>
                             Деталі по {b.rows.length} кампаніях
                           </p>
+                          {(() => {
+                            const label = getTargetActionLabel(
+                              b.productId,
+                              b.targetActionId
+                            );
+                            if (!label) return null;
+                            return (
+                              <div className='mt-1 flex items-center gap-1'>
+                                <IconTag className='text-muted-foreground size-3 shrink-0' />
+                                <span className='text-muted-foreground text-xs'>
+                                  {label.productName}
+                                </span>
+                                <span className='text-muted-foreground/40 text-xs'>
+                                  ·
+                                </span>
+                                <span className='text-foreground text-xs font-medium'>
+                                  {label.actionName}
+                                </span>
+                              </div>
+                            );
+                          })()}
                         </div>
                         <button
                           onClick={() => setExpandedBatchId(null)}
@@ -1652,6 +1821,21 @@ export default function CommunicationsPage() {
                     <CardDescription className='text-xs'>
                       {batch.rows.length} кампаній · {batch.uploadedAt}
                     </CardDescription>
+                    {(() => {
+                      const label = getTargetActionLabel(
+                        batch.productId,
+                        batch.targetActionId
+                      );
+                      if (!label) return null;
+                      return (
+                        <div className='flex items-center gap-1 pt-0.5'>
+                          <IconTag className='text-muted-foreground size-3 shrink-0' />
+                          <span className='text-muted-foreground text-xs'>
+                            {label.productName} · {label.actionName}
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </CardHeader>
                   <CardContent className='pt-0'>
                     <CommFunnel
