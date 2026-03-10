@@ -468,3 +468,38 @@ See "Theming System" section above or `docs/themes.md`.
 5. **Follow existing patterns** - look at similar components before creating new ones
 6. **Environment variables** - prefix with `NEXT_PUBLIC_` for client-side access
 7. **shadcn components** - don't modify files in `src/components/ui/` directly; extend them instead
+
+---
+
+## Cursor Cloud specific instructions
+
+### Service overview
+
+This is a **single-service frontend app** (Next.js). There are no databases, backend APIs, or external infrastructure dependencies. All data is mocked in-memory via faker.js (`src/constants/mock-api.ts`) and hardcoded Ukrainian banking analytics data in page components. Clerk auth has been removed from the codebase (despite references in docs). Sentry is optional and disabled by default.
+
+### Running the app
+
+- Install: `npm install` (or `bun install` if Bun is available)
+- Dev server: `npm run dev` → http://localhost:3000
+- The `.npmrc` includes `legacy-peer-deps=true`, so `npm install` respects that by default.
+
+### Lint / format / build
+
+- Lint: `npm run lint`
+- Lint strict (zero warnings): `npm run lint:strict`
+- Format check: `npm run format:check`
+- Build: `npm run build`
+
+### Environment
+
+- Copy `env.example.txt` → `.env.local`. The only important setting for local dev is `NEXT_PUBLIC_SENTRY_DISABLED=true` to suppress Sentry errors.
+- No Clerk keys are required — Clerk has been removed from dependencies.
+
+### Git hooks
+
+- **pre-commit**: runs `npx lint-staged` (Prettier formatting)
+- **pre-push**: no-op (comment saying CI handles checks)
+
+### Network access requirements
+
+The npm registry (`registry.npmjs.org`) must be reachable over HTTPS for `npm install` to work. If the Cloud Agent network settings restrict egress, add `registry.npmjs.org` to the allowlist.
