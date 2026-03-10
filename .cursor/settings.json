@@ -5,6 +5,9 @@
     },
     "parallel": {
       "enabled": true
+    },
+    "atlassian": {
+      "enabled": true
     }
   }
 }
