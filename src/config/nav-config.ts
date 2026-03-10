@@ -33,6 +33,14 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
+    title: 'Довідники',
+    url: '/dashboard/cashback/dictionaries',
+    icon: 'workspace',
+    isActive: false,
+    shortcut: ['d', 'v'],
+    items: []
+  },
+  {
     title: 'Звіти',
     url: '/dashboard/reports/quick-cashback-refund',
     icon: 'reports',
