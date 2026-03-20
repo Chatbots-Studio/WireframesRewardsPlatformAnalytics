@@ -35,6 +35,7 @@ import {
   IconChevronRight,
   IconChevronsDown
 } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -44,6 +45,7 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
   const itemsToShow = useFilteredNavItems(navItems);
+  const t = useTranslations('sidebar');
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -54,7 +56,7 @@ export default function AppSidebar() {
       <SidebarHeader />
       <SidebarContent className='overflow-x-hidden'>
         <SidebarGroup>
-          <SidebarGroupLabel>Dashboards</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('dashboards')}</SidebarGroupLabel>
           <SidebarMenu>
             {itemsToShow.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
@@ -121,7 +123,7 @@ export default function AppSidebar() {
                   size='lg'
                   className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
                 >
-                  <span className='truncate'>Account</span>
+                  <span className='truncate'>{t('account')}</span>
                   <IconChevronsDown className='ml-auto size-4' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -133,13 +135,13 @@ export default function AppSidebar() {
               >
                 <DropdownMenuLabel className='p-0 font-normal'>
                   <div className='text-muted-foreground px-1 py-1.5 text-sm'>
-                    Sign in to manage your account
+                    {t('signInPrompt')}
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <IconBell className='mr-2 h-4 w-4' />
-                  Notifications
+                  {t('notifications')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -4,10 +4,12 @@ import { IconBrightness } from '@tabler/icons-react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
 export function ThemeModeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
+  const t = useTranslations('common');
 
   const handleThemeToggle = React.useCallback(
     (e?: React.MouseEvent) => {
@@ -40,7 +42,7 @@ export function ThemeModeToggle() {
       onClick={handleThemeToggle}
     >
       <IconBrightness />
-      <span className='sr-only'>Toggle theme</span>
+      <span className='sr-only'>{t('toggleTheme')}</span>
     </Button>
   );
 }

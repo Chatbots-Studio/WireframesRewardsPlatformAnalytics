@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import * as React from 'react';
 import { CheckIcon } from '@radix-ui/react-icons';
 
@@ -38,6 +39,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   multiple
 }: DataTableFacetedFilterProps<TData, TValue>) {
+  const t = useTranslations('dataTable');
   const [open, setOpen] = React.useState(false);
 
   const columnFilterValue = column?.getFilterValue();
@@ -111,7 +113,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     variant='secondary'
                     className='rounded-sm px-1 font-normal'
                   >
-                    {selectedValues.size} selected
+                    {t('selected', { count: selectedValues.size })}
                   </Badge>
                 ) : (
                   options
@@ -135,7 +137,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList className='max-h-full'>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t('noResultsFound')}</CommandEmpty>
             <CommandGroup className='max-h-[18.75rem] overflow-x-hidden overflow-y-auto'>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
@@ -174,7 +176,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     onSelect={() => onReset()}
                     className='justify-center text-center'
                   >
-                    Clear filters
+                    {t('clearFilters')}
                   </CommandItem>
                 </CommandGroup>
               </>

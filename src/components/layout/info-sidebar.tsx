@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useTranslations } from 'next-intl';
 import { IconChevronRight } from '@tabler/icons-react';
 import Link from 'next/link';
 import {
@@ -15,26 +16,31 @@ import {
 } from '@/components/ui/infobar';
 
 // Default/fallback data when no content is set
-const defaultData = {
-  title: 'Documentation',
-  sections: [
-    {
-      title: 'Getting Started',
-      description: 'Learn how to get started with this application.',
-      links: [
-        {
-          title: 'Installation Guide',
-          url: '#'
-        }
-      ]
-    }
-  ]
-};
+function useDefaultData() {
+  const t = useTranslations('infoSidebar');
+  return {
+    title: t('defaultTitle'),
+    sections: [
+      {
+        title: t('gettingStarted'),
+        description: t('gettingStartedDescription'),
+        links: [
+          {
+            title: t('installationGuide'),
+            url: '#'
+          }
+        ]
+      }
+    ]
+  };
+}
 
 export function InfoSidebar({
   ...props
 }: React.ComponentProps<typeof Infobar>) {
+  const t = useTranslations('infoSidebar');
   const { content } = useInfobar();
+  const defaultData = useDefaultData();
   const data = content || defaultData;
 
   return (
@@ -69,7 +75,7 @@ export function InfoSidebar({
                     {section.links && section.links.length > 0 && (
                       <div className='flex flex-col gap-2'>
                         <h4 className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                          Learn more
+                          {t('learnMore')}
                         </h4>
                         <ul className='flex flex-col gap-1.5'>
                           {section.links.map((link, linkIndex) => (
@@ -91,7 +97,7 @@ export function InfoSidebar({
                 ))
               ) : (
                 <div className='text-muted-foreground px-2 py-4 text-center text-sm'>
-                  No content available
+                  {t('noContent')}
                 </div>
               )}
             </div>

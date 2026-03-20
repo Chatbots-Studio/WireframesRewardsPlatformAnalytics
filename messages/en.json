@@ -59,11 +59,16 @@
     "noColumnsFound": "No columns found.",
     "noResultsFound": "No results found.",
     "clearFilters": "Clear filters",
-    "selected": "{count} selected"
+    "selected": "{count} selected",
+    "view": "View",
+    "reset": "Reset",
+    "resetFilters": "Reset filters"
   },
   "alertModal": {
     "title": "Are you sure?",
-    "description": "This action cannot be undone."
+    "description": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "continue": "Continue"
   },
   "infoSidebar": {
     "defaultTitle": "Documentation",

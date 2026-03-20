@@ -18,6 +18,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import * as React from 'react';
 import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
 
@@ -28,6 +29,7 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table
 }: DataTableViewOptionsProps<TData>) {
+  const t = useTranslations('dataTable');
   const columns = React.useMemo(
     () =>
       table
@@ -43,22 +45,22 @@ export function DataTableViewOptions<TData>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          aria-label='Toggle columns'
+          aria-label={t('toggleColumns')}
           role='combobox'
           variant='outline'
           size='sm'
           className='ml-auto hidden h-8 lg:flex'
         >
           <Settings2 />
-          View
+          {t('view')}
           <CaretSortIcon className='ml-auto opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent align='end' className='w-44 p-0'>
         <Command>
-          <CommandInput placeholder='Search columns...' />
+          <CommandInput placeholder={t('searchColumns')} />
           <CommandList>
-            <CommandEmpty>No columns found.</CommandEmpty>
+            <CommandEmpty>{t('noColumnsFound')}</CommandEmpty>
             <CommandGroup>
               {columns.map((column) => (
                 <CommandItem

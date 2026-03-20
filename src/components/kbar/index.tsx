@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from 'next-intl';
 import { navItems } from '@/config/nav-config';
 import {
   KBarAnimator,
@@ -16,16 +17,14 @@ import { useFilteredNavItems } from '@/hooks/use-nav';
 export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const filteredItems = useFilteredNavItems(navItems);
+  const t = useTranslations('search');
 
-  // These action are for the navigation
   const actions = useMemo(() => {
-    // Define navigateTo inside the useMemo callback to avoid dependency array issues
     const navigateTo = (url: string) => {
       router.push(url);
     };
 
     return filteredItems.flatMap((navItem) => {
-      // Only include base action if the navItem has a real URL and is not just a container
       const baseAction =
         navItem.url !== '#'
           ? {
@@ -33,13 +32,12 @@ export default function KBar({ children }: { children: React.ReactNode }) {
               name: navItem.title,
               shortcut: navItem.shortcut,
               keywords: navItem.title.toLowerCase(),
-              section: 'Navigation',
-              subtitle: `Go to ${navItem.title}`,
+              section: t('navigation'),
+              subtitle: t('goTo', { title: navItem.title }),
               perform: () => navigateTo(navItem.url)
             }
           : null;
 
-      // Map child items into actions
       const childActions =
         navItem.items?.map((childItem) => ({
           id: `${childItem.title.toLowerCase()}Action`,
@@ -47,14 +45,13 @@ export default function KBar({ children }: { children: React.ReactNode }) {
           shortcut: childItem.shortcut,
           keywords: childItem.title.toLowerCase(),
           section: navItem.title,
-          subtitle: `Go to ${childItem.title}`,
+          subtitle: t('goTo', { title: childItem.title }),
           perform: () => navigateTo(childItem.url)
         })) ?? [];
 
-      // Return only valid actions (ignoring null base actions for containers)
       return baseAction ? [baseAction, ...childActions] : childActions;
     });
-  }, [router, filteredItems]);
+  }, [router, filteredItems, t]);
 
   return (
     <KBarProvider actions={actions}>

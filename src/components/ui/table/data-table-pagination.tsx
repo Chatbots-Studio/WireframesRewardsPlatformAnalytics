@@ -1,5 +1,8 @@
+'use client';
+
 import type { Table } from '@tanstack/react-table';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -23,6 +26,7 @@ export function DataTablePagination<TData>({
   className,
   ...props
 }: DataTablePaginationProps<TData>) {
+  const t = useTranslations('dataTable');
   return (
     <div
       className={cn(
@@ -34,16 +38,15 @@ export function DataTablePagination<TData>({
       <div className='text-muted-foreground flex-1 text-sm whitespace-nowrap'>
         {table.getFilteredSelectedRowModel().rows.length > 0 ? (
           <>
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {t('selectedRows', { selected: table.getFilteredSelectedRowModel().rows.length, total: table.getFilteredRowModel().rows.length })}
           </>
         ) : (
-          <>{table.getFilteredRowModel().rows.length} row(s) total.</>
+          <>{t('totalRows', { total: table.getFilteredRowModel().rows.length })}</>
         )}
       </div>
       <div className='flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8'>
         <div className='flex items-center space-x-2'>
-          <p className='text-sm font-medium whitespace-nowrap'>Rows per page</p>
+          <p className='text-sm font-medium whitespace-nowrap'>{t('rowsPerPage')}</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -63,12 +66,11 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className='flex items-center justify-center text-sm font-medium'>
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
+          {t('pageOf', { page: table.getState().pagination.pageIndex + 1, total: table.getPageCount() })}
         </div>
         <div className='flex items-center space-x-2'>
           <Button
-            aria-label='Go to first page'
+            aria-label={t('goToFirstPage')}
             variant='outline'
             size='icon'
             className='hidden size-8 lg:flex'
@@ -78,7 +80,7 @@ export function DataTablePagination<TData>({
             <ChevronsLeft />
           </Button>
           <Button
-            aria-label='Go to previous page'
+            aria-label={t('goToPreviousPage')}
             variant='outline'
             size='icon'
             className='size-8'
@@ -88,7 +90,7 @@ export function DataTablePagination<TData>({
             <ChevronLeftIcon />
           </Button>
           <Button
-            aria-label='Go to next page'
+            aria-label={t('goToNextPage')}
             variant='outline'
             size='icon'
             className='size-8'
@@ -98,7 +100,7 @@ export function DataTablePagination<TData>({
             <ChevronRightIcon />
           </Button>
           <Button
-            aria-label='Go to last page'
+            aria-label={t('goToLastPage')}
             variant='outline'
             size='icon'
             className='hidden size-8 lg:flex'
