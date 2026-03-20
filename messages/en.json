@@ -283,7 +283,7 @@
     "type": "Type",
     "example": "Example",
     "required": "Req.",
-    "csvHelpText": "One row = one client. {customerId} — unique client identifier; {campaignId} — unique marketing campaign identifier (required). {sent} — send date (required); {delivered}, {opened}, {clicked} — event dates (empty if not occurred). Channel values: {email}, {sms}, {push}, {viber} or {other}.",
+    "csvHelpText": "One row = one client. <b>customer_id</b> — unique client identifier; <b>campaign_id</b> — unique marketing campaign identifier (required). <b>sent</b> — send date (required); <b>delivered</b>, <b>opened</b>, <b>clicked</b> — event dates (empty if not occurred). Channel values: <b>Email</b>, <b>SMS</b>, <b>Push</b>, <b>Viber</b> or <b>Other</b>.",
     "campaignName": "Campaign Name",
     "channel": "Channel",
     "company": "Company",
@@ -318,7 +318,9 @@
     "madePurchaseDesc": "Made Purchase / Sent",
     "revenueLiftDesc": "Transaction sum",
     "typeString": "string",
-    "typeDate": "date"
+    "typeDate": "date",
+    "selectedCount": "Selected: {count}",
+    "noData": "No Data"
   },
   "dictionaries": {
     "breadcrumb": "Product Manager · Analytics",

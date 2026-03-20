@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
@@ -512,13 +513,14 @@ const EXTRA_MOCK_BATCH: CommBatch = {
 
 // ─── SVG Funnel ──────────────────────────────────────────────
 function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
+  const t = useTranslations('communications');
   const s = batchStats(batch.rows);
   const steps = [
-    { label: 'Sent', value: s.sent },
-    { label: 'Delivered', value: s.delivered },
-    { label: 'Opened', value: s.opened },
-    { label: 'Clicks', value: s.clicked },
-    { label: 'Converted', value: s.converted }
+    { label: t('sent'), value: s.sent },
+    { label: t('delivered'), value: s.delivered },
+    { label: t('opened'), value: s.opened },
+    { label: t('clicks'), value: s.clicked },
+    { label: t('converted'), value: s.converted }
   ];
   const maxVal = steps[0].value;
   const W = 300;
@@ -591,7 +593,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                 fontSize={10}
                 fill='var(--muted-foreground)'
               >
-                {Math.round(pctVal * 100)}% from start
+                {Math.round(pctVal * 100)}{t('fromStart')}
               </text>
               {i > 0 && (
                 <>
@@ -616,7 +618,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                         : 'var(--muted-foreground)'
                     }
                   >
-                    -{dropPct}% dropped off
+                    -{dropPct}% {t('droppedOff')}
                   </text>
                 </>
               )}
@@ -630,12 +632,13 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
 
 // ─── Cashback Detail Panel ─────────────────────────────────────
 function CashbackDetailPanel({ row }: { row: CommRow }) {
+  const t = useTranslations('communications');
   const { cashback, noCashback } = row;
 
   return (
     <div className='px-4 py-3'>
       <p className='text-muted-foreground mb-2.5 text-xs font-semibold tracking-wide uppercase'>
-        Segment Breakdown
+        {t('segmentBreakdown')}
       </p>
       <div className='grid grid-cols-2 gap-3'>
         {/* With Cashback */}
@@ -646,23 +649,23 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
                 <IconTag className='text-primary size-3' />
               </span>
               <span className='text-primary text-xs font-semibold'>
-                With Cashback
+                {t('withCashback')}
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-muted-foreground'>Clients</span>
+              <span className='text-muted-foreground'>{t('clients')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.customers)}
               </span>
-              <span className='text-muted-foreground'>Purchases</span>
+              <span className='text-muted-foreground'>{t('purchases')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.purchases)}
               </span>
-              <span className='text-muted-foreground'>Total Amount</span>
+              <span className='text-muted-foreground'>{t('totalAmount')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(cashback.revenue)}
               </span>
-              <span className='text-muted-foreground'>Average Check</span>
+              <span className='text-muted-foreground'>{t('averageCheck')}</span>
               <span className='text-primary text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   cashback.purchases > 0
@@ -674,7 +677,7 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
           </div>
         ) : (
           <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
-            <span className='text-muted-foreground text-xs'>No Data</span>
+            <span className='text-muted-foreground text-xs'>{t('noData')}</span>
           </div>
         )}
 
@@ -686,23 +689,23 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
                 <IconMailOpened className='text-muted-foreground size-3' />
               </span>
               <span className='text-muted-foreground text-xs font-semibold'>
-                Without Cashback (received message)
+                {t('withoutCashback')}
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-muted-foreground'>Clients</span>
+              <span className='text-muted-foreground'>{t('clients')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.customers)}
               </span>
-              <span className='text-muted-foreground'>Purchases</span>
+              <span className='text-muted-foreground'>{t('purchases')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.purchases)}
               </span>
-              <span className='text-muted-foreground'>Total Amount</span>
+              <span className='text-muted-foreground'>{t('totalAmount')}</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(noCashback.revenue)}
               </span>
-              <span className='text-muted-foreground'>Average Check</span>
+              <span className='text-muted-foreground'>{t('averageCheck')}</span>
               <span className='text-muted-foreground text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   noCashback.purchases > 0
@@ -714,7 +717,7 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
           </div>
         ) : (
           <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
-            <span className='text-muted-foreground text-xs'>No Data</span>
+            <span className='text-muted-foreground text-xs'>{t('noData')}</span>
           </div>
         )}
       </div>
@@ -724,6 +727,7 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
 
 // ─── Campaign Detail Table ────────────────────────────────────
 function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
+  const t = useTranslations('communications');
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
   const hasCompany = rows.some((r) => r.company);
@@ -753,21 +757,21 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
       <Table>
         <TableHeader>
           <TableRow className='bg-muted'>
-            <TableHead className='pl-4'>Campaign Name</TableHead>
-            <TableHead>Channel</TableHead>
-            {hasCompany && <TableHead>Company</TableHead>}
-            {hasDate && <TableHead>Date</TableHead>}
-            <TableHead className='text-right'>Sent</TableHead>
+            <TableHead className='pl-4'>{t('campaignName')}</TableHead>
+            <TableHead>{t('channel')}</TableHead>
+            {hasCompany && <TableHead>{t('company')}</TableHead>}
+            {hasDate && <TableHead>{t('date')}</TableHead>}
+            <TableHead className='text-right'>{t('sent')}</TableHead>
             <TableHead className='text-right font-semibold'>
-              Made Purchase
+              {t('madePurchase')}
             </TableHead>
-            <TableHead className='text-right'>Purchase Count</TableHead>
+            <TableHead className='text-right'>{t('purchaseCount')}</TableHead>
             {hasRevenue && (
-              <TableHead className='text-right'>Average Check</TableHead>
+              <TableHead className='text-right'>{t('averageCheck')}</TableHead>
             )}
             {hasRevenue && (
               <TableHead className={cn('text-right', !hasSegments && 'pr-4')}>
-                Revenue Lift
+                {t('revenueLift')}
               </TableHead>
             )}
             {hasSegments && <TableHead className='w-8 pr-3' />}
@@ -877,7 +881,7 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                             e.stopPropagation();
                             setExpandedKey(isExpanded ? null : rowKey);
                           }}
-                          title='Segment Breakdown'
+                          title={t('segmentBreakdown')}
                         >
                           {isExpanded ? (
                             <IconChevronUp className='size-3.5' />
@@ -907,6 +911,7 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
 
 // ─── Channel Summary Section ─────────────────────────────────
 function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
+  const t = useTranslations('communications');
   if (batches.length === 0) return null;
 
   const stats = getChannelStats(batches);
@@ -915,10 +920,10 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
     <div>
       <div className='mb-3'>
         <p className='text-foreground text-sm font-semibold'>
-          Channel Effectiveness
+          {t('channelEffectiveness')}
         </p>
         <p className='text-muted-foreground text-xs'>
-          Aggregate across all uploads · sorted by revenue lift
+          {t('channelEffectivenessDescription')}
         </p>
       </div>
 
@@ -972,13 +977,13 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                   {s.channel}
                 </span>
                 <span className='text-muted-foreground text-xs'>
-                  {s.campaigns} campaigns
+                  {s.campaigns} {t('campaigns')}
                 </span>
               </div>
 
               {/* Hero: Made Purchase */}
               <div className='mb-3'>
-                <p className='text-muted-foreground text-xs'>Made Purchase</p>
+                <p className='text-muted-foreground text-xs'>{t('madePurchase')}</p>
                 <p
                   className={cn(
                     'text-3xl leading-none font-black tabular-nums',
@@ -988,7 +993,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                   {s.overallConv}%
                 </p>
                 <p className='text-muted-foreground mt-0.5 text-xs'>
-                  {fmtNum(s.converted)} of {fmtNum(s.sent)} received message
+                  {fmtNum(s.converted)} {t('receivedMessage', { count: fmtNum(s.sent) })}
                 </p>
               </div>
 
@@ -997,7 +1002,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                 <>
                   <div className='bg-primary/10 mb-2 rounded-lg px-2.5 py-2'>
                     <p className='text-muted-foreground text-[10px]'>
-                      Revenue Lift per Participant
+                      {t('revenueLiftPerParticipant')}
                     </p>
                     <p
                       className={cn(
@@ -1007,23 +1012,23 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                           : 'text-muted-foreground'
                       )}
                     >
-                      +{fmtNum(s.liftPerUser)} ₴/month
+                      +{fmtNum(s.liftPerUser)} {t('perMonth')}
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                      {fmtNum(s.avgSpendWithComm)} ₴ with communication ·{' '}
-                      {fmtNum(s.avgSpendControl)} ₴ without
+                      {fmtNum(s.avgSpendWithComm)} ₴ {t('withCommunication')} ·{' '}
+                      {fmtNum(s.avgSpendControl)} ₴ {t('without')}
                     </p>
                   </div>
 
                   <div className='bg-primary/10 mb-3 rounded-lg px-2.5 py-2'>
                     <p className='text-muted-foreground text-[10px]'>
-                      Total Revenue Lift
+                      {t('totalRevenueLift')}
                     </p>
                     <p className='text-primary text-sm font-bold tabular-nums'>
                       {fmtMoney(s.totalLift)}
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                      across {fmtNum(s.converted)} participants
+                      {t('acrossParticipants', { count: fmtNum(s.converted) })}
                     </p>
                   </div>
                 </>
@@ -1032,7 +1037,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
               {/* Best campaign */}
               <div className='border-border/50 border-t pt-2'>
                 <p className='text-muted-foreground text-[10px]'>
-                  Top Campaign
+                  {t('topCampaign')}
                 </p>
                 <p className='text-muted-foreground mt-0.5 truncate text-xs font-medium'>
                   {s.bestCampaign}
@@ -1044,8 +1049,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
       </div>
 
       <p className='text-muted-foreground mt-2 text-[11px]'>
-        * Revenue lift — comparison of average monthly turnover of those who
-        received a message with clients without any communications or cashbacks
+        {t('revenueLiftNote')}
       </p>
     </div>
   );
@@ -1067,6 +1071,7 @@ function BatchCard({
   onDelete: () => void;
   onExpand: () => void;
 }) {
+  const t = useTranslations('communications');
   const s = batchStats(batch.rows);
   const overallConv = pct(s.converted, s.sent);
   const channels = Array.from(new Set(batch.rows.map((r) => r.channel)));
@@ -1122,13 +1127,13 @@ function BatchCard({
 
         <div className='mb-3 grid grid-cols-2 gap-2'>
           <div className='bg-muted rounded-lg px-3 py-2'>
-            <p className='text-muted-foreground text-xs'>Sent</p>
+            <p className='text-muted-foreground text-xs'>{t('sent')}</p>
             <p className='text-foreground text-base font-bold tabular-nums'>
               {fmtNum(s.sent)}
             </p>
           </div>
           <div className='bg-primary/10 rounded-lg px-3 py-2'>
-            <p className='text-muted-foreground text-xs'>Made Purchase</p>
+            <p className='text-muted-foreground text-xs'>{t('madePurchase')}</p>
             <p
               className={cn(
                 'text-base font-bold tabular-nums',
@@ -1147,7 +1152,7 @@ function BatchCard({
         {s.revenue > 0 && (
           <div className='bg-primary/10 mb-3 rounded-lg px-3 py-2'>
             <p className='text-muted-foreground text-xs'>
-              Generated Turnover from Purchases
+              {t('generatedTurnover')}
             </p>
             <p className='text-primary text-base font-bold tabular-nums'>
               {fmtMoney(s.revenue)}
@@ -1157,9 +1162,9 @@ function BatchCard({
 
         <div className='mb-3 space-y-1.5'>
           {[
-            { label: 'Delivery', val: pct(s.delivered, s.sent), ref: 95 },
-            { label: 'Opens', val: pct(s.opened, s.delivered), ref: 30 },
-            { label: 'Clicks', val: pct(s.clicked, s.opened), ref: 20 }
+            { label: t('delivery'), val: pct(s.delivered, s.sent), ref: 95 },
+            { label: t('opens'), val: pct(s.opened, s.delivered), ref: 30 },
+            { label: t('clicks'), val: pct(s.clicked, s.opened), ref: 20 }
           ].map((m) => (
             <div key={m.label} className='flex items-center gap-2'>
               <span className='text-muted-foreground w-16 shrink-0 text-xs'>
@@ -1195,7 +1200,7 @@ function BatchCard({
             </span>
           ))}
           <span className='border-border bg-muted text-muted-foreground inline-flex items-center rounded-full border px-2 py-0.5 text-xs'>
-            {batch.rows.length} campaigns
+            {t('campaignCount', { count: batch.rows.length })}
           </span>
         </div>
 
@@ -1226,6 +1231,7 @@ function BatchCard({
 
 // ─── Comparison Table ────────────────────────────────────────
 function ComparisonTable({ batches }: { batches: CommBatch[] }) {
+  const t = useTranslations('communications');
   const metrics = batches.map((b) => {
     const s = batchStats(b.rows);
     return {
@@ -1256,35 +1262,35 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
   const cols: { key: MetricKey; label: string; desc: string }[] = [
     {
       key: 'deliveryRate',
-      label: 'Delivery',
-      desc: 'Delivered / Sent'
+      label: t('delivery'),
+      desc: t('deliveryDesc')
     },
     {
       key: 'openRate',
-      label: 'Opened',
-      desc: 'Opened / Delivered'
+      label: t('opened'),
+      desc: t('openedDesc')
     },
     {
       key: 'clickRate',
-      label: 'Clicked',
-      desc: 'Clicks / Opened'
+      label: t('clicked'),
+      desc: t('clickedDesc')
     },
     {
       key: 'convRate',
-      label: 'Conversion',
-      desc: 'Made Purchase / Clicked'
+      label: t('conversion'),
+      desc: t('conversionDesc')
     },
     {
       key: 'overallConv',
-      label: 'Made Purchase',
-      desc: 'Made Purchase / Sent'
+      label: t('madePurchase'),
+      desc: t('madePurchaseDesc')
     },
     ...(hasRevenue
       ? [
           {
             key: 'revenue' as MetricKey,
-            label: 'Revenue Lift',
-            desc: 'Transaction Amount'
+            label: t('revenueLift'),
+            desc: t('revenueLiftDesc')
           }
         ]
       : [])
@@ -1295,7 +1301,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-[220px]'>Upload</TableHead>
+            <TableHead className='w-[220px]'>{t('upload')}</TableHead>
             {cols.map((c) => (
               <TableHead key={c.key} className='text-right'>
                 <div>
@@ -1351,6 +1357,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
 
 // ─── CSV Format Card ─────────────────────────────────────────
 function FormatCard() {
+  const t = useTranslations('communications');
   const columns = [
     { col: 'customer_id', type: 'string', example: 'CL-00142', required: true },
     { col: 'campaign_id', type: 'string', example: 'CMP-001', required: true },
@@ -1387,9 +1394,9 @@ function FormatCard() {
       <CardHeader className='pb-3'>
         <div className='flex items-start justify-between gap-2'>
           <div>
-            <CardTitle className='text-base'>Expected CSV Structure</CardTitle>
+            <CardTitle className='text-base'>{t('csvStructureTitle')}</CardTitle>
             <CardDescription className='mt-0.5'>
-              First row — headers, encoding UTF-8, delimiter — comma
+              {t('csvStructureDescription')}
             </CardDescription>
           </div>
           <Button
@@ -1399,7 +1406,7 @@ function FormatCard() {
             className='shrink-0 gap-1.5'
           >
             <IconDownload className='size-3.5' />
-            Sample
+            {t('sample')}
           </Button>
         </div>
       </CardHeader>
@@ -1407,10 +1414,10 @@ function FormatCard() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='pl-6'>Column</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Example</TableHead>
-              <TableHead className='pr-6 text-right'>Req.</TableHead>
+              <TableHead className='pl-6'>{t('column')}</TableHead>
+              <TableHead>{t('type')}</TableHead>
+              <TableHead>{t('example')}</TableHead>
+              <TableHead className='pr-6 text-right'>{t('required')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -1422,7 +1429,7 @@ function FormatCard() {
                   </code>
                 </TableCell>
                 <TableCell className='text-muted-foreground text-xs'>
-                  {c.type}
+                  {c.type === 'date' ? t('typeDate') : t('typeString')}
                 </TableCell>
                 <TableCell className='text-muted-foreground text-xs'>
                   {c.example}
@@ -1441,15 +1448,9 @@ function FormatCard() {
         <div className='border-border/50 flex items-start gap-2 border-t px-6 py-3'>
           <IconInfoCircle className='text-muted-foreground mt-0.5 size-3.5 shrink-0' />
           <p className='text-muted-foreground text-xs'>
-            One row = one client. <strong>customer_id</strong> — unique
-            client identifier; <strong>campaign_id</strong> — unique
-            marketing campaign identifier (required).{' '}
-            <strong>sent</strong> — send date (required);{' '}
-            <strong>delivered</strong>, <strong>opened</strong>,{' '}
-            <strong>clicked</strong> — event dates (empty if not occurred).
-            Channel values: <strong>Email</strong>, <strong>SMS</strong>,{' '}
-            <strong>Push</strong>, <strong>Viber</strong> or{' '}
-            <strong>Other</strong>.
+            {t.rich('csvHelpText', {
+              b: (chunks) => <strong>{chunks}</strong>
+            })}
           </p>
         </div>
       </CardContent>
@@ -1463,6 +1464,7 @@ function UploadCard({
 }: {
   onUpload: (productId: string, targetActionId: string) => void;
 }) {
+  const t = useTranslations('communications');
   const [dragging, setDragging] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState('');
   const [selectedTargetActionId, setSelectedTargetActionId] = useState('');
@@ -1484,23 +1486,23 @@ function UploadCard({
   return (
     <Card className='h-full'>
       <CardHeader className='pb-3'>
-        <CardTitle className='text-base'>Upload Communications</CardTitle>
+        <CardTitle className='text-base'>{t('uploadTitle')}</CardTitle>
         <CardDescription>
-          Select product and target action, then upload CSV
+          {t('uploadDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
         <div className='grid gap-3'>
           <div className='grid gap-1.5'>
             <label className='text-foreground text-xs font-medium'>
-              Product
+              {t('product')}
             </label>
             <Select
               value={selectedProductId}
               onValueChange={handleProductChange}
             >
               <SelectTrigger className='w-full text-sm'>
-                <SelectValue placeholder='Select product...' />
+                <SelectValue placeholder={t('selectProduct')} />
               </SelectTrigger>
               <SelectContent>
                 {PRODUCT_DICTIONARY.map((p) => (
@@ -1521,7 +1523,7 @@ function UploadCard({
                   : 'text-muted-foreground/50'
               )}
             >
-              Target Action
+              {t('targetAction')}
             </label>
             <Select
               value={selectedTargetActionId}
@@ -1532,8 +1534,8 @@ function UploadCard({
                 <SelectValue
                   placeholder={
                     selectedProductId
-                      ? 'Select target action...'
-                      : 'Select product first'
+                      ? t('selectTargetAction')
+                      : t('selectProductFirst')
                   }
                 />
               </SelectTrigger>
@@ -1583,10 +1585,10 @@ function UploadCard({
             />
           </div>
           <p className='text-foreground text-sm font-medium'>
-            Drag CSV here
+            {t('dragCsvHere')}
           </p>
           <p className='text-muted-foreground mt-1 text-xs'>
-            {canUpload ? 'or click to select' : 'select product and action'}
+            {canUpload ? t('orClickToSelect') : t('selectProductAndAction')}
           </p>
           <Badge variant='outline' className='mt-3 text-xs'>
             .csv · UTF-8
@@ -1595,9 +1597,9 @@ function UploadCard({
 
         <div className='grid grid-cols-3 gap-2 text-center'>
           {[
-            { label: 'Channels', value: 'Email, SMS, Push, Viber' },
-            { label: 'Rows', value: 'No limit' },
-            { label: 'Format', value: 'CSV (UTF-8)' }
+            { label: t('channels'), value: 'Email, SMS, Push, Viber' },
+            { label: t('rows'), value: t('noLimit') },
+            { label: t('format'), value: 'CSV (UTF-8)' }
           ].map((item) => (
             <div key={item.label} className='bg-muted rounded-lg px-2 py-2'>
               <p className='text-muted-foreground text-[10px]'>{item.label}</p>
@@ -1614,6 +1616,7 @@ function UploadCard({
 
 // ─── Main Page ───────────────────────────────────────────────
 export default function CommunicationsPage() {
+  const t = useTranslations('communications');
   const [batches, setBatches] = useState<CommBatch[]>(MOCK_BATCHES);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showUpload, setShowUpload] = useState(false);
@@ -1621,15 +1624,15 @@ export default function CommunicationsPage() {
 
   function handleUpload(productId: string, targetActionId: string) {
     if (batches.find((b) => b.id === EXTRA_MOCK_BATCH.id)) {
-      toast.info('This upload is already in the list');
+      toast.info(t('alreadyInList'));
       return;
     }
     setBatches((prev) => [
       { ...EXTRA_MOCK_BATCH, productId, targetActionId },
       ...prev
     ]);
-    toast.success('File uploaded successfully', {
-      description: `${EXTRA_MOCK_BATCH.name} · ${EXTRA_MOCK_BATCH.rows.length} campaigns`
+    toast.success(t('fileUploaded'), {
+      description: `${EXTRA_MOCK_BATCH.name} · ${t('campaignCount', { count: EXTRA_MOCK_BATCH.rows.length })}`
     });
   }
 
@@ -1659,11 +1662,11 @@ export default function CommunicationsPage() {
         <div className='flex items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Marketing · Channel Communications
+              {t('breadcrumb')}
             </p>
-            <h2 className='text-2xl font-bold tracking-tight'>Communications</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('title')}</h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
-              Upload reports, analyze conversion, and compare campaigns
+              {t('description')}
             </p>
           </div>
           <Button
@@ -1672,7 +1675,7 @@ export default function CommunicationsPage() {
             variant={showUpload ? 'outline' : 'default'}
           >
             <IconUpload className='size-4' />
-            {showUpload ? 'Hide' : 'Upload Past Communications'}
+            {showUpload ? t('hideButton') : t('uploadButton')}
           </Button>
         </div>
 
@@ -1692,16 +1695,17 @@ export default function CommunicationsPage() {
           <div className='mb-3 flex items-center justify-between gap-2'>
             <div>
               <p className='text-foreground text-sm font-semibold'>
-                Uploaded Campaigns
+                {t('uploadedCampaigns')}
               </p>
               <p className='text-muted-foreground text-xs'>
-                {batches.length} uploads · Select 2+ to compare
+                {t('uploadsSelectCompare', { count: batches.length })}
               </p>
             </div>
             {selectedIds.length > 0 && (
               <Badge variant='secondary' className='gap-1'>
-                Selected: {selectedIds.length}
-                {canCompare && ' · comparison active'}
+                {canCompare
+                  ? t('selectedComparison', { count: selectedIds.length })
+                  : t('selectedCount', { count: selectedIds.length })}
               </Badge>
             )}
           </div>
@@ -1709,10 +1713,10 @@ export default function CommunicationsPage() {
             <div className='border-border flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-16 text-center'>
               <IconMailForward className='text-muted-foreground/40 mb-3 size-10' />
               <p className='text-muted-foreground text-sm font-medium'>
-                No uploaded data
+                {t('noUploadedData')}
               </p>
               <p className='text-muted-foreground mt-1 text-xs'>
-                Upload the first CSV file to get started
+                {t('uploadFirstCsv')}
               </p>
             </div>
           ) : (
@@ -1743,7 +1747,7 @@ export default function CommunicationsPage() {
                             {b.name}
                           </p>
                           <p className='text-muted-foreground text-xs'>
-                            Details for {b.rows.length} campaigns
+                            {t('detailsFor', { count: b.rows.length })}
                           </p>
                           {(() => {
                             const label = getTargetActionLabel(
@@ -1788,7 +1792,7 @@ export default function CommunicationsPage() {
             <div className='flex items-center gap-3'>
               <div className='bg-border h-px flex-1' />
               <p className='text-muted-foreground shrink-0 text-xs font-semibold tracking-widest uppercase'>
-                Comparing {selectedBatches.length} uploads
+                {t('comparingUploads', { count: selectedBatches.length })}
               </p>
               <div className='bg-border h-px flex-1' />
             </div>
@@ -1818,7 +1822,7 @@ export default function CommunicationsPage() {
                       <CardTitle className='text-sm'>{batch.name}</CardTitle>
                     </div>
                     <CardDescription className='text-xs'>
-                      {batch.rows.length} campaigns · {batch.uploadedAt}
+                      {t('campaignCount', { count: batch.rows.length })} · {batch.uploadedAt}
                     </CardDescription>
                     {(() => {
                       const label = getTargetActionLabel(
@@ -1849,19 +1853,19 @@ export default function CommunicationsPage() {
                           <div className='mt-3 grid grid-cols-2 gap-2'>
                             {[
                               {
-                                label: 'Opened',
+                                label: t('opened'),
                                 val: pct(s.opened, s.delivered)
                               },
                               {
-                                label: 'Clicked',
+                                label: t('clicked'),
                                 val: pct(s.clicked, s.opened)
                               },
                               {
-                                label: 'Conversion',
+                                label: t('conversion'),
                                 val: pct(s.converted, s.clicked)
                               },
                               {
-                                label: 'Made Purchase',
+                                label: t('madePurchase'),
                                 val: pct(s.converted, s.sent)
                               }
                             ].map((m) => (
@@ -1884,7 +1888,7 @@ export default function CommunicationsPage() {
                                 {fmtMoney(s.revenue)}
                               </p>
                               <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                                Generated Turnover
+                                {t('generatedTurnoverShort')}
                               </p>
                             </div>
                           )}
@@ -1901,7 +1905,7 @@ export default function CommunicationsPage() {
         {!canCompare && selectedIds.length === 1 && (
           <div className='border-primary/30 bg-primary/10 text-primary flex items-center gap-2 rounded-lg border px-4 py-3 text-sm'>
             <IconInfoCircle className='size-4 shrink-0' />
-            Select one more upload to compare
+            {t('selectOneMore')}
           </div>
         )}
       </div>
