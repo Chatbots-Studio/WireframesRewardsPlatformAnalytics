@@ -65,9 +65,9 @@ interface Category {
 const categories: Category[] = [
   {
     id: '1',
-    name: 'Персональний: Кафе',
+    name: 'Personal: Café',
     type: 'personal',
-    segment: 'Молодь 18-35',
+    segment: 'Youth 18-35',
     shown: 8200,
     chosen: 7216,
     transacted: 6642,
@@ -80,7 +80,7 @@ const categories: Category[] = [
     id: '2',
     name: 'Rozetka',
     type: 'partner',
-    segment: 'Всі',
+    segment: 'All',
     shown: 18000,
     chosen: 14580,
     transacted: 12960,
@@ -93,7 +93,7 @@ const categories: Category[] = [
     id: '3',
     name: 'Bolt Food',
     type: 'partner',
-    segment: 'Всі',
+    segment: 'All',
     shown: 15000,
     chosen: 12000,
     transacted: 9600,
@@ -104,9 +104,9 @@ const categories: Category[] = [
   },
   {
     id: '4',
-    name: 'Супермаркети',
+    name: 'Supermarkets',
     type: 'default',
-    segment: 'Всі',
+    segment: 'All',
     shown: 45000,
     chosen: 31500,
     transacted: 26100,
@@ -117,9 +117,9 @@ const categories: Category[] = [
   },
   {
     id: '5',
-    name: 'Аптеки',
+    name: 'Pharmacies',
     type: 'default',
-    segment: 'Всі',
+    segment: 'All',
     shown: 29000,
     chosen: 19720,
     transacted: 15080,
@@ -130,9 +130,9 @@ const categories: Category[] = [
   },
   {
     id: '6',
-    name: 'Персональний: Спорт',
+    name: 'Personal: Sports',
     type: 'personal',
-    segment: 'Активні 25-45',
+    segment: 'Active 25-45',
     shown: 6400,
     chosen: 4608,
     transacted: 3456,
@@ -143,9 +143,9 @@ const categories: Category[] = [
   },
   {
     id: '7',
-    name: 'АЗС',
+    name: 'Gas Stations',
     type: 'default',
-    segment: 'Всі',
+    segment: 'All',
     shown: 38000,
     chosen: 22800,
     transacted: 17480,
@@ -167,22 +167,22 @@ function getStatus(cat: Category): Status {
 function funnelSteps(cat: Category) {
   return [
     {
-      label: 'Показано пропозицію',
+      label: 'Offer Shown',
       value: cat.shown,
       icon: <IconEye className='size-3.5' />
     },
     {
-      label: 'Обрали кешбек',
+      label: 'Selected Cashback',
       value: cat.chosen,
       icon: <IconClick className='size-3.5' />
     },
     {
-      label: 'Зробили транзакцію',
+      label: 'Made Transaction',
       value: cat.transacted,
       icon: <IconCreditCard className='size-3.5' />
     },
     {
-      label: 'Отримали кешбек',
+      label: 'Received Cashback',
       value: cat.received,
       icon: <IconUsers className='size-3.5' />
     }
@@ -197,9 +197,9 @@ const sortedByProblems = [...categories].sort(
 // ─── Sub-components ─────────────────────────────────────────
 
 const typeLabel: Record<CashbackType, string> = {
-  default: 'Дефолтний',
-  partner: 'Партнерський',
-  personal: 'Персональний'
+  default: 'Default',
+  partner: 'Partner',
+  personal: 'Personal'
 };
 const typeVariant: Record<CashbackType, 'secondary' | 'outline' | 'default'> = {
   default: 'secondary',
@@ -307,7 +307,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
               fontSize={10}
               fill='var(--muted-foreground)'
             >
-              {Math.round(pct * 100)}% від початку
+              {Math.round(pct * 100)}% from start
             </text>
             {/* Dropout між кроками */}
             {i > 0 && (
@@ -333,7 +333,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
                       : 'var(--muted-foreground)'
                   }
                 >
-                  -{dropPct}% відвалилось
+                  -{dropPct}% dropped off
                 </text>
               </>
             )}
@@ -390,7 +390,7 @@ function HealthCard({
             className={`text-xs font-medium ${diff >= 0 ? 'text-primary' : 'text-muted-foreground'}`}
           >
             {diff >= 0 ? '+' : ''}
-            {diff}pp vs ціль
+            {diff}pp vs target
           </p>
         </div>
       </div>
@@ -410,10 +410,10 @@ function HealthCard({
               {cat.trend > 0 ? '+' : ''}
               {cat.trend}pp
             </span>
-            <span>vs минулий місяць</span>
+            <span>vs previous month</span>
           </>
         )}
-        {cat.trend === 0 && <span>Без змін vs минулий місяць</span>}
+        {cat.trend === 0 && <span>No change vs previous month</span>}
       </div>
     </button>
   );
@@ -454,9 +454,9 @@ export default function ProductDashboard() {
 
   const allAggregate: Category = {
     id: 'all',
-    name: 'Всі категорії та пропозиції',
+    name: 'All Categories & Offers',
     type: 'default',
-    segment: `${filtered.length} категорій`,
+    segment: `${filtered.length} categories`,
     shown: totalShown,
     chosen: totalChosen,
     transacted: totalTransacted,
@@ -479,15 +479,15 @@ export default function ProductDashboard() {
         <div className='flex flex-wrap items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Продакт-менеджер · Кешбек-програма
+              Product Manager · Cashback Program
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Деталізація пропозицій
+              Offer Details
             </h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
               {criticalCount > 0
-                ? `${criticalCount} категорі${criticalCount === 1 ? 'я потребує' : 'ї потребують'} негайної уваги`
-                : 'Всі категорії в нормі або вище цілі'}
+                ? `${criticalCount} categor${criticalCount === 1 ? 'y needs' : 'ies need'} immediate attention`
+                : 'All categories normal or above target'}
             </p>
           </div>
 
@@ -497,32 +497,32 @@ export default function ProductDashboard() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='feb2025'>Лютий 2025</SelectItem>
-                <SelectItem value='jan2025'>Січень 2025</SelectItem>
+                <SelectItem value='feb2025'>February 2025</SelectItem>
+                <SelectItem value='jan2025'>January 2025</SelectItem>
                 <SelectItem value='q1'>Q1 2025</SelectItem>
-                <SelectItem value='custom'>Довільний...</SelectItem>
+                <SelectItem value='custom'>Custom...</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className='w-[150px]'>
-                <SelectValue placeholder='Тип кешбеку' />
+                <SelectValue placeholder='Cashback type' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>Всі типи</SelectItem>
-                <SelectItem value='default'>Дефолтний</SelectItem>
-                <SelectItem value='partner'>Партнерський</SelectItem>
-                <SelectItem value='personal'>Персональний</SelectItem>
+                <SelectItem value='all'>All types</SelectItem>
+                <SelectItem value='default'>Default</SelectItem>
+                <SelectItem value='partner'>Partner</SelectItem>
+                <SelectItem value='personal'>Personal</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterSegment} onValueChange={setFilterSegment}>
               <SelectTrigger className='w-[150px]'>
-                <SelectValue placeholder='Сегмент' />
+                <SelectValue placeholder='Segment' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>Всі сегменти</SelectItem>
-                <SelectItem value='youth'>Молодь 18-35</SelectItem>
-                <SelectItem value='active'>Активні 25-45</SelectItem>
-                <SelectItem value='premium'>Преміум</SelectItem>
+                <SelectItem value='all'>All segments</SelectItem>
+                <SelectItem value='youth'>Youth 18-35</SelectItem>
+                <SelectItem value='active'>Active 25-45</SelectItem>
+                <SelectItem value='premium'>Premium</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -533,7 +533,7 @@ export default function ProductDashboard() {
           {/* Всі категорії та пропозиції — клікабельний список */}
           <div className='space-y-2 lg:col-span-2'>
             <p className='text-muted-foreground px-1 text-xs font-semibold tracking-wide uppercase'>
-              Всі категорії та пропозиції · відхилення від цілі
+              All categories & offers · deviation from target
             </p>
             <div className='space-y-2 overflow-y-auto pr-1'>
               {/* Пункт «Всі» — зведена воронка */}
@@ -555,10 +555,10 @@ export default function ProductDashboard() {
                     </div>
                     <div className='min-w-0'>
                       <p className='text-foreground text-sm leading-tight font-semibold'>
-                        Всі категорії та пропозиції
+                        All Categories & Offers
                       </p>
                       <p className='text-muted-foreground mt-0.5 text-xs'>
-                        {filtered.length} категорій · зведена воронка
+                        {filtered.length} categories · aggregated funnel
                       </p>
                     </div>
                   </div>
@@ -566,7 +566,7 @@ export default function ProductDashboard() {
                     <p className='text-primary text-lg font-black tabular-nums'>
                       {avgConv}%
                     </p>
-                    <p className='text-muted-foreground text-xs'>заг. конв.</p>
+                    <p className='text-muted-foreground text-xs'>overall conv.</p>
                   </div>
                 </div>
               </button>
@@ -602,7 +602,7 @@ export default function ProductDashboard() {
                   <div className='mt-1 flex items-center gap-2'>
                     {isAll ? (
                       <span className='text-muted-foreground text-xs'>
-                        Сумарно по {filtered.length} категоріях
+                        Total across {filtered.length} categories
                       </span>
                     ) : (
                       <>
@@ -610,7 +610,7 @@ export default function ProductDashboard() {
                           {typeLabel[selectedCat.type]}
                         </Badge>
                         <span className='text-muted-foreground text-xs'>
-                          Сегмент: {selectedCat.segment}
+                          Segment: {selectedCat.segment}
                         </span>
                       </>
                     )}
@@ -623,12 +623,12 @@ export default function ProductDashboard() {
                     {selectedCat.convRate}%
                   </p>
                   <p className='text-muted-foreground text-xs'>
-                    Ціль: {selectedCat.benchmark}%
+                    Target: {selectedCat.benchmark}%
                   </p>
                 </div>
               </div>
               <CardDescription className='mt-1'>
-                Воронка: Показано → Обрали → Транзакція → Кешбек · Червоний
+                Funnel: Shown → Selected → Transaction → Cashback · Red
                 dropout {'>'} 25%
               </CardDescription>
             </CardHeader>
@@ -638,21 +638,21 @@ export default function ProductDashboard() {
               <div className='mt-4 grid grid-cols-3 gap-3'>
                 {[
                   {
-                    label: 'Показано → Обрали',
+                    label: 'Shown → Selected',
                     val: Math.round(
                       (selectedCat.chosen / selectedCat.shown) * 100
                     ),
                     ref: 75
                   },
                   {
-                    label: 'Обрали → Транзакція',
+                    label: 'Selected → Transaction',
                     val: Math.round(
                       (selectedCat.transacted / selectedCat.chosen) * 100
                     ),
                     ref: 85
                   },
                   {
-                    label: 'Транзакція → Отримали',
+                    label: 'Transaction → Received',
                     val: Math.round(
                       (selectedCat.received / selectedCat.transacted) * 100
                     ),
@@ -684,7 +684,7 @@ export default function ProductDashboard() {
                           ok ? 'text-primary' : 'text-muted-foreground'
                         )}
                       >
-                        ціль {m.ref}%{' '}
+                        target {m.ref}%{' '}
                         {ok ? (
                           <IconCheck className='size-3' />
                         ) : (
@@ -713,11 +713,11 @@ export default function ProductDashboard() {
                   )}
                   <span>
                     {selectedCat.convRate < selectedCat.benchmark
-                      ? `Конверсія ${selectedCat.convRate}% нижче цілі ${selectedCat.benchmark}% на ${selectedCat.benchmark - selectedCat.convRate}pp. `
+                      ? `Conversion ${selectedCat.convRate}% below target ${selectedCat.benchmark}% by ${selectedCat.benchmark - selectedCat.convRate}pp. `
                       : ''}
                     {selectedCat.trend < 0
-                      ? `Падає ${Math.abs(selectedCat.trend)}pp за місяць — динаміка негативна. Рекомендовано запустити A/B тест.`
-                      : 'Стабільний стан.'}
+                      ? `Dropping ${Math.abs(selectedCat.trend)}pp per month — negative trend. A/B test recommended.`
+                      : 'Stable state.'}
                   </span>
                 </div>
               </CardFooter>
@@ -729,25 +729,25 @@ export default function ProductDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>
-              Всі категорії — деталізація
+              All Categories — Details
             </CardTitle>
             <CardDescription>
-              Відсортовано за відхиленням від цілі · Клікни на рядок щоб
-              побачити воронку · Червоний = нижче benchmark
+              Sorted by deviation from target · Click row to see funnel ·
+              Red = below benchmark
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Категорія</TableHead>
-                  <TableHead className='text-right'>Показано</TableHead>
-                  <TableHead className='text-right'>Обрали</TableHead>
-                  <TableHead className='text-right'>Транзакція</TableHead>
-                  <TableHead className='text-right'>Отримали</TableHead>
-                  <TableHead className='text-right'>Конв.</TableHead>
-                  <TableHead className='text-right'>Ціль</TableHead>
-                  <TableHead className='text-right'>Відхилення</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead className='text-right'>Shown</TableHead>
+                  <TableHead className='text-right'>Selected</TableHead>
+                  <TableHead className='text-right'>Transaction</TableHead>
+                  <TableHead className='text-right'>Received</TableHead>
+                  <TableHead className='text-right'>Conv.</TableHead>
+                  <TableHead className='text-right'>Target</TableHead>
+                  <TableHead className='text-right'>Deviation</TableHead>
                   <TableHead className='text-right'>MoM</TableHead>
                 </TableRow>
               </TableHeader>
