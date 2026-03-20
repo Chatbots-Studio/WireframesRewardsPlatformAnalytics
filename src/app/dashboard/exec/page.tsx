@@ -233,7 +233,7 @@ const signals: {
   {
     level: 'ok',
     title: `ROI ${curr.roi}% for February — 150% target exceeded`,
-    detail: `Revenue ${curr.revenue.toLocaleString('uk-UA')} K ₴ with accrued cashback costs of ${curr.accrued.toLocaleString('uk-UA')} K ₴. Growth for the 6th consecutive month.`
+    detail: `Revenue ${curr.revenue.toLocaleString('en-US')} K ₴ with accrued cashback costs of ${curr.accrued.toLocaleString('en-US')} K ₴. Growth for the 6th consecutive month.`
   },
   {
     level: 'warn',
@@ -243,7 +243,7 @@ const signals: {
   },
   {
     level: 'info',
-    title: `Cashback balance on accounts: ${curr.balance.toLocaleString('uk-UA')} K ₴ (${balancePct}% of accrued)`,
+    title: `Cashback balance on accounts: ${curr.balance.toLocaleString('en-US')} K ₴ (${balancePct}% of accrued)`,
     detail:
       'Clients retain part of the cashback — this is a bank liability and also a retention resource.'
   }
@@ -265,7 +265,7 @@ function RoiBarTooltip({ active, payload, label }: any) {
   const paid = payload.find((p: any) => p.dataKey === 'paid')?.value ?? 0;
   const bal = acc - paid;
   const roi = Math.round((rev / acc) * 100);
-  const fmt = (v: number) => `${v.toLocaleString('uk-UA')} K ₴`;
+  const fmt = (v: number) => `${v.toLocaleString('en-US')} K ₴`;
   return (
     <div className='bg-card text-card-foreground min-w-[200px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
@@ -292,7 +292,7 @@ function ActiveClientsTooltip({ active, payload, label }: any) {
     <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
-        Active clients: <strong>{val.toLocaleString('uk-UA')}</strong>
+        Active clients: <strong>{val.toLocaleString('en-US')}</strong>
       </p>
     </div>
   );
@@ -341,7 +341,7 @@ function BreakdownTooltip({ active, payload, label }: any) {
     payload.find((p: any) => p.dataKey === k)?.value ?? 0;
   const wb = g('wb_i') + g('wb_c') + g('wb_cr') + g('wb_o');
   const nc = g('nc_i') + g('nc_c') + g('nc_cr') + g('nc_o');
-  const fmt = (v: number) => `${v.toLocaleString('uk-UA')} K ₴`;
+  const fmt = (v: number) => `${v.toLocaleString('en-US')} K ₴`;
   return (
     <div className='bg-card text-card-foreground min-w-[210px] space-y-0.5 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
@@ -393,9 +393,9 @@ export default function ExecDashboard() {
               ROI {curr.roi}% — revenue exceeds costs by 1.86×
             </h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
-              Revenue {curr.revenue.toLocaleString('uk-UA')} K ₴ · Accrued
-              cashback {curr.accrued.toLocaleString('uk-UA')} K ₴ · Paid out{' '}
-              {curr.paid.toLocaleString('uk-UA')} K ₴ ({paidPct}%)
+              Revenue {curr.revenue.toLocaleString('en-US')} K ₴ · Accrued
+              cashback {curr.accrued.toLocaleString('en-US')} K ₴ · Paid out{' '}
+              {curr.paid.toLocaleString('en-US')} K ₴ ({paidPct}%)
             </p>
           </div>
           <Select defaultValue='6m'>
@@ -501,7 +501,7 @@ export default function ExecDashboard() {
                     </span>
                   </div>
                   <span className='text-primary font-bold tabular-nums'>
-                    {curr.revenue.toLocaleString('uk-UA')} K ₴
+                    {curr.revenue.toLocaleString('en-US')} K ₴
                   </span>
                 </div>
                 <Separator />
@@ -518,7 +518,7 @@ export default function ExecDashboard() {
                     </span>
                   </div>
                   <span className='text-muted-foreground font-semibold tabular-nums'>
-                    {curr.accrued.toLocaleString('uk-UA')} K ₴
+                    {curr.accrued.toLocaleString('en-US')} K ₴
                   </span>
                 </div>
 
@@ -534,7 +534,7 @@ export default function ExecDashboard() {
                     </span>
                   </div>
                   <span className='text-muted-foreground text-sm font-medium tabular-nums'>
-                    {curr.paid.toLocaleString('uk-UA')} K ₴ ({paidPct}%)
+                    {curr.paid.toLocaleString('en-US')} K ₴ ({paidPct}%)
                   </span>
                 </div>
 
@@ -547,7 +547,7 @@ export default function ExecDashboard() {
                     </span>
                   </div>
                   <span className='text-muted-foreground text-sm font-medium tabular-nums'>
-                    {curr.balance.toLocaleString('uk-UA')} K ₴ ({balancePct}
+                    {curr.balance.toLocaleString('en-US')} K ₴ ({balancePct}
                     %)
                   </span>
                 </div>

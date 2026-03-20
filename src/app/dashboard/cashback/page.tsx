@@ -297,7 +297,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
               fill={color}
               fontWeight={700}
             >
-              {step.value.toLocaleString('uk-UA')}
+              {step.value.toLocaleString('en-US')}
             </text>
             {/* % від початку */}
             <text

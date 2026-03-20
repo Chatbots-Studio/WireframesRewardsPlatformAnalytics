@@ -31,11 +31,11 @@ import {
 } from '@/features/reports/data/quick-cashback-refund.mock';
 
 function formatMoney(value: number): string {
-  return `${value.toLocaleString('uk-UA')} ₴`;
+  return `${value.toLocaleString('en-US')} ₴`;
 }
 
 function formatDate(value: string): string {
-  return new Date(value).toLocaleString('uk-UA', {
+  return new Date(value).toLocaleString('en-US', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',

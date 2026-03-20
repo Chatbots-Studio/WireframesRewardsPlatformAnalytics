@@ -459,14 +459,14 @@ function BeforeAfterTooltip({
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
-        Before: <strong>{row?.before?.toLocaleString('uk-UA')} k ₴</strong>
+        Before: <strong>{row?.before?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p>
-        After: <strong>{row?.after?.toLocaleString('uk-UA')} k ₴</strong>
+        After: <strong>{row?.after?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p className='text-muted-foreground pt-1'>
-        Transactions: {row?.txBefore?.toLocaleString('uk-UA')} →{' '}
-        {row?.txAfter?.toLocaleString('uk-UA')}
+        Transactions: {row?.txBefore?.toLocaleString('en-US')} →{' '}
+        {row?.txAfter?.toLocaleString('en-US')}
       </p>
     </div>
   );
@@ -510,14 +510,14 @@ function CannibalizationTooltip({
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
         Cashback categories:{' '}
-        <strong>{row?.cashbackCats?.toLocaleString('uk-UA')} ₴</strong>
+        <strong>{row?.cashbackCats?.toLocaleString('en-US')} ₴</strong>
       </p>
       <p>
         Other categories:{' '}
-        <strong>{row?.otherCats?.toLocaleString('uk-UA')} ₴</strong>
+        <strong>{row?.otherCats?.toLocaleString('en-US')} ₴</strong>
       </p>
       <p className='pt-1 font-medium'>
-        Total: {row?.total?.toLocaleString('uk-UA')} ₴
+        Total: {row?.total?.toLocaleString('en-US')} ₴
       </p>
     </div>
   );
@@ -560,9 +560,9 @@ function ROIScatterTooltip({
   return (
     <div className={cn(CHART_TOOLTIP_CLASS, 'min-w-[200px]')}>
       <p className='mb-1 text-sm font-semibold'>{d.name}</p>
-      <p>Turnover: {d.turnover.toLocaleString('uk-UA')} k ₴</p>
-      <p>Cashback: {d.cashback.toLocaleString('uk-UA')} k ₴</p>
-      <p>Transactions: {d.transactions.toLocaleString('uk-UA')}</p>
+      <p>Turnover: {d.turnover.toLocaleString('en-US')} k ₴</p>
+      <p>Cashback: {d.cashback.toLocaleString('en-US')} k ₴</p>
+      <p>Transactions: {d.transactions.toLocaleString('en-US')}</p>
       {d.isAnomaly && ANOMALY_MESSAGES[d.name] && (
         <p className='text-warning mt-1 font-medium'>
           ⚠️ Anomaly: {ANOMALY_MESSAGES[d.name]}
@@ -936,7 +936,7 @@ export default function CashbackImpactPage() {
                       <div className='flex items-center justify-between text-sm'>
                         <span className='font-medium'>{step.label}</span>
                         <span className='text-muted-foreground tabular-nums'>
-                          {step.value.toLocaleString('uk-UA')}
+                          {step.value.toLocaleString('en-US')}
                           {step.pct < 100 ? ` (${step.pct}%)` : ''}
                         </span>
                       </div>

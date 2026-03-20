@@ -105,7 +105,7 @@ function pct(num: number, den: number) {
 function fmtNum(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(0)}k`;
-  return n.toLocaleString('uk-UA');
+  return n.toLocaleString('en-US');
 }
 
 function fmtMoney(n: number) {
@@ -582,7 +582,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
               >
                 {step.value >= 1000
                   ? `${(step.value / 1000).toFixed(0)}k`
-                  : step.value.toLocaleString('uk-UA')}
+                  : step.value.toLocaleString('en-US')}
               </text>
               <text
                 x={W / 2}
