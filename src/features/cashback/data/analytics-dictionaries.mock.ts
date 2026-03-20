@@ -34,7 +34,7 @@ export const ANALYTICS_DATA_SOURCES: AnalyticsDataSource[] = [
     id: 'SRC-CB-WEBHOOKS',
     name: 'Cashback Webhooks',
     description:
-      'Події процесингу кешбеку: активації категорій, транзакції, нарахування, виплати.',
+      'Cashback processing events: category activations, transactions, accruals, payouts.',
     type: 'event_stream',
     owner: 'Cashback Core',
     refreshPolicy: 'near real-time',
@@ -44,7 +44,7 @@ export const ANALYTICS_DATA_SOURCES: AnalyticsDataSource[] = [
     id: 'SRC-CRM-COMM',
     name: 'CRM Campaign History',
     description:
-      'Історія комунікацій по кампаніях (in-app/push/email/sms/call), завантаження або API.',
+      'Campaign communication history (in-app/push/email/sms/call), upload or API.',
     type: 'api',
     owner: 'CRM / Marketing',
     refreshPolicy: 'hourly',
@@ -54,7 +54,7 @@ export const ANALYTICS_DATA_SOURCES: AnalyticsDataSource[] = [
     id: 'SRC-SEG-UPLOAD',
     name: 'Segments Upload',
     description:
-      'Файлова привʼязка клієнтів до сегментів до запуску автоматичного модуля сегментації.',
+      'File-based client-to-segment mapping before automatic segmentation module launch.',
     type: 'file_upload',
     owner: 'Product Analytics',
     refreshPolicy: 'on demand',
@@ -64,7 +64,7 @@ export const ANALYTICS_DATA_SOURCES: AnalyticsDataSource[] = [
     id: 'SRC-DWH-TX',
     name: 'Transactions DWH',
     description:
-      'Агрегати транзакцій і карткової активності для побудови метрик за періоди.',
+      'Transaction and card activity aggregates for building metrics by period.',
     type: 'dwh',
     owner: 'Data Platform',
     refreshPolicy: 'daily',
@@ -74,7 +74,7 @@ export const ANALYTICS_DATA_SOURCES: AnalyticsDataSource[] = [
     id: 'SRC-FIN-PNL',
     name: 'Financial PnL',
     description:
-      'Дохід банку по клієнтах та продуктах (інтерчендж, комісії, кредитні доходи).',
+      'Bank revenue by clients and products (interchange, commissions, credit income).',
     type: 'dwh',
     owner: 'Finance BI',
     refreshPolicy: 'monthly',
@@ -87,42 +87,42 @@ export const PRODUCT_DICTIONARY: ProductDictionaryEntry[] = [
     id: 'PRD-RADA-CARD',
     name: 'Rada Card',
     productSourceDescription:
-      'Картковий продукт для масового сегмента. Аналітика побудована на подіях вибору категорії та транзакцій.',
+      'Card product for the mass segment. Analytics built on category selection events and transactions.',
     productSourceId: 'SRC-CB-WEBHOOKS',
     activeConditions: [
-      'Картка активна та не заблокована',
-      'Є принаймні один вхід у мобільний застосунок за останні 30 днів',
-      'Категорія кешбеку обрана у поточному календарному місяці'
+      'Card is active and not blocked',
+      'At least one mobile app login within the last 30 days',
+      'Cashback category selected in the current calendar month'
     ],
     inactiveConditions: [
-      'Картка заблокована або закрита',
-      'Відсутня активність у застосунку понад 30 днів',
-      'Категорія не обрана у поточному календарному місяці'
+      'Card is blocked or closed',
+      'No app activity for more than 30 days',
+      'Category not selected in the current calendar month'
     ],
     targetActions: [
       {
         id: 'TA-RADA-CATEGORY-SELECT',
-        name: 'Вибір категорії кешбеку',
+        name: 'Cashback Category Selection',
         definition:
-          'Клієнт відкрив екран кешбеку та підтвердив вибір категорії в поточному місяці.',
+          'Client opened the cashback screen and confirmed category selection in the current month.',
         identificationMethod:
           'event_name = cashback_category_selected AND period_month = current_month',
         dataSourceId: 'SRC-CB-WEBHOOKS'
       },
       {
         id: 'TA-RADA-CB-TX',
-        name: 'Транзакція з нарахованим кешбеком',
+        name: 'Transaction with Accrued Cashback',
         definition:
-          'Транзакція по картці, яка підпала під активне правило кешбеку та отримала нарахування.',
+          'Card transaction that matched an active cashback rule and received an accrual.',
         identificationMethod:
           'event_name = cashback_accrued AND cashback_amount > 0',
         dataSourceId: 'SRC-CB-WEBHOOKS'
       },
       {
         id: 'TA-RADA-CB-PAYOUT',
-        name: 'Отримання кешбеку клієнтом',
+        name: 'Client Cashback Payout',
         definition:
-          'Кошти кешбеку виведені клієнту на рахунок після нарахування.',
+          'Cashback funds transferred to the client account after accrual.',
         identificationMethod:
           'event_name = cashback_payout AND payout_status = success',
         dataSourceId: 'SRC-CB-WEBHOOKS'
@@ -133,33 +133,33 @@ export const PRODUCT_DICTIONARY: ProductDictionaryEntry[] = [
     id: 'PRD-DEPOSIT',
     name: 'Deposits',
     productSourceDescription:
-      'Продукт депозитів з аналітикою впливу кешбек-пропозицій на поведінку сегментів.',
+      'Deposit product with analytics on the impact of cashback offers on segment behavior.',
     productSourceId: 'SRC-DWH-TX',
     activeConditions: [
-      'Є чинний депозитний договір',
-      'Клієнт потрапляє у цільовий сегмент кампанії',
-      'Кампанія активна у межах вікна атрибуції 30 днів'
+      'Active deposit agreement exists',
+      'Client falls within the campaign target segment',
+      'Campaign is active within the 30-day attribution window'
     ],
     inactiveConditions: [
-      'Депозит закритий',
-      'Клієнт виключений із сегменту кампанії',
-      'Вікно атрибуції 30 днів минуло'
+      'Deposit is closed',
+      'Client excluded from campaign segment',
+      '30-day attribution window has expired'
     ],
     targetActions: [
       {
         id: 'TA-DEP-PRODUCT-VIEW',
-        name: 'Перегляд депозитної пропозиції',
+        name: 'Deposit Offer View',
         definition:
-          'Клієнт відкрив деталі депозитної пропозиції після комунікації.',
+          'Client opened deposit offer details after a communication.',
         identificationMethod:
           'event_name = deposit_offer_viewed AND attribution_window_days <= 30',
         dataSourceId: 'SRC-CRM-COMM'
       },
       {
         id: 'TA-DEP-OPEN',
-        name: 'Відкриття депозиту',
+        name: 'Deposit Opening',
         definition:
-          'Клієнт відкрив депозит після взаємодії з комунікацією та/або кешбек-офером.',
+          'Client opened a deposit after interacting with a communication and/or cashback offer.',
         identificationMethod:
           'deposit_opened_at IS NOT NULL AND attribution_window_days <= 30',
         dataSourceId: 'SRC-DWH-TX'
@@ -170,39 +170,39 @@ export const PRODUCT_DICTIONARY: ProductDictionaryEntry[] = [
     id: 'PRD-SALARY',
     name: 'Salary Project',
     productSourceDescription:
-      'Зарплатний продукт, де оцінюємо активацію та утримання клієнтів через персональні кампанії.',
+      'Salary product where we evaluate client activation and retention through personalized campaigns.',
     productSourceId: 'SRC-SEG-UPLOAD',
     activeConditions: [
-      'Клієнт входить у завантажений цільовий сегмент',
-      'Отримано мінімум одне зарахування зарплати за останній місяць'
+      'Client is in the uploaded target segment',
+      'At least one salary deposit received in the last month'
     ],
     inactiveConditions: [
-      'Клієнт відсутній у поточному сегменті',
-      'Немає зарплатних зарахувань більше 30 днів'
+      'Client is not in the current segment',
+      'No salary deposits for more than 30 days'
     ],
     targetActions: [
       {
         id: 'TA-SAL-SEGMENT-ENTER',
-        name: 'Потрапляння в цільовий сегмент',
+        name: 'Target Segment Entry',
         definition:
-          'Клієнт присутній у файлі сегментації або отриманий з модуля сегментів.',
+          'Client is present in the segmentation file or received from the segments module.',
         identificationMethod: 'segment_id IS NOT NULL AND assigned_at IS NOT NULL',
         dataSourceId: 'SRC-SEG-UPLOAD'
       },
       {
         id: 'TA-SAL-ACTIVE-CARD-TX',
-        name: 'Активна карткова транзакція',
+        name: 'Active Card Transaction',
         definition:
-          'Після потрапляння у сегмент клієнт здійснив щонайменше одну покупку.',
+          'After entering the segment, the client made at least one purchase.',
         identificationMethod:
           'tx_count_after_segment_assignment >= 1 within 30 days',
         dataSourceId: 'SRC-DWH-TX'
       },
       {
         id: 'TA-SAL-RETENTION-30D',
-        name: 'Утримання 30 днів',
+        name: '30-Day Retention',
         definition:
-          'Клієнт залишився активним через 30 днів після першої цільової дії.',
+          'Client remained active 30 days after the first target action.',
         identificationMethod:
           'is_active_on_day_30 = true (cohort retention check)'
       }
