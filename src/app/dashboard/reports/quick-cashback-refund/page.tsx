@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import PageContainer from '@/components/layout/page-container';
 import {
   Card,
@@ -45,6 +46,7 @@ function formatDate(value: string): string {
 }
 
 export default function QuickCashbackRefundReportPage() {
+  const t = useTranslations('reports');
   const [periodDays, setPeriodDays] = useState<FraudReportPeriodDays>(7);
 
   const rows = useMemo(
@@ -69,20 +71,19 @@ export default function QuickCashbackRefundReportPage() {
         <div className='flex flex-wrap items-start justify-between gap-3'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Reports · Anti-Fraud
+              {t('breadcrumb')}
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Quick Cashback Withdrawal + Refund
+              {t('title')}
             </h2>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Clients with suspicious patterns: maximum cashback in a single
-              transaction, withdrawal within 10-40 minutes, and subsequent product return.
+              {t('description')}
             </p>
           </div>
 
           <div className='flex items-center gap-2'>
             <Badge variant='outline' className='text-xs'>
-              Period
+              {t('period')}
             </Badge>
             <Select
               value={String(periodDays)}
@@ -94,9 +95,9 @@ export default function QuickCashbackRefundReportPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='7'>Last 7 Days</SelectItem>
-                <SelectItem value='14'>Last 14 Days</SelectItem>
-                <SelectItem value='30'>Last 30 Days</SelectItem>
+                <SelectItem value='7'>{t('periodLast7d')}</SelectItem>
+                <SelectItem value='14'>{t('periodLast14d')}</SelectItem>
+                <SelectItem value='30'>{t('periodLast30d')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -105,14 +106,14 @@ export default function QuickCashbackRefundReportPage() {
         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Suspicious Clients</CardDescription>
+              <CardDescription>{t('suspiciousClients')}</CardDescription>
               <CardTitle className='text-2xl'>{rows.length}</CardTitle>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Total Max Cashback</CardDescription>
+              <CardDescription>{t('totalMaxCashback')}</CardDescription>
               <CardTitle className='text-primary text-2xl'>
                 {formatMoney(summary.maxCashbackTotal)}
               </CardTitle>
@@ -121,7 +122,7 @@ export default function QuickCashbackRefundReportPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Total Cashback Withdrawn</CardDescription>
+              <CardDescription>{t('totalCashbackWithdrawn')}</CardDescription>
               <CardTitle className='text-2xl'>
                 {formatMoney(summary.withdrawnCashbackTotal)}
               </CardTitle>
@@ -131,21 +132,21 @@ export default function QuickCashbackRefundReportPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Client List</CardTitle>
+            <CardTitle>{t('clientList')}</CardTitle>
             <CardDescription>
-              Sorted by event date: newest first
+              {t('clientListDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Client ID</TableHead>
-                  <TableHead className='text-right'>Purchase Amount</TableHead>
-                  <TableHead className='text-right'>Max Cashback</TableHead>
-                  <TableHead className='text-right'>Withdrawn Cashback</TableHead>
-                  <TableHead className='text-right'>Current Balance</TableHead>
-                  <TableHead className='text-right'>Event Date</TableHead>
+                  <TableHead>{t('tableClientId')}</TableHead>
+                  <TableHead className='text-right'>{t('tablePurchaseAmount')}</TableHead>
+                  <TableHead className='text-right'>{t('tableMaxCashback')}</TableHead>
+                  <TableHead className='text-right'>{t('tableWithdrawnCashback')}</TableHead>
+                  <TableHead className='text-right'>{t('tableCurrentBalance')}</TableHead>
+                  <TableHead className='text-right'>{t('tableEventDate')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -155,7 +156,7 @@ export default function QuickCashbackRefundReportPage() {
                       colSpan={6}
                       className='text-muted-foreground h-24 text-center'
                     >
-                      No cases for selected period
+                      {t('noCases')}
                     </TableCell>
                   </TableRow>
                 ) : (

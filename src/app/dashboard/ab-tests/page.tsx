@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -159,33 +160,36 @@ const selectedTestData = [
 ];
 
 function StatusBadge({ status }: { status: string }) {
+  const t = useTranslations('abTests');
   if (status === 'active')
     return (
       <Badge className='bg-primary/10 text-primary hover:bg-primary/10'>
-        <IconClock className='mr-1 size-3' /> Active
+        <IconClock className='mr-1 size-3' /> {t('statusActive')}
       </Badge>
     );
   return (
     <Badge className='bg-success/10 text-success hover:bg-success/10'>
-      <IconCircleCheck className='mr-1 size-3' /> Completed
+      <IconCircleCheck className='mr-1 size-3' /> {t('statusCompleted')}
     </Badge>
   );
 }
 
 function TypeBadge({ type }: { type: string }) {
+  const t = useTranslations('abTests');
   const map: Record<
     string,
-    { label: string; variant: 'default' | 'secondary' | 'outline' }
+    { key: 'typeDefault' | 'typePartner' | 'typePersonal'; variant: 'default' | 'secondary' | 'outline' }
   > = {
-    default: { label: 'Default', variant: 'secondary' },
-    partner: { label: 'Partner', variant: 'outline' },
-    personal: { label: 'Personal', variant: 'default' }
+    default: { key: 'typeDefault', variant: 'secondary' },
+    partner: { key: 'typePartner', variant: 'outline' },
+    personal: { key: 'typePersonal', variant: 'default' }
   };
-  const t = map[type] || map['default'];
-  return <Badge variant={t.variant}>{t.label}</Badge>;
+  const cfg = map[type] || map['default'];
+  return <Badge variant={cfg.variant}>{t(cfg.key)}</Badge>;
 }
 
 function TestCard({ test }: { test: (typeof activeTests)[0] }) {
+  const t = useTranslations('abTests');
   const lift = test.testGroup.conversion - test.controlGroup.conversion;
   const isWinnerTest = test.winner === 'test';
   const isWinnerControl = test.winner === 'control';
@@ -202,12 +206,12 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             </div>
             <CardTitle className='text-base'>{test.name}</CardTitle>
             <CardDescription className='mt-0.5'>
-              {test.startDate} – {test.endDate} · Target:{' '}
+              {test.startDate} – {test.endDate} · {t('target')}{' '}
               <strong>{test.targetMetric}</strong>
             </CardDescription>
           </div>
           <div className='text-right'>
-            <p className='text-muted-foreground text-xs'>Confidence</p>
+            <p className='text-muted-foreground text-xs'>{t('confidence')}</p>
             <p
               className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-primary' : test.confidence >= 80 ? 'text-chart-warning' : 'text-muted-foreground'}`}
             >
@@ -217,8 +221,8 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
               className={`text-xs ${test.confidence >= 95 ? 'text-primary' : 'text-muted-foreground'}`}
             >
               {test.confidence >= 95
-                ? '✓ Statistically Significant'
-                : 'Collecting Data'}
+                ? t('statisticallySignificant')
+                : t('collectingData')}
             </p>
           </div>
         </div>
@@ -230,31 +234,31 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             className={`rounded-lg border p-3 ${isWinnerControl ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-sm font-semibold'>Control Group</span>
+              <span className='text-sm font-semibold'>{t('controlGroup')}</span>
               {isWinnerControl && (
                 <Badge className='bg-success text-success-foreground text-xs'>
-                  Winner
+                  {t('winner')}
                 </Badge>
               )}
             </div>
             <p className='text-muted-foreground text-xs'>
-              {test.controlGroup.size.toLocaleString()} clients
+              {test.controlGroup.size.toLocaleString()} {t('clients')}
             </p>
             <div className='mt-2 space-y-1'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Conversion</span>
+                <span className='text-muted-foreground'>{t('conversion')}</span>
                 <span className='font-semibold'>
                   {test.controlGroup.conversion}%
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Turnover</span>
+                <span className='text-muted-foreground'>{t('turnover')}</span>
                 <span className='font-semibold'>
                   {test.controlGroup.turnover.toLocaleString()} ₴
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Transaction Count</span>
+                <span className='text-muted-foreground'>{t('transactionCount')}</span>
                 <span className='font-semibold'>
                   {test.controlGroup.txCount}
                 </span>
@@ -267,19 +271,19 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             className={`rounded-lg border p-3 ${isWinnerTest ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-sm font-semibold'>Test Group</span>
+              <span className='text-sm font-semibold'>{t('testGroup')}</span>
               {isWinnerTest && (
                 <Badge className='bg-success text-success-foreground text-xs'>
-                  Winner
+                  {t('winner')}
                 </Badge>
               )}
             </div>
             <p className='text-muted-foreground text-xs'>
-              {test.testGroup.size.toLocaleString()} clients
+              {test.testGroup.size.toLocaleString()} {t('clients')}
             </p>
             <div className='mt-2 space-y-1'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Conversion</span>
+                <span className='text-muted-foreground'>{t('conversion')}</span>
                 <span className='font-semibold'>
                   {test.testGroup.conversion}%
                   <span
@@ -291,13 +295,13 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Turnover</span>
+                <span className='text-muted-foreground'>{t('turnover')}</span>
                 <span className='font-semibold'>
                   {test.testGroup.turnover.toLocaleString()} ₴
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Transaction Count</span>
+                <span className='text-muted-foreground'>{t('transactionCount')}</span>
                 <span className='font-semibold'>{test.testGroup.txCount}</span>
               </div>
             </div>
@@ -308,9 +312,9 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
         <div className='mt-3'>
           <div className='mb-1 flex items-center justify-between text-xs'>
             <span className='text-muted-foreground'>
-              Statistical Confidence
+              {t('statisticalConfidence')}
             </span>
-            <span className='font-medium'>{test.confidence}% / 95% threshold</span>
+            <span className='font-medium'>{t('threshold95', { confidence: test.confidence })}</span>
           </div>
           <Progress value={test.confidence} className='h-1.5' />
         </div>
@@ -318,7 +322,7 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
       {test.status === 'active' && (
         <CardFooter className='text-muted-foreground text-xs'>
           <IconClock className='mr-1 size-3' />
-          {test.daysLeft} days remaining until completion
+          {t('daysRemaining', { days: test.daysLeft })}
         </CardFooter>
       )}
     </Card>
@@ -326,15 +330,16 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
 }
 
 export default function ABTestsPage() {
+  const t = useTranslations('abTests');
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-5'>
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>A/B Tests</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('title')}</h2>
             <p className='text-muted-foreground text-sm'>
-              Comparison of test and control groups for cashback offers
+              {t('description')}
             </p>
           </div>
           <div className='flex items-center gap-2'>
@@ -343,10 +348,10 @@ export default function ABTestsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Types</SelectItem>
-                <SelectItem value='default'>Default</SelectItem>
-                <SelectItem value='partner'>Partner</SelectItem>
-                <SelectItem value='personal'>Personal</SelectItem>
+                <SelectItem value='all'>{t('allTypes')}</SelectItem>
+                <SelectItem value='default'>{t('typeDefault')}</SelectItem>
+                <SelectItem value='partner'>{t('typePartner')}</SelectItem>
+                <SelectItem value='personal'>{t('typePersonal')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -356,25 +361,25 @@ export default function ABTestsPage() {
         <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
           {[
             {
-              label: 'Active Tests',
+              label: t('activeTests'),
               value: '2',
               icon: <IconFlask className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Completed (month)',
+              label: t('completedMonth'),
               value: '3',
               icon: <IconCircleCheck className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Confirmed Hypotheses',
+              label: t('confirmedHypotheses'),
               value: '2 / 3',
               icon: <IconTrendingUp className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Avg Conversion Lift',
+              label: t('avgConversionLift'),
               value: '+11.3pp',
               icon: <IconChartBar className='size-4' />,
               color: 'text-primary'
@@ -399,13 +404,13 @@ export default function ABTestsPage() {
         <Tabs defaultValue='active'>
           <TabsList>
             <TabsTrigger value='active'>
-              Active{' '}
+              {t('tabActive')}{' '}
               <Badge className='bg-primary text-primary-foreground ml-2'>
                 {activeTests.length}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value='completed'>
-              Completed{' '}
+              {t('tabCompleted')}{' '}
               <Badge className='ml-2' variant='secondary'>
                 {completedTests.length}
               </Badge>
@@ -428,9 +433,9 @@ export default function ABTestsPage() {
         {/* Deep dive chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Detailed Comparison: AB-2025-07</CardTitle>
+            <CardTitle>{t('detailedComparison')}</CardTitle>
             <CardDescription>
-              Personal Cashback Café 5% vs 7% — group metrics comparison
+              {t('detailedComparisonDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -457,13 +462,13 @@ export default function ABTestsPage() {
                 <ReferenceLine y={0} stroke='var(--border)' />
                 <Bar
                   dataKey='control'
-                  name='Control Group'
+                  name={t('controlGroup')}
                   fill={C.control}
                   radius={[3, 3, 0, 0]}
                 />
                 <Bar
                   dataKey='test'
-                  name='Test Group'
+                  name={t('testGroup')}
                   fill={C.test}
                   radius={[3, 3, 0, 0]}
                 />
@@ -471,7 +476,7 @@ export default function ABTestsPage() {
             </ResponsiveContainer>
           </CardContent>
           <CardFooter className='text-muted-foreground text-sm'>
-            Confidence 87% — test ongoing. Expected result date: 28.02.2025
+            {t('detailedComparisonFooter')}
           </CardFooter>
         </Card>
       </div>

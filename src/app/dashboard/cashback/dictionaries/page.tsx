@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -33,9 +34,9 @@ const SOURCE_TYPE_LABEL: Record<DataSourceType, string> = {
   file_upload: 'File Upload'
 };
 
-const SOURCE_STATUS_LABEL: Record<DataSourceStatus, string> = {
-  active: 'Active',
-  planned: 'Planned'
+const SOURCE_STATUS_KEY: Record<DataSourceStatus, string> = {
+  active: 'statusActive',
+  planned: 'statusPlanned'
 };
 
 const SOURCE_STATUS_VARIANT: Record<
@@ -47,6 +48,7 @@ const SOURCE_STATUS_VARIANT: Record<
 };
 
 export default function CashbackDictionariesPage() {
+  const t = useTranslations('dictionaries');
   const [selectedProductId, setSelectedProductId] = useState<string>(
     PRODUCT_DICTIONARY[0]?.id ?? ''
   );
@@ -70,38 +72,36 @@ export default function CashbackDictionariesPage() {
         <div className='flex flex-wrap items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Product Manager · Analytics
+              {t('breadcrumb')}
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Target Actions & Sources Dictionaries
+              {t('title')}
             </h2>
             <p className='text-muted-foreground mt-1 max-w-3xl text-sm'>
-              Product catalog for analytics with information source, activity/inactivity
-              conditions, and target actions list. The data sources dictionary is
-              reused across products and communications.
+              {t('description')}
             </p>
           </div>
           <Badge variant='secondary' className='h-fit'>
-            v2 dictionary structure
+            {t('version')}
           </Badge>
         </div>
 
         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Products</CardDescription>
+              <CardDescription>{t('products')}</CardDescription>
               <CardTitle className='text-2xl'>{PRODUCT_DICTIONARY.length}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Target Actions</CardDescription>
+              <CardDescription>{t('targetActions')}</CardDescription>
               <CardTitle className='text-2xl'>{totalTargetActions}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Data Sources (v2)</CardDescription>
+              <CardDescription>{t('dataSources')}</CardDescription>
               <CardTitle className='text-2xl'>
                 {ANALYTICS_DATA_SOURCES.length}
               </CardTitle>
@@ -112,9 +112,9 @@ export default function CashbackDictionariesPage() {
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-5'>
           <Card className='lg:col-span-2'>
             <CardHeader>
-              <CardTitle className='text-base'>Product Dictionary</CardTitle>
+              <CardTitle className='text-base'>{t('productDictionary')}</CardTitle>
               <CardDescription>
-                Select a product to view source, conditions, and target actions
+                {t('productDictionaryDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-2'>
@@ -133,7 +133,7 @@ export default function CashbackDictionariesPage() {
                   >
                     <p className='text-sm font-semibold'>{product.name}</p>
                     <p className='text-muted-foreground mt-1 text-xs'>
-                      {product.targetActions.length} target actions
+                      {t('targetActionsCount', { count: product.targetActions.length })}
                     </p>
                   </button>
                 );
@@ -145,24 +145,24 @@ export default function CashbackDictionariesPage() {
             <CardHeader>
               <CardTitle className='text-base'>{selectedProduct.name}</CardTitle>
               <CardDescription>
-                Product information source and activity conditions
+                {t('productInfoDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-5'>
               <div className='space-y-2 rounded-lg border p-3'>
                 <div className='flex flex-wrap items-center gap-2'>
                   <p className='text-xs font-semibold tracking-wide uppercase'>
-                    Product Information Source
+                    {t('productInfoSource')}
                   </p>
                   <Badge variant='outline'>v2</Badge>
                 </div>
                 <p className='text-sm'>{selectedProduct.productSourceDescription}</p>
                 <p className='text-muted-foreground text-xs'>
-                  Source:{' '}
+                  {t('source')}{' '}
                   <span className='text-foreground font-medium'>
                     {selectedProduct.productSourceId
                       ? dataSourceById[selectedProduct.productSourceId]?.name
-                      : 'Not Set'}
+                      : t('notSet')}
                   </span>
                 </p>
               </div>
@@ -171,7 +171,7 @@ export default function CashbackDictionariesPage() {
                 <div className='rounded-lg border p-3'>
                   <div className='mb-2 flex items-center gap-2'>
                     <p className='text-xs font-semibold tracking-wide uppercase'>
-                      Activity Conditions
+                      {t('activityConditions')}
                     </p>
                     <Badge variant='outline'>v2</Badge>
                   </div>
@@ -187,7 +187,7 @@ export default function CashbackDictionariesPage() {
                 <div className='rounded-lg border p-3'>
                   <div className='mb-2 flex items-center gap-2'>
                     <p className='text-xs font-semibold tracking-wide uppercase'>
-                      Inactivity Conditions
+                      {t('inactivityConditions')}
                     </p>
                     <Badge variant='outline'>v2</Badge>
                   </div>
@@ -207,22 +207,21 @@ export default function CashbackDictionariesPage() {
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>
-              Product Target Actions List
+              {t('productTargetActionsList')}
             </CardTitle>
             <CardDescription>
-              Fields: ID, name, description, identification method (v2), source (v2,
-              optional)
+              {t('productTargetActionsDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>How We Define</TableHead>
-                  <TableHead>How to Identify</TableHead>
-                  <TableHead>Data Source</TableHead>
+                  <TableHead>{t('tableId')}</TableHead>
+                  <TableHead>{t('tableName')}</TableHead>
+                  <TableHead>{t('tableDefinition')}</TableHead>
+                  <TableHead>{t('tableIdentification')}</TableHead>
+                  <TableHead>{t('tableDataSource')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -241,7 +240,7 @@ export default function CashbackDictionariesPage() {
                         </span>
                       ) : (
                         <span className='text-muted-foreground text-sm'>
-                          Not Set (optional)
+                          {t('notSetOptional')}
                         </span>
                       )}
                     </TableCell>
@@ -254,22 +253,22 @@ export default function CashbackDictionariesPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className='text-base'>Data Sources Dictionary</CardTitle>
+            <CardTitle className='text-base'>{t('dataSourcesDictionary')}</CardTitle>
             <CardDescription>
-              Centralized source catalog for product analytics and communications
+              {t('dataSourcesDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Owner</TableHead>
-                  <TableHead>Refresh</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead>{t('tableId')}</TableHead>
+                  <TableHead>{t('tableName')}</TableHead>
+                  <TableHead>{t('tableType')}</TableHead>
+                  <TableHead>{t('tableOwner')}</TableHead>
+                  <TableHead>{t('tableRefresh')}</TableHead>
+                  <TableHead>{t('tableStatus')}</TableHead>
+                  <TableHead>{t('tableDescription')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -284,7 +283,7 @@ export default function CashbackDictionariesPage() {
                     <TableCell>{source.refreshPolicy}</TableCell>
                     <TableCell>
                       <Badge variant={SOURCE_STATUS_VARIANT[source.status]}>
-                        {SOURCE_STATUS_LABEL[source.status]}
+                        {t(SOURCE_STATUS_KEY[source.status] as any)}
                       </Badge>
                     </TableCell>
                     <TableCell className='text-sm'>{source.description}</TableCell>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { CircleHelp } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ interface MetricInfoTriggerProps {
 }
 
 export function MetricInfoTrigger({ metric, onOpen }: MetricInfoTriggerProps) {
+  const t = useTranslations('metricDrawer');
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -24,10 +26,10 @@ export function MetricInfoTrigger({ metric, onOpen }: MetricInfoTriggerProps) {
           size='icon'
           className='h-6 w-6 shrink-0'
           onClick={() => onOpen(metric.id)}
-          aria-label={`Metric explanation: ${metric.title}`}
+          aria-label={t('metricExplanation', { title: metric.title })}
         >
           <CircleHelp className='h-3.5 w-3.5' />
-          <span className='sr-only'>Open explanation</span>
+          <span className='sr-only'>{t('openExplanation')}</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent className='max-w-xs space-y-1'>
