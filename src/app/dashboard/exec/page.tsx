@@ -41,6 +41,7 @@ import {
   ReferenceLine
 } from 'recharts';
 import { chartPalette, chartGradientId } from '@/lib/chart-theme';
+import { useTranslations } from 'next-intl';
 
 // ─── Palette ────────────────────────────────────────────────
 const C = {
@@ -259,6 +260,7 @@ const signalIcon = {
 
 // ─── Tooltips ────────────────────────────────────────────────
 function RoiBarTooltip({ active, payload, label }: any) {
+  const t = useTranslations('exec');
   if (!active || !payload?.length) return null;
   const rev = payload.find((p: any) => p.dataKey === 'revenue')?.value ?? 0;
   const acc = payload.find((p: any) => p.dataKey === 'accrued')?.value ?? 0;
@@ -269,36 +271,45 @@ function RoiBarTooltip({ active, payload, label }: any) {
   return (
     <div className='bg-card text-card-foreground min-w-[200px] space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
-      <p className='text-primary font-semibold'>Bank revenue: {fmt(rev)}</p>
-      <Separator />
-      <p className='text-muted-foreground font-medium'>Costs (cashback):</p>
-      <p className='text-muted-foreground pl-2'>· Accrued: {fmt(acc)}</p>
-      <p className='text-muted-foreground pl-2'>
-        · Paid out: {fmt(paid)} ({Math.round((paid / acc) * 100)}%)
-      </p>
-      <p className='text-muted-foreground pl-2'>
-        · Balance on accounts: {fmt(bal)} ({Math.round((bal / acc) * 100)}%)
+      <p className='text-primary font-semibold'>
+        {t('tooltipBankRevenue')} {fmt(rev)}
       </p>
       <Separator />
-      <p className='font-bold'>Monthly ROI: {roi}%</p>
+      <p className='text-muted-foreground font-medium'>{t('tooltipCosts')}</p>
+      <p className='text-muted-foreground pl-2'>
+        · {t('tooltipAccrued')} {fmt(acc)}
+      </p>
+      <p className='text-muted-foreground pl-2'>
+        · {t('tooltipPaidOut')} {fmt(paid)} ({Math.round((paid / acc) * 100)}%)
+      </p>
+      <p className='text-muted-foreground pl-2'>
+        · {t('tooltipBalance')} {fmt(bal)} ({Math.round((bal / acc) * 100)}%)
+      </p>
+      <Separator />
+      <p className='font-bold'>
+        {t('tooltipMonthlyRoi')} {roi}%
+      </p>
     </div>
   );
 }
 
 function ActiveClientsTooltip({ active, payload, label }: any) {
+  const t = useTranslations('exec');
   if (!active || !payload?.length) return null;
   const val = payload[0]?.value ?? 0;
   return (
     <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
-        Active clients: <strong>{val.toLocaleString('en-US')}</strong>
+        {t('tooltipActiveClients')}{' '}
+        <strong>{val.toLocaleString('en-US')}</strong>
       </p>
     </div>
   );
 }
 
 function TurnoverTooltip({ active, payload, label }: any) {
+  const t = useTranslations('exec');
   if (!active || !payload?.length) return null;
   const wb = payload.find((p: any) => p.dataKey === 'withCashback')?.value ?? 0;
   const nc = payload.find((p: any) => p.dataKey === 'noCashback')?.value ?? 0;
@@ -307,16 +318,19 @@ function TurnoverTooltip({ active, payload, label }: any) {
     <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
-        With cashback: <strong>{fmt(wb)}</strong>
+        {t('withCashback')}: <strong>{fmt(wb)}</strong>
       </p>
-      <p className='text-muted-foreground'>Without program: {fmt(nc)}</p>
+      <p className='text-muted-foreground'>
+        {t('withoutProgram')}: {fmt(nc)}
+      </p>
       <Separator />
-      <p className='font-semibold'>Total: {fmt(wb + nc)}</p>
+      <p className='font-semibold'>{t('tooltipTotal')} {fmt(wb + nc)}</p>
     </div>
   );
 }
 
 function RevenuePerClientTooltip({ active, payload, label }: any) {
+  const t = useTranslations('exec');
   if (!active || !payload?.length) return null;
   const wb = payload.find((p: any) => p.dataKey === 'withCashback')?.value ?? 0;
   const nc = payload.find((p: any) => p.dataKey === 'noCashback')?.value ?? 0;
@@ -324,9 +338,11 @@ function RevenuePerClientTooltip({ active, payload, label }: any) {
     <div className='bg-card text-card-foreground space-y-1 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 font-semibold'>{label}</p>
       <p style={{ color: C.active }}>
-        With cashback: <strong>{wb} ₴</strong>
+        {t('withCashback')}: <strong>{wb} ₴</strong>
       </p>
-      <p className='text-muted-foreground'>Without program: {nc} ₴</p>
+      <p className='text-muted-foreground'>
+        {t('withoutProgram')}: {nc} ₴
+      </p>
       <Separator />
       <p className='text-primary font-semibold'>
         +{wb - nc} ₴ / client (+{Math.round((wb / nc - 1) * 100)}%)
@@ -336,6 +352,7 @@ function RevenuePerClientTooltip({ active, payload, label }: any) {
 }
 
 function BreakdownTooltip({ active, payload, label }: any) {
+  const t = useTranslations('exec');
   if (!active || !payload?.length) return null;
   const g = (k: string) =>
     payload.find((p: any) => p.dataKey === k)?.value ?? 0;
@@ -346,40 +363,45 @@ function BreakdownTooltip({ active, payload, label }: any) {
     <div className='bg-card text-card-foreground min-w-[210px] space-y-0.5 rounded-lg border px-3 py-2 text-xs shadow-md'>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p className='font-medium' style={{ color: C.active }}>
-        With cashback: {fmt(wb)}
+        {t('withCashback')}: {fmt(wb)}
       </p>
       <p className='text-muted-foreground pl-2'>
-        · Interchange: {fmt(g('wb_i'))}
+        · {t('legendInterchange')}: {fmt(g('wb_i'))}
       </p>
       <p className='text-muted-foreground pl-2'>
-        · Commission: {fmt(g('wb_c'))}
+        · {t('legendCommission')}: {fmt(g('wb_c'))}
       </p>
       <p className='text-muted-foreground pl-2'>
-        · Credit limit %: {fmt(g('wb_cr'))}
+        · {t('legendCreditLimit')}: {fmt(g('wb_cr'))}
       </p>
-      <p className='text-muted-foreground pl-2'>· Other: {fmt(g('wb_o'))}</p>
+      <p className='text-muted-foreground pl-2'>
+        · {t('legendOther')}: {fmt(g('wb_o'))}
+      </p>
       <Separator />
       <p className='text-muted-foreground/70 font-medium'>
-        Without program: {fmt(nc)}
+        {t('withoutProgram')}: {fmt(nc)}
       </p>
       <p className='text-muted-foreground/50 pl-2'>
-        · Interchange: {fmt(g('nc_i'))}
+        · {t('legendInterchange')}: {fmt(g('nc_i'))}
       </p>
       <p className='text-muted-foreground/50 pl-2'>
-        · Commission: {fmt(g('nc_c'))}
+        · {t('legendCommission')}: {fmt(g('nc_c'))}
       </p>
       <p className='text-muted-foreground/50 pl-2'>
-        · Credit limit %: {fmt(g('nc_cr'))}
+        · {t('legendCreditLimit')}: {fmt(g('nc_cr'))}
       </p>
-      <p className='text-muted-foreground/50 pl-2'>· Other: {fmt(g('nc_o'))}</p>
+      <p className='text-muted-foreground/50 pl-2'>
+        · {t('legendOther')}: {fmt(g('nc_o'))}
+      </p>
       <Separator />
-      <p className='font-bold'>Total: {fmt(wb + nc)}</p>
+      <p className='font-bold'>{t('tooltipTotal')} {fmt(wb + nc)}</p>
     </div>
   );
 }
 
 // ─── Component ───────────────────────────────────────────────
 export default function ExecDashboard() {
+  const t = useTranslations('exec');
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-5'>
@@ -387,15 +409,18 @@ export default function ExecDashboard() {
         <div className='flex items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Top Management · Cashback Program · February 2025
+              {t('breadcrumb')}
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              ROI {curr.roi}% — revenue exceeds costs by 1.86×
+              {t('roiTitle', { roi: curr.roi, multiplier: '1.86' })}
             </h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
-              Revenue {curr.revenue.toLocaleString('en-US')} K ₴ · Accrued
-              cashback {curr.accrued.toLocaleString('en-US')} K ₴ · Paid out{' '}
-              {curr.paid.toLocaleString('en-US')} K ₴ ({paidPct}%)
+              {t('revenueLabel', {
+                revenue: curr.revenue.toLocaleString('en-US'),
+                accrued: curr.accrued.toLocaleString('en-US'),
+                paid: curr.paid.toLocaleString('en-US'),
+                paidPct
+              })}
             </p>
           </div>
           <Select defaultValue='6m'>
@@ -403,10 +428,10 @@ export default function ExecDashboard() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='6m'>Last 6 months</SelectItem>
-              <SelectItem value='3m'>Last 3 months</SelectItem>
-              <SelectItem value='ytd'>Year to date</SelectItem>
-              <SelectItem value='2024'>Year 2024</SelectItem>
+              <SelectItem value='6m'>{t('periodLast6m')}</SelectItem>
+              <SelectItem value='3m'>{t('periodLast3m')}</SelectItem>
+              <SelectItem value='ytd'>{t('periodYtd')}</SelectItem>
+              <SelectItem value='2024'>{t('periodYear2024')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -415,11 +440,10 @@ export default function ExecDashboard() {
         <Card className='ring-primary/20 ring-1'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-base'>
-              Revenue vs Cashback Costs · by month
+              {t('roiCardTitle')}
             </CardTitle>
             <CardDescription>
-              K ₴ · Purple = bank revenue · Light = accrued cashback ·
-              Neutral = paid cashback
+              {t('roiCardDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -455,10 +479,10 @@ export default function ExecDashboard() {
                       }}
                       formatter={(v) =>
                         v === 'revenue'
-                          ? 'Bank revenue'
+                          ? t('legendBankRevenue')
                           : v === 'accrued'
-                            ? 'Accrued cashback'
-                            : 'Paid cashback'
+                            ? t('legendAccruedCashback')
+                            : t('legendPaidCashback')
                       }
                     />
                     <Bar
@@ -486,7 +510,7 @@ export default function ExecDashboard() {
               {/* Current month rows */}
               <div className='flex flex-col justify-center space-y-3 lg:col-span-2'>
                 <p className='text-muted-foreground text-xs font-semibold tracking-wide uppercase'>
-                  February 2025
+                  {t('february2025')}
                 </p>
 
                 {/* Revenue */}
@@ -497,7 +521,7 @@ export default function ExecDashboard() {
                       style={{ backgroundColor: C.revenue }}
                     />
                     <span className='text-foreground/80 text-sm'>
-                      Bank revenue
+                      {t('bankRevenue')}
                     </span>
                   </div>
                   <span className='text-primary font-bold tabular-nums'>
@@ -514,7 +538,7 @@ export default function ExecDashboard() {
                       style={{ backgroundColor: C.accrued }}
                     />
                     <span className='text-foreground/80 text-sm'>
-                      Accrued cashback
+                      {t('accruedCashback')}
                     </span>
                   </div>
                   <span className='text-muted-foreground font-semibold tabular-nums'>
@@ -530,7 +554,7 @@ export default function ExecDashboard() {
                       style={{ backgroundColor: C.paid }}
                     />
                     <span className='text-muted-foreground text-xs'>
-                      of which paid out
+                      {t('ofWhichPaidOut')}
                     </span>
                   </div>
                   <span className='text-muted-foreground text-sm font-medium tabular-nums'>
@@ -543,7 +567,7 @@ export default function ExecDashboard() {
                   <div className='flex items-center gap-2'>
                     <div className='bg-muted-foreground/20 size-2.5 rounded-sm' />
                     <span className='text-muted-foreground text-xs'>
-                      balance on accounts
+                      {t('balanceOnAccounts')}
                     </span>
                   </div>
                   <span className='text-muted-foreground text-sm font-medium tabular-nums'>
@@ -556,14 +580,14 @@ export default function ExecDashboard() {
                 {/* ROI */}
                 <div className='flex items-center justify-between'>
                   <span className='text-foreground text-sm font-semibold'>
-                    Monthly ROI
+                    {t('monthlyRoi')}
                   </span>
                   <div className='text-right'>
                     <span className='text-primary text-2xl font-black tabular-nums'>
                       {curr.roi}%
                     </span>
                     <p className='text-muted-foreground text-xs'>
-                      vs {prev.roi}% in January{' '}
+                      {t('vsJanuary', { prev: prev.roi })}{' '}
                       <span className='text-primary font-medium'>
                         +{curr.roi - prev.roi}pp
                       </span>
@@ -571,8 +595,7 @@ export default function ExecDashboard() {
                   </div>
                 </div>
                 <p className='text-muted-foreground bg-muted rounded-md px-2 py-1.5 text-xs'>
-                  ROI = Revenue / Accrued cashback × 100. Conservative estimate —
-                  accounts for all liabilities.
+                  {t('roiFormula')}
                 </p>
               </div>
             </div>
@@ -584,10 +607,10 @@ export default function ExecDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className='text-base'>
-                Active Clients Growth
+                {t('activeClientsTitle')}
               </CardTitle>
               <CardDescription>
-                Selected and used cashback during the month
+                {t('activeClientsDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -631,7 +654,7 @@ export default function ExecDashboard() {
                   <Area
                     type='monotone'
                     dataKey='active'
-                    name='Active'
+                    name={t('activeClientsLabel')}
                     stroke={C.active}
                     fill={`url(#${chartGradientId('primary')})`}
                     strokeWidth={2.5}
@@ -655,16 +678,16 @@ export default function ExecDashboard() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              +91% over 6 months · Covered base share:{' '}
+              {t('activeClientsFooter')}{' '}
               <strong className='text-foreground'>57%</strong>
             </CardFooter>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className='text-base'>Turnover Dynamics</CardTitle>
+              <CardTitle className='text-base'>{t('turnoverTitle')}</CardTitle>
               <CardDescription>
-                With cashback vs without program · K ₴ / month
+                {t('turnoverDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -696,7 +719,9 @@ export default function ExecDashboard() {
                       fontFamily: 'var(--font-sans)'
                     }}
                     formatter={(v) =>
-                      v === 'withCashback' ? 'With cashback' : 'Without program'
+                      v === 'withCashback'
+                        ? t('withCashback')
+                        : t('withoutProgram')
                     }
                   />
                   <Bar
@@ -716,7 +741,7 @@ export default function ExecDashboard() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              Cashback turnover +177% over 6 months · February total:{' '}
+              {t('turnoverFooter')}{' '}
               <strong className='text-foreground'>191 M ₴</strong>
             </CardFooter>
           </Card>
@@ -727,10 +752,10 @@ export default function ExecDashboard() {
           <Card className='col-span-2'>
             <CardHeader>
               <CardTitle className='text-base'>
-                Bank Revenue per Client
+                {t('revenuePerClientTitle')}
               </CardTitle>
               <CardDescription>
-                Actual monthly revenue · ₴ / client
+                {t('revenuePerClientDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -761,7 +786,9 @@ export default function ExecDashboard() {
                       fontFamily: 'var(--font-sans)'
                     }}
                     formatter={(v) =>
-                      v === 'withCashback' ? 'With cashback' : 'Without program'
+                      v === 'withCashback'
+                        ? t('withCashback')
+                        : t('withoutProgram')
                     }
                   />
                   <Line
@@ -786,8 +813,11 @@ export default function ExecDashboard() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              February: <strong className='text-primary'>218 ₴</strong> with cashback
-              vs <strong className='text-muted-foreground'>93 ₴</strong> without ·{' '}
+              {t('revenuePerClientFooter')}{' '}
+              <strong className='text-primary'>218 ₴</strong>{' '}
+              {t('withCashback')} vs{' '}
+              <strong className='text-muted-foreground'>93 ₴</strong>{' '}
+              {t('revenuePerClientWithout')} ·{' '}
               <strong className='text-primary'>+134%</strong>
             </CardFooter>
           </Card>
@@ -795,13 +825,17 @@ export default function ExecDashboard() {
           <Card className='col-span-3'>
             <CardHeader>
               <CardTitle className='text-base'>
-                Bank Revenue Structure
+                {t('revenueStructureTitle')}
               </CardTitle>
               <CardDescription>
-                K ₴ · <span style={{ color: C.active }}>■</span> With cashback
-                &nbsp;
-                <span className='text-muted-foreground/40'>■</span> Without program
-                · Hover = details
+                {t.rich('revenueStructureDescription', {
+                  wc: (chunks) => (
+                    <span style={{ color: C.active }}>{chunks}</span>
+                  ),
+                  wo: (chunks) => (
+                    <span className='text-muted-foreground/40'>{chunks}</span>
+                  )
+                })}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -883,13 +917,13 @@ export default function ExecDashboard() {
               <div className='mt-3 space-y-1.5 text-xs'>
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-1'>
                   <span className='text-muted-foreground w-24 shrink-0 font-medium'>
-                    With cashback:
+                    {t('legendWithCashback')}
                   </span>
                   {[
-                    { color: C.interchange, label: 'Interchange' },
-                    { color: C.commission, label: 'Commission' },
-                    { color: C.credit, label: 'Credit limit %' },
-                    { color: C.other, label: 'Other' }
+                    { color: C.interchange, label: t('legendInterchange') },
+                    { color: C.commission, label: t('legendCommission') },
+                    { color: C.credit, label: t('legendCreditLimit') },
+                    { color: C.other, label: t('legendOther') }
                   ].map((l, i) => (
                     <span key={i} className='flex items-center gap-1'>
                       <span
@@ -902,14 +936,14 @@ export default function ExecDashboard() {
                 </div>
                 <div className='flex items-center gap-x-3'>
                   <span className='text-muted-foreground w-24 shrink-0 font-medium'>
-                    Without program:
+                    {t('legendWithoutProgram')}
                   </span>
                   <span className='flex items-center gap-1'>
                     <span
                       className='inline-block size-2.5 rounded-sm'
                       style={{ backgroundColor: chartPalette.neutralLight }}
                     />
-                    same structure (neutral)
+                    {t('legendSameStructure')}
                   </span>
                 </div>
               </div>
@@ -921,7 +955,7 @@ export default function ExecDashboard() {
         <Card>
           <CardHeader className='pb-3'>
             <CardTitle className='text-muted-foreground text-sm font-semibold tracking-wide uppercase'>
-              Key Signals
+              {t('signalsTitle')}
             </CardTitle>
           </CardHeader>
           <CardContent className='space-y-3 pt-0'>
