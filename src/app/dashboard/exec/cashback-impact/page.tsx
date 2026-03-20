@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import PageContainer from '@/components/layout/page-container';
 import { cn } from '@/lib/utils';
 import { getMetricById } from '@/features/exec/cashback-impact/data/metric-catalog';
@@ -453,19 +454,20 @@ function BeforeAfterTooltip({
   payload?: { payload: (typeof BEFORE_AFTER_DATA)[0] }[];
   label?: string;
 }) {
+  const t = useTranslations('cashbackImpact');
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   return (
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
-        Before: <strong>{row?.before?.toLocaleString('en-US')} k ₴</strong>
+        {t('tooltipBefore')} <strong>{row?.before?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p>
-        After: <strong>{row?.after?.toLocaleString('en-US')} k ₴</strong>
+        {t('tooltipAfter')} <strong>{row?.after?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p className='text-muted-foreground pt-1'>
-        Transactions: {row?.txBefore?.toLocaleString('en-US')} →{' '}
+        {t('tooltipTransactions')} {row?.txBefore?.toLocaleString('en-US')} →{' '}
         {row?.txAfter?.toLocaleString('en-US')}
       </p>
     </div>
@@ -503,21 +505,22 @@ function CannibalizationTooltip({
   payload?: { payload: (typeof CANNIBALIZATION_DATA)[0] }[];
   label?: string;
 }) {
+  const t = useTranslations('cashbackImpact');
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   return (
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
-        Cashback categories:{' '}
+        {t('tooltipCashbackCategories')}{' '}
         <strong>{row?.cashbackCats?.toLocaleString('en-US')} ₴</strong>
       </p>
       <p>
-        Other categories:{' '}
+        {t('tooltipOtherCategories')}{' '}
         <strong>{row?.otherCats?.toLocaleString('en-US')} ₴</strong>
       </p>
       <p className='pt-1 font-medium'>
-        Total: {row?.total?.toLocaleString('en-US')} ₴
+        {t('tooltipTotal')} {row?.total?.toLocaleString('en-US')} ₴
       </p>
     </div>
   );
@@ -532,11 +535,12 @@ function ROIBarTooltip({
   payload?: { value: number }[];
   label?: string;
 }) {
+  const t = useTranslations('cashbackImpact');
   if (!active || !payload?.length) return null;
   return (
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
-      <p className='font-bold'>ROI: {payload[0]?.value ?? 0}x</p>
+      <p className='font-bold'>{t('tooltipRoi')} {payload[0]?.value ?? 0}x</p>
     </div>
   );
 }
@@ -554,18 +558,19 @@ function ROIScatterTooltip({
   active?: boolean;
   payload?: { payload: (typeof ROI_CATEGORIES)[0] }[];
 }) {
+  const t = useTranslations('cashbackImpact');
   if (!active || !payload?.length) return null;
   const d = payload[0]?.payload;
   if (!d) return null;
   return (
     <div className={cn(CHART_TOOLTIP_CLASS, 'min-w-[200px]')}>
       <p className='mb-1 text-sm font-semibold'>{d.name}</p>
-      <p>Turnover: {d.turnover.toLocaleString('en-US')} k ₴</p>
-      <p>Cashback: {d.cashback.toLocaleString('en-US')} k ₴</p>
-      <p>Transactions: {d.transactions.toLocaleString('en-US')}</p>
+      <p>{t('tooltipTurnover')} {d.turnover.toLocaleString('en-US')} k ₴</p>
+      <p>{t('tooltipCashback')} {d.cashback.toLocaleString('en-US')} k ₴</p>
+      <p>{t('tooltipTransactions')} {d.transactions.toLocaleString('en-US')}</p>
       {d.isAnomaly && ANOMALY_MESSAGES[d.name] && (
         <p className='text-warning mt-1 font-medium'>
-          ⚠️ Anomaly: {ANOMALY_MESSAGES[d.name]}
+          ⚠️ {t('tooltipAnomaly')} {ANOMALY_MESSAGES[d.name]}
         </p>
       )}
     </div>
@@ -595,6 +600,7 @@ function ROILineTooltip({
 }
 
 export default function CashbackImpactPage() {
+  const t = useTranslations('cashbackImpact');
   const [selectedFunnelCategory, setSelectedFunnelCategory] =
     useState<string>('all');
   const [isMetricDrawerOpen, setIsMetricDrawerOpen] = useState(false);
@@ -615,19 +621,19 @@ export default function CashbackImpactPage() {
         <div className='flex items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Top Management · Cashback Program · February 2025
+              {t('breadcrumb')}
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Cashback Impact
+              {t('title')}
             </h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
-              Cashback program effectiveness analysis by category
+              {t('description')}
             </p>
           </div>
           <div className='flex items-center gap-2'>
             <Select defaultValue='all'>
               <SelectTrigger className='w-[180px] shrink-0'>
-                <SelectValue placeholder='Category' />
+                <SelectValue placeholder={t('categoryPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((c) => (
@@ -642,9 +648,9 @@ export default function CashbackImpactPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='6m'>Last 6 months</SelectItem>
-                <SelectItem value='3m'>Last 3 months</SelectItem>
-                <SelectItem value='ytd'>Year to date</SelectItem>
+                <SelectItem value='6m'>{t('periodLast6m')}</SelectItem>
+                <SelectItem value='3m'>{t('periodLast3m')}</SelectItem>
+                <SelectItem value='ytd'>{t('periodYtd')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -666,11 +672,10 @@ export default function CashbackImpactPage() {
         <Card className='border-muted-foreground/20 bg-muted/30'>
           <CardHeader className='pb-2'>
             <CardTitle className='text-muted-foreground text-sm font-semibold tracking-wide uppercase'>
-              Categories with Low Conversion (&lt;5%)
+              {t('lowConversionTitle')}
             </CardTitle>
             <p className='text-muted-foreground mt-1 text-xs'>
-              Categories with conversion &lt;5% require offer or
-              communication review.
+              {t('lowConversionDescription')}
             </p>
           </CardHeader>
           <CardContent>
@@ -698,20 +703,18 @@ export default function CashbackImpactPage() {
         <div className='space-y-6'>
           <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
-              Block 1: ROI by Categories
+              {t('block1Title')}
             </h3>
             <p className='text-muted-foreground text-sm'>
-              ROI analysis by categories: bar chart, turnover/cashback scatter,
-              top-5 dynamics
+              {t('block1Description')}
             </p>
           </div>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>ROI by Categories</CardTitle>
+              <CardTitle className='text-base'>{t('roiByCategoriesTitle')}</CardTitle>
               <CardDescription>
-                Sorted by ROI from highest to lowest. Zones: red
-                &lt;50x, yellow 50–200x, green &gt;200x
+                {t('roiByCategoriesDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -777,10 +780,9 @@ export default function CashbackImpactPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>Turnover vs Cashback</CardTitle>
+              <CardTitle className='text-base'>{t('turnoverVsCashbackTitle')}</CardTitle>
               <CardDescription>
-                Each category = bubble. Size = number of transactions.
-                Anomalous categories highlighted in tooltip
+                {t('turnoverVsCashbackDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -826,9 +828,9 @@ export default function CashbackImpactPage() {
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>
-                ROI Dynamics for Top 5 Categories
+                {t('roiDynamicsTitle')}
               </CardTitle>
-              <CardDescription>Last 6 months (Sep–Feb)</CardDescription>
+              <CardDescription>{t('roiDynamicsDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width='100%' height={300}>
@@ -899,18 +901,18 @@ export default function CashbackImpactPage() {
 
           <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
-              Block 2: Conversion Funnel
+              {t('block2Title')}
             </h3>
             <p className='text-muted-foreground text-sm'>
-              Conversion funnel and heatmap "Conversion vs Average Check"
+              {t('block2Description')}
             </p>
           </div>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>Conversion Funnel</CardTitle>
+              <CardTitle className='text-base'>{t('funnelTitle')}</CardTitle>
               <CardDescription>
-                4 steps: transactions → offer → category → activation
+                {t('funnelDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
@@ -924,7 +926,7 @@ export default function CashbackImpactPage() {
                 <SelectContent>
                   {FUNNEL_CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>
-                      {c === 'all' ? 'All Categories' : c}
+                      {c === 'all' ? t('allCategories') : c}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -962,12 +964,10 @@ export default function CashbackImpactPage() {
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>
-                Conversion vs Average Check
+                {t('heatmapTitle')}
               </CardTitle>
               <CardDescription>
-                Rows = categories, columns = check ranges. Color = %
-                conversion. Transport and Supermarkets show the highest conversion
-                at low check — the cheapest loyalty.
+                {t('heatmapDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1013,27 +1013,26 @@ export default function CashbackImpactPage() {
 
           <div className='border-border border-t pt-6'>
             <h3 className='text-lg font-semibold tracking-tight'>
-              Block 3: Incrementality
+              {t('block3Title')}
             </h3>
             <p className='text-muted-foreground text-sm'>
-              Before/after, cohort activated vs control group, cannibalization
-              analysis
+              {t('block3Description')}
             </p>
           </div>
 
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>
-                Turnover and transactions: before vs after offer launch
+                {t('beforeAfterTitle')}
               </CardTitle>
               <CardDescription>
-                3 months before vs 3 months after for top 8 categories
+                {t('beforeAfterDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-6'>
               <div>
                 <p className='text-muted-foreground mb-2 text-xs font-medium'>
-                  Turnover (k ₴)
+                  {t('beforeAfterTurnoverLabel')}
                 </p>
                 <ResponsiveContainer width='100%' height={280}>
                   <BarChart
@@ -1073,7 +1072,7 @@ export default function CashbackImpactPage() {
               </div>
               <div>
                 <p className='text-muted-foreground mb-2 text-xs font-medium'>
-                  Transactions
+                  {t('beforeAfterTransactionsLabel')}
                 </p>
                 <ResponsiveContainer width='100%' height={280}>
                   <BarChart
@@ -1123,10 +1122,10 @@ export default function CashbackImpactPage() {
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>
-                Cohort: activated vs control group
+                {t('cohortTitle')}
               </CardTitle>
               <CardDescription>
-                Average turnover per client (₴/month) over 6 months
+                {t('cohortDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1152,8 +1151,8 @@ export default function CashbackImpactPage() {
                     }}
                     formatter={(v) =>
                       v === 'activated'
-                        ? 'Cashback Activated'
-                        : 'Control Group'
+                        ? t('cohortLegendActivated')
+                        : t('cohortLegendControl')
                     }
                   />
                   <Line
@@ -1178,17 +1177,17 @@ export default function CashbackImpactPage() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              February: +146% activated vs control group
+              {t('cohortFooter')}
             </CardFooter>
           </Card>
 
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>
-                Cannibalization: cashback categories vs others
+                {t('cannibalizationTitle')}
               </CardTitle>
               <CardDescription>
-                Total client spending before and after cashback activation
+                {t('cannibalizationDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1216,8 +1215,8 @@ export default function CashbackImpactPage() {
                     }}
                     formatter={(v) =>
                       v === 'cashbackCats'
-                        ? 'Cashback categories'
-                        : 'Other categories'
+                        ? t('cannibalizationLegendCashback')
+                        : t('cannibalizationLegendOther')
                     }
                   />
                   <Bar
@@ -1238,8 +1237,7 @@ export default function CashbackImpactPage() {
               </ResponsiveContainer>
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
-              Total spending increased — not just redistribution between categories.
-              Cashback categories +112%, others −12% for the period.
+              {t('cannibalizationFooter')}
             </CardFooter>
           </Card>
         </div>

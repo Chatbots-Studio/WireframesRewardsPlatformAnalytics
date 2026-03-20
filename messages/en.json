@@ -175,7 +175,8 @@
     "tooltipAnomaly": "Anomaly:",
     "tooltipCashbackCategories": "Cashback categories:",
     "tooltipOtherCategories": "Other categories:",
-    "tooltipTotal": "Total:"
+    "tooltipTotal": "Total:",
+    "tooltipRoi": "ROI:"
   },
   "cashback": {
     "breadcrumb": "Product Manager · Cashback Program",
