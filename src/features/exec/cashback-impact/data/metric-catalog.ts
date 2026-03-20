@@ -35,144 +35,144 @@ export interface MetricCatalogItem {
 const metricCatalog: MetricCatalogItem[] = [
   {
     id: 'activation_conversion',
-    title: 'Конверсія активації кешбеку',
+    title: 'Cashback Activation Conversion',
     aliases: ['Activation Conversion'],
     shortDefinition:
-      'Частка нових клієнтів, що активували кешбек одразу після відкриття картки.',
-    quickFormula: '(активовані нові клієнти / нові картки) × 100%',
+      'Share of new customers who activated cashback immediately after opening a card.',
+    quickFormula: '(activated new customers / new cards) × 100%',
     formula: {
       expression:
-        'Клієнт вважається активованим, якщо в перші 24 години після відкриття картки обрав категорію кешбеку.',
+        'A customer is considered activated if they selected a cashback category within the first 24 hours after opening a card.',
       details: [
-        'Чисельник — кількість нових клієнтів з подією активації кешбеку в межах 24 годин.',
-        'Знаменник — кількість нових карток за той самий період.',
-        'Дельта до попереднього місяця = різниця в pp для тренду.'
+        'Numerator — number of new customers with a cashback activation event within 24 hours.',
+        'Denominator — number of new cards issued in the same period.',
+        'Delta to the previous month = difference in pp for trend.'
       ],
       example:
-        'За лютий відкрито 12 400 нових карток. З них 7 614 клієнтів обрали категорію кешбеку протягом 24 год. Конверсія = 7 614 / 12 400 × 100% = 61.4%.'
+        'In February, 12,400 new cards were opened. Of those, 7,614 customers selected a cashback category within 24 hours. Conversion = 7,614 / 12,400 × 100% = 61.4%.'
     },
     drivers: [
-      'Поточний onboarding у додатку та глибина onboarding-нагадувань',
-      'Ясність перших оферів у шапці продукту',
-      'Актуальність пропозицій для сегмента користувача',
-      'Величина та прозорість умов першого оферу',
-      'Рівень фроду на першому кроці (фільтри ботів)'
+      'Current in-app onboarding and depth of onboarding reminders',
+      'Clarity of initial offers in the product header',
+      'Relevance of offers to the user segment',
+      'Size and transparency of the first offer terms',
+      'Fraud level at the first step (bot filters)'
     ],
     actions: [
       {
         role: 'Product',
         action:
-          'Зробити кешбек першою дією в onboarding-складі для нових карток.',
-        expectedImpact: 'швидший старт активації у користувачів'
+          'Make cashback the first action in the onboarding flow for new cards.',
+        expectedImpact: 'faster activation start for users'
       },
       {
         role: 'CRM',
-        action: 'Відправити follow-up пуш через 45 хвилин і через 20 годин.',
+        action: 'Send a follow-up push after 45 minutes and after 20 hours.',
         expectedImpact:
-          'підвищення активацій у користувачів із паузою між відкриттям і натисканням'
+          'increased activations among users with a pause between opening and tapping'
       },
       {
         role: 'Finance',
-        action: 'Перевірити витрати на стартовий офер для різних сегментів.',
-        expectedImpact: 'зниження витрат без падіння конверсії'
+        action: 'Review costs of the starter offer across different segments.',
+        expectedImpact: 'reduced costs without lowering conversion'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Розумно високо',
+        label: 'Reasonably high',
         condition: '≥ 55%',
         interpretation:
-          'Відносно стабільний попит на пропозицію при поточних витратах.'
+          'Relatively stable demand for the offer at current costs.'
       },
       {
         level: 'watch',
-        label: 'Під контролем',
+        label: 'Under control',
         condition: '45% – 54%',
-        interpretation: 'Потрібен огляд onboarding та локальних комунікацій.'
+        interpretation: 'Onboarding and local communications need review.'
       },
       {
         level: 'risk',
-        label: 'Треба діяти',
+        label: 'Action needed',
         condition: '< 45%',
         interpretation:
-          'Імовірне проблемне повідомлення, неузгоджені офери або фрод.'
+          'Likely a problematic message, misaligned offers, or fraud.'
       }
     ],
     caveats: [
-      'На дуже малих сегментах відносний шум росте на 10–20pp.',
-      'Порівняння між місяцями потребує однакових правил onboarding у періодах.'
+      'On very small segments, relative noise increases by 10–20pp.',
+      'Month-over-month comparison requires consistent onboarding rules across periods.'
     ]
   },
   {
     id: 'time_to_first_tx',
-    title: 'Час до першої транзакції',
+    title: 'Time to First Transaction',
     aliases: ['Time to first transaction'],
     shortDefinition:
-      'Скільки часу в середньому проходить від активації кешбеку до першої оплати з ним.',
+      'Average time from cashback activation to the first payment using it.',
     quickFormula:
-      'Середній час(перший cashback tx — подія активації) / кількість клієнтів, що виконали першу оплату',
+      'Average time(first cashback tx — activation event) / number of customers who made the first payment',
     formula: {
       expression:
-        'Середнє значення по всіх клієнтах з активацією та принаймні однією наступною транзакцією.',
+        'Average value across all customers with activation and at least one subsequent transaction.',
       details: [
-        'Чисельник — сума годин/діб між активацією кешбеку і першою повною транзакцією.',
-        'Знаменник — кількість клієнтів, які здійснили першу транзакцію.',
-        'Значення знижується після оптимізації пуш-комунікацій або каталогу пропозицій.'
+        'Numerator — sum of hours/days between cashback activation and the first completed transaction.',
+        'Denominator — number of customers who made the first transaction.',
+        'Value decreases after optimizing push communications or the offer catalog.'
       ],
       example:
-        '3 клієнти з активацією зробили першу оплату через 1.8, 2.5 та 2.6 дня відповідно. Середній час = (1.8 + 2.5 + 2.6) / 3 = 2.3 дн.'
+        '3 customers with activation made their first payment after 1.8, 2.5, and 2.6 days respectively. Average time = (1.8 + 2.5 + 2.6) / 3 = 2.3 days.'
     },
     drivers: [
-      'Час доставки повідомлень та активності у додатку',
-      'Наявність підходящих мерчантів у геолокації користувача',
-      'Сезонні фактори (провал на початку тижня/місяця)',
-      'Складність верифікації транзакції в мерчанта',
-      'Кількість відкладених або розфактурованих оплат'
+      'Message delivery time and in-app activity',
+      'Availability of suitable merchants in the user\'s geolocation',
+      'Seasonal factors (dip at the beginning of the week/month)',
+      'Complexity of transaction verification at the merchant',
+      'Number of deferred or unbilled payments'
     ],
     actions: [
       {
         role: 'Product',
         action:
-          'Додати контекстну CTA картку для негайної покупки в 24-годинний вікон.',
-        expectedImpact: 'скорочення часу до першої оплати'
+          'Add a contextual CTA card for immediate purchase within the 24-hour window.',
+        expectedImpact: 'reduced time to first payment'
       },
       {
         role: 'CRM',
-        action: 'Надіслати персональні приклади першої покупки по сегменту.',
-        expectedImpact: 'менше зволікань після активації'
+        action: 'Send personalized first-purchase examples by segment.',
+        expectedImpact: 'less hesitation after activation'
       },
       {
         role: 'Finance',
         action:
-          'Валідувати часові межі транзакційних подій із партнерськими мерчантами.',
-        expectedImpact: 'менше пропущених оплат через технічний лаг'
+          'Validate time boundaries of transaction events with partner merchants.',
+        expectedImpact: 'fewer missed payments due to technical lag'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Нормально швидко',
-        condition: 'до 2 днів',
+        label: 'Normally fast',
+        condition: 'up to 2 days',
         interpretation:
-          'Клієнт починає чекати користь від кешбеку без зайвих затримок.'
+          'Customer starts benefiting from cashback without unnecessary delays.'
       },
       {
         level: 'watch',
-        label: 'Потрібен контроль',
-        condition: '2–4 дні',
-        interpretation: 'Певна частина сегменту затримується з першою оплатою.'
+        label: 'Needs monitoring',
+        condition: '2–4 days',
+        interpretation: 'A portion of the segment is delayed with the first payment.'
       },
       {
         level: 'risk',
-        label: 'Ризик втрати',
-        condition: '> 4 днів',
-        interpretation: 'Можливо, офер не виводить на моментальну дію.'
+        label: 'Churn risk',
+        condition: '> 4 days',
+        interpretation: 'The offer may not be driving immediate action.'
       }
     ],
     caveats: [
-      'Різні часові зони для клієнтів можуть спотворювати середнє значення.',
-      'На періоди сезонних акцій треба порівнювати з відповідним контрольним періодом.'
+      'Different time zones for customers can distort the average value.',
+      'During seasonal promotion periods, compare with the corresponding control period.'
     ]
   },
   {
@@ -180,285 +180,285 @@ const metricCatalog: MetricCatalogItem[] = [
     title: 'Reactivation Rate',
     aliases: ['Reactivation Rate'],
     shortDefinition:
-      'Скільки сплячих клієнтів повернулося до активності після запуску релевантних дотягів.',
+      'How many dormant customers returned to activity after launching relevant re-engagement campaigns.',
     quickFormula:
-      '(реактивовані сплячі клієнти / база сплячих >90 днів) × 100%',
+      '(reactivated dormant customers / dormant base >90 days) × 100%',
     formula: {
       expression:
-        'Розрахунок на основі бази клієнтів, що не проводили транзакцій > 90 днів до початку періоду дії кешбеку.',
+        'Calculated based on the customer base that had no transactions for >90 days before the start of the cashback campaign period.',
       details: [
-        'Чисельник — клієнти зі сплячого сегмента, які здійснили оплату або клікнули в період кампанії.',
-        'Знаменник — кількість клієнтів у сплячому сегменті на старті періоду.',
-        'Результат порівнюється з історичним періодом без запусків кампейнів.'
+        'Numerator — customers from the dormant segment who made a payment or clicked during the campaign period.',
+        'Denominator — number of customers in the dormant segment at the start of the period.',
+        'Result is compared with a historical period without campaign launches.'
       ],
       example:
-        'На старті лютого у сплячому сегменті (>90 дн. без транзакцій) було 8 200 клієнтів. Із них 1 533 здійснили оплату протягом кампанії. Reactivation Rate = 1 533 / 8 200 × 100% = 18.7%.'
+        'At the start of February, the dormant segment (>90 days without transactions) had 8,200 customers. Of those, 1,533 made a payment during the campaign. Reactivation Rate = 1,533 / 8,200 × 100% = 18.7%.'
     },
     drivers: [
-      'Якість сегментації «сплячих» клієнтів',
-      'Таймінг push/SMS на тригерних подіях',
-      'Привабливість оферу для повернення конкретного сегмента',
-      'Тривалість вікна дії кампанії',
-      'Паралельні канали взаємодії (email, пуш, in-app)'
+      'Quality of "dormant" customer segmentation',
+      'Timing of push/SMS on trigger events',
+      'Attractiveness of the return offer for a specific segment',
+      'Duration of the campaign action window',
+      'Parallel interaction channels (email, push, in-app)'
     ],
     actions: [
       {
         role: 'CRM',
-        action: 'Розбити сплячі сегменти на 30/60/90+ днів пасивності.',
-        expectedImpact: 'точніше таргетування і вища конверсія реактивації'
+        action: 'Split dormant segments into 30/60/90+ days of inactivity.',
+        expectedImpact: 'more precise targeting and higher reactivation conversion'
       },
       {
         role: 'Product',
         action:
-          'Додати «легкий» офер для повернення без зайвих порогів витрат.',
-        expectedImpact: 'зниження барʼєру входу для повернення'
+          'Add a "light" return offer without excessive spending thresholds.',
+        expectedImpact: 'lower barrier to entry for returning'
       },
       {
         role: 'Finance',
         action:
-          'Встановити мінімальний поріг прогріву оферу залежно від CLV сегмента.',
-        expectedImpact: 'краща окупність реактивації'
+          'Set a minimum offer warm-up threshold depending on the segment CLV.',
+        expectedImpact: 'better reactivation ROI'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Добрий сигнал',
+        label: 'Good signal',
         condition: '≥ 12%',
-        interpretation: 'Працюють офери та канали для повороту до активності.'
+        interpretation: 'Offers and channels for returning to activity are working.'
       },
       {
         level: 'watch',
-        label: 'Треба спостерігати',
+        label: 'Needs observation',
         condition: '6–11%',
         interpretation:
-          'Повернення присутнє, але потребує зміцнення комунікації.'
+          'Returns are present but communication needs strengthening.'
       },
       {
         level: 'risk',
-        label: 'Критично низько',
+        label: 'Critically low',
         condition: '< 6%',
-        interpretation: 'Сигнал, що офер не релевантний сплячим клієнтам.'
+        interpretation: 'Signal that the offer is not relevant to dormant customers.'
       }
     ],
     caveats: [
-      'Порівняння між місяцями має враховувати канали, де відбувся одночасний CRM-ремаркетинг.',
-      'Показник залежить від того, як довго клієнт був «сплячим» до дати сплеску.'
+      'Month-over-month comparison should account for channels where simultaneous CRM remarketing occurred.',
+      'The metric depends on how long the customer was "dormant" before the spike date.'
     ]
   },
   {
     id: 'transaction_frequency',
-    title: 'Транзакційність',
+    title: 'Transaction Frequency',
     shortDefinition:
-      'Скільки транзакцій на місяць в середньому робить клієнт з кешбеком.',
+      'How many transactions per month an average customer with cashback makes.',
     quickFormula:
-      'Середні транзакції клієнтів з кешбеком vs без кешбеку (різниця та дельта)',
+      'Average transactions of customers with cashback vs without cashback (difference and delta)',
     formula: {
       expression:
-        'Для групи користувачів із кешбеком рахується кількість транзакцій у місяць, далі порівнюється з контрольною групою без кешбеку.',
+        'For the group of users with cashback, the number of transactions per month is calculated, then compared with the control group without cashback.',
       details: [
-        'Чисельник — кількість транзакцій / кількість активних клієнтів у відповідній групі.',
-        'Нормалізація відбувається по однаковій датифреймі (місяць) та сегменту.',
-        'Delta в UI показує відставання/зрив від середнього без кешбеку.'
+        'Numerator — number of transactions / number of active customers in the respective group.',
+        'Normalization is done on the same time frame (month) and segment.',
+        'Delta in the UI shows the lag/deviation from the average without cashback.'
       ],
       example:
-        'Група з кешбеком: 42 000 транзакцій / 10 000 клієнтів = 4.2 txn/міс. Контрольна група без кешбеку: 21 000 / 10 000 = 2.1 txn/міс. Дельта = +2.1 транз./міс.'
+        'Cashback group: 42,000 transactions / 10,000 customers = 4.2 txn/mo. Control group without cashback: 21,000 / 10,000 = 2.1 txn/mo. Delta = +2.1 txn/mo.'
     },
     drivers: [
-      'Сильність оферів у частотних категоріях витрат',
-      'Поведінкові тригери (нагадування + ліміти)',
-      'Доступ до мерчантів, що конвертують регулярну оплату',
-      'Сезонність (фести, свята, зарплатний цикл)',
-      'Якість валідації повторних транзакцій в аналітичному пайплайні'
+      'Strength of offers in high-frequency spending categories',
+      'Behavioral triggers (reminders + limits)',
+      'Access to merchants that convert regular payments',
+      'Seasonality (festivals, holidays, payroll cycle)',
+      'Quality of repeat transaction validation in the analytics pipeline'
     ],
     actions: [
       {
         role: 'Product',
         action:
-          'Налаштувати часті повторювані офери в щоденному ритмі (без перевищення burn rate).',
-        expectedImpact: 'зростання частоти за рахунок рутинних платежів'
+          'Set up frequent recurring offers on a daily rhythm (without exceeding burn rate).',
+        expectedImpact: 'frequency growth driven by routine payments'
       },
       {
         role: 'CRM',
         action:
-          'Підвести користувачів до релевантних категорій через персоналізовані підказки.',
-        expectedImpact: 'збільшення повторних оплат у тижневому інтервалі'
+          'Guide users to relevant categories through personalized hints.',
+        expectedImpact: 'increased repeat payments on a weekly basis'
       },
       {
         role: 'Finance',
         action:
-          'Привести вартість оферів до нормованого порогу по ланцюгу сегментів.',
-        expectedImpact: 'зменшення непродуктивного приросту частоти'
+          'Bring offer costs to a normalized threshold across the segment chain.',
+        expectedImpact: 'reduction of unproductive frequency growth'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Сильне зростання',
-        condition: '>= 3.5 txn/міс',
-        interpretation: 'Програма суттєво підштовхує повторну активність.'
+        label: 'Strong growth',
+        condition: '>= 3.5 txn/mo',
+        interpretation: 'The program significantly drives repeat activity.'
       },
       {
         level: 'watch',
-        label: 'Блискавична зона',
-        condition: '2.5–3.4 txn/міс',
-        interpretation: 'Ефект є, але може бути залежним від окремих кампаній.'
+        label: 'Borderline zone',
+        condition: '2.5–3.4 txn/mo',
+        interpretation: 'Effect exists but may depend on individual campaigns.'
       },
       {
         level: 'risk',
-        label: 'Слабкий сигнал',
-        condition: '< 2.5 txn/міс',
+        label: 'Weak signal',
+        condition: '< 2.5 txn/mo',
         interpretation:
-          'Можливо, кешбек не дає доданої частоти, лише перерозподіл.'
+          'Cashback may not be adding frequency, only redistributing it.'
       }
     ],
     caveats: [
-      'Найчастіше зростання транзакційності спочатку йде з маркетингового сплеску.',
-      'Без контрольної групи важко відокремити сезонний фактор.'
+      'Most often, transaction frequency growth initially comes from a marketing spike.',
+      'Without a control group, it is difficult to isolate the seasonal factor.'
     ]
   },
   {
     id: 'avg_check_delta',
-    title: 'Зміна середнього чека',
+    title: 'Average Check Change',
     shortDefinition:
-      'Наскільки збільшився середній чек під дією кешбеку для вибраних категорій.',
+      'How much the average check increased under cashback influence for selected categories.',
     quickFormula:
-      '((avg check з кешбеком − avg check без кешбеку) / avg check без кешбеку) × 100%',
+      '((avg check with cashback − avg check without cashback) / avg check without cashback) × 100%',
     formula: {
       expression:
-        'Порівнюється середній чек до/після активації кешбеку на контрольованих категоріях.',
+        'The average check before/after cashback activation is compared across controlled categories.',
       details: [
-        'Чисельник — різниця між середнім чеком з cashback-дією та базовим середнім чеком у тих же сегментах.',
-        'Знаменник — базовий середній чек без кешбеку.',
-        'Delta виводиться у відсотках і відслідковується помісячно.'
+        'Numerator — difference between the average check with a cashback action and the baseline average check in the same segments.',
+        'Denominator — baseline average check without cashback.',
+        'Delta is displayed as a percentage and tracked monthly.'
       ],
       example:
-        'Середній чек без кешбеку = 482 ₴. З кешбеком = 595 ₴. Дельта = (595 − 482) / 482 × 100% = +23.4%.'
+        'Average check without cashback = 482 UAH. With cashback = 595 UAH. Delta = (595 − 482) / 482 × 100% = +23.4%.'
     },
     drivers: [
-      'Тип оферу (відсотковий або фіксований бонус)',
-      'Психологічний поріг ціни в конкретній категорії',
-      'Вплив додаткових акцій та купонів у мерчанті',
-      'Сезонні зміни асортименту',
-      'Агрегація даних по нових vs лояльних користувачів'
+      'Offer type (percentage or fixed bonus)',
+      'Psychological price threshold in a specific category',
+      'Impact of additional promotions and coupons at the merchant',
+      'Seasonal assortment changes',
+      'Data aggregation across new vs loyal users'
     ],
     actions: [
       {
         role: 'Product',
         action:
-          'Запускати офери на товари з вищим середнім чеком в основних мережах.',
-        expectedImpact: 'підвищення лояльної вартісності корисного чека'
+          'Launch offers on products with a higher average check in major retail chains.',
+        expectedImpact: 'increased loyal value of the useful check'
       },
       {
         role: 'CRM',
         action:
-          'Добавити підказки «підніміть чек до порогу» в сегментах з низьким середнім чеком.',
-        expectedImpact: 'прямий uplift середнього чека'
+          'Add "raise your check to the threshold" hints in segments with a low average check.',
+        expectedImpact: 'direct average check uplift'
       },
       {
         role: 'Finance',
-        action: 'Контролювати маржинальність оферів із високим середнім чеком.',
-        expectedImpact: 'зміцнення не лише обороту, а й прибутковості'
+        action: 'Monitor the margin of offers with a high average check.',
+        expectedImpact: 'strengthening not only turnover but also profitability'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Стійке зростання',
+        label: 'Steady growth',
         condition: '≥ 15%',
-        interpretation: 'Кешбек реально піднімає середню цінність покупки.'
+        interpretation: 'Cashback genuinely raises the average purchase value.'
       },
       {
         level: 'watch',
-        label: 'Нейтрально-помірно',
+        label: 'Neutral-moderate',
         condition: '5–14%',
         interpretation:
-          'Ефект є, але потрібно перевірити кореляцію з категорією/сезоном.'
+          'Effect exists but the correlation with category/season needs verification.'
       },
       {
         level: 'risk',
-        label: 'Недостатній uplfit',
+        label: 'Insufficient uplift',
         condition: '< 5%',
         interpretation:
-          'Кешбек може стимулювати часті покупки, але без росту чеку.'
+          'Cashback may stimulate frequent purchases but without check growth.'
       }
     ],
     caveats: [
-      'Середній чек чутливий до одиничних великих транзакцій.',
-      'На перехідні періоди важливо нормалізувати на кількість активних клієнтів.'
+      'Average check is sensitive to individual large transactions.',
+      'During transitional periods, it is important to normalize by the number of active customers.'
     ]
   },
   {
     id: 'credit_utilization',
-    title: 'Credit Utilization',
-    aliases: ['Завантаженість кредитного ліміту'],
+    title: 'Credit Limit Utilization',
+    aliases: ['Credit Limit Utilization'],
     shortDefinition:
-      'Частка обороту в кешбек-повʼязаних покупках, що пройшла через кредитний ліміт.',
-    quickFormula: '(транзакції з кредиту / усі транзакції) × 100%',
+      'Share of turnover in cashback-related purchases that went through the credit limit.',
+    quickFormula: '(credit transactions / all transactions) × 100%',
     formula: {
       expression:
-        'Частка оплати кредитним лімітом в наборі транзакцій, які віднесені до категорій кешбеку.',
+        'Share of credit limit payments in the set of transactions attributed to cashback categories.',
       details: [
-        'Чисельник — сума сум оплачених через кредитний ліміт.',
-        'Знаменник — сумарний оборот по тих самих транзакціях з кешбеком.',
-        'Інтерпретація залежить від апетиту до ризику та політики скорингу.'
+        'Numerator — total amount paid through the credit limit.',
+        'Denominator — total turnover of the same cashback transactions.',
+        'Interpretation depends on risk appetite and scoring policy.'
       ],
       example:
-        'Загальний оборот кешбек-транзакцій за лютий = 14.2 млн ₴. З них 4.94 млн ₴ оплачено через кредитний ліміт. Credit Utilization = 4.94 / 14.2 × 100% = 34.8%.'
+        'Total cashback transaction turnover for February = 14.2M UAH. Of that, 4.94M UAH was paid through the credit limit. Credit Utilization = 4.94 / 14.2 × 100% = 34.8%.'
     },
     drivers: [
-      'Поведінка користувачів у каналі оплати',
-      'Різниця лімітів за сегментами та вік користувача',
-      'Пропозиції партнерів і умови оплати в кешбек-сегменті',
-      'Політики запобігання борговому перегріву',
-      'Тиск з боку сезонних великих покупок'
+      'User behavior in the payment channel',
+      'Limit differences across segments and user age',
+      'Partner offers and payment terms in the cashback segment',
+      'Debt overheating prevention policies',
+      'Pressure from seasonal large purchases'
     ],
     actions: [
       {
         role: 'Risk',
         action:
-          'Встановити сегментні ліміти та алерти на аномальне зростання credit utilization.',
-        expectedImpact: 'керовані ризики перегорання кредитного ліміту'
+          'Set segment-level limits and alerts for abnormal credit utilization growth.',
+        expectedImpact: 'managed risks of credit limit overuse'
       },
       {
         role: 'Product',
         action:
-          'Показувати фінансові альтернативи (декілька варіантів оплати) в інтерфейсі.',
+          'Display financial alternatives (multiple payment options) in the interface.',
         expectedImpact:
-          'баланс між зручністю користувача та ризиком боргового тягаря'
+          'balance between user convenience and debt burden risk'
       },
       {
         role: 'Finance',
-        action: 'Порівняти рентабельність чеків з високою часткою кредиту.',
-        expectedImpact: 'уніфікування правил для доцільних і ризикових оферів'
+        action: 'Compare profitability of checks with a high credit share.',
+        expectedImpact: 'unified rules for viable and risky offers'
       }
     ],
     thresholds: [
       {
         level: 'good',
-        label: 'Балансовано',
+        label: 'Balanced',
         condition: '20% – 35%',
         interpretation:
-          'Ріст кредитної активності є, але в межах контрольованого кредитного ризику.'
+          'Credit activity is growing but within controlled credit risk limits.'
       },
       {
         level: 'watch',
-        label: 'Поглиблений контроль',
+        label: 'Enhanced monitoring',
         condition: '35% – 60%',
         interpretation:
-          'Можливе зміщення в бік короткострокового боргового споживання.'
+          'Possible shift toward short-term debt-driven consumption.'
       },
       {
         level: 'risk',
-        label: 'Підвищений ризик',
+        label: 'Elevated risk',
         condition: '> 60%',
         interpretation:
-          'Сильний ризик перегріву портфелю за частиною сегментів.'
+          'High risk of portfolio overheating in certain segments.'
       }
     ],
     caveats: [
-      'Наближення до межі кредитної політики може штучно занижувати реальну дельту.',
-      'На крос-сегментний період поріг порівняння треба брати з однаковим рівнем credit score.'
+      'Approaching the credit policy limit can artificially understate the actual delta.',
+      'For cross-segment periods, the comparison threshold should use the same credit score level.'
     ]
   }
 ];
