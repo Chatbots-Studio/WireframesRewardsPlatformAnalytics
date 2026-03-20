@@ -78,28 +78,28 @@ const C = {
 const activeTests = [
   {
     id: 'AB-2025-07',
-    name: 'Персональний кешбек: Кафе 5% vs 7%',
+    name: 'Personal Cashback: Café 5% vs 7%',
     type: 'personal',
     status: 'active',
     startDate: '01.02.2025',
     endDate: '28.02.2025',
     daysLeft: 7,
     confidence: 87,
-    targetMetric: 'Конверсія воронки',
+    targetMetric: 'Funnel Conversion',
     controlGroup: { size: 4100, conversion: 58, turnover: 3200, txCount: 5.1 },
     testGroup: { size: 4100, conversion: 71, turnover: 4800, txCount: 6.8 },
     winner: null
   },
   {
     id: 'AB-2025-08',
-    name: 'Push-нагадування про кешбек (день 3)',
+    name: 'Push Cashback Reminder (Day 3)',
     type: 'default',
     status: 'active',
     startDate: '10.02.2025',
     endDate: '10.03.2025',
     daysLeft: 18,
     confidence: 72,
-    targetMetric: 'Активація кешбеку',
+    targetMetric: 'Cashback Activation',
     controlGroup: { size: 8500, conversion: 62, turnover: 3800, txCount: 5.6 },
     testGroup: { size: 8500, conversion: 67, turnover: 4100, txCount: 5.9 },
     winner: null
@@ -109,42 +109,42 @@ const activeTests = [
 const completedTests = [
   {
     id: 'AB-2025-04',
-    name: 'Дефолтний: АЗС 3% vs 5%',
+    name: 'Default: Gas Stations 3% vs 5%',
     type: 'default',
     status: 'completed',
     startDate: '01.01.2025',
     endDate: '31.01.2025',
     daysLeft: 0,
     confidence: 98,
-    targetMetric: 'Оберт по АЗС',
+    targetMetric: 'Gas Station Turnover',
     controlGroup: { size: 12000, conversion: 41, turnover: 2100, txCount: 3.8 },
     testGroup: { size: 12000, conversion: 56, turnover: 3400, txCount: 5.2 },
     winner: 'test'
   },
   {
     id: 'AB-2025-05',
-    name: 'Персональний: Спорт — варіант показу A vs B',
+    name: 'Personal: Sports — Display Variant A vs B',
     type: 'personal',
     status: 'completed',
     startDate: '05.01.2025',
     endDate: '04.02.2025',
     daysLeft: 0,
     confidence: 95,
-    targetMetric: 'CTR пропозиції',
+    targetMetric: 'Offer CTR',
     controlGroup: { size: 2200, conversion: 68, turnover: 4200, txCount: 6.1 },
     testGroup: { size: 2200, conversion: 65, turnover: 3900, txCount: 5.8 },
     winner: 'control'
   },
   {
     id: 'AB-2025-06',
-    name: 'Bolt Food партнер: лімітований vs безлімітний кешбек',
+    name: 'Bolt Food Partner: Limited vs Unlimited Cashback',
     type: 'partner',
     status: 'completed',
     startDate: '15.01.2025',
     endDate: '14.02.2025',
     daysLeft: 0,
     confidence: 99,
-    targetMetric: 'Конверсія та оберт',
+    targetMetric: 'Conversion & Turnover',
     controlGroup: { size: 5500, conversion: 55, turnover: 2800, txCount: 4.9 },
     testGroup: { size: 5500, conversion: 72, turnover: 4600, txCount: 7.2 },
     winner: 'test'
@@ -152,22 +152,22 @@ const completedTests = [
 ];
 
 const selectedTestData = [
-  { metric: 'Конверсія %', control: 58, test: 71 },
-  { metric: 'Оберт (₴/100)', control: 32, test: 48 },
-  { metric: 'К-сть транзакцій', control: 51, test: 68 },
-  { metric: 'Середня транзакція (₴/10)', control: 63, test: 71 }
+  { metric: 'Conversion %', control: 58, test: 71 },
+  { metric: 'Turnover (₴/100)', control: 32, test: 48 },
+  { metric: 'Transaction Count', control: 51, test: 68 },
+  { metric: 'Avg Transaction (₴/10)', control: 63, test: 71 }
 ];
 
 function StatusBadge({ status }: { status: string }) {
   if (status === 'active')
     return (
       <Badge className='bg-primary/10 text-primary hover:bg-primary/10'>
-        <IconClock className='mr-1 size-3' /> Активний
+        <IconClock className='mr-1 size-3' /> Active
       </Badge>
     );
   return (
     <Badge className='bg-success/10 text-success hover:bg-success/10'>
-      <IconCircleCheck className='mr-1 size-3' /> Завершений
+      <IconCircleCheck className='mr-1 size-3' /> Completed
     </Badge>
   );
 }
@@ -177,9 +177,9 @@ function TypeBadge({ type }: { type: string }) {
     string,
     { label: string; variant: 'default' | 'secondary' | 'outline' }
   > = {
-    default: { label: 'Дефолтний', variant: 'secondary' },
-    partner: { label: 'Партнерський', variant: 'outline' },
-    personal: { label: 'Персональний', variant: 'default' }
+    default: { label: 'Default', variant: 'secondary' },
+    partner: { label: 'Partner', variant: 'outline' },
+    personal: { label: 'Personal', variant: 'default' }
   };
   const t = map[type] || map['default'];
   return <Badge variant={t.variant}>{t.label}</Badge>;
@@ -202,12 +202,12 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             </div>
             <CardTitle className='text-base'>{test.name}</CardTitle>
             <CardDescription className='mt-0.5'>
-              {test.startDate} – {test.endDate} · Ціль:{' '}
+              {test.startDate} – {test.endDate} · Target:{' '}
               <strong>{test.targetMetric}</strong>
             </CardDescription>
           </div>
           <div className='text-right'>
-            <p className='text-muted-foreground text-xs'>Впевненість</p>
+            <p className='text-muted-foreground text-xs'>Confidence</p>
             <p
               className={`text-2xl font-bold ${test.confidence >= 95 ? 'text-primary' : test.confidence >= 80 ? 'text-chart-warning' : 'text-muted-foreground'}`}
             >
@@ -217,8 +217,8 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
               className={`text-xs ${test.confidence >= 95 ? 'text-primary' : 'text-muted-foreground'}`}
             >
               {test.confidence >= 95
-                ? '✓ Статистично значимо'
-                : 'Збираємо дані'}
+                ? '✓ Statistically Significant'
+                : 'Collecting Data'}
             </p>
           </div>
         </div>
@@ -230,31 +230,31 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             className={`rounded-lg border p-3 ${isWinnerControl ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-sm font-semibold'>Контрольна група</span>
+              <span className='text-sm font-semibold'>Control Group</span>
               {isWinnerControl && (
                 <Badge className='bg-success text-success-foreground text-xs'>
-                  Переможець
+                  Winner
                 </Badge>
               )}
             </div>
             <p className='text-muted-foreground text-xs'>
-              {test.controlGroup.size.toLocaleString()} клієнтів
+              {test.controlGroup.size.toLocaleString()} clients
             </p>
             <div className='mt-2 space-y-1'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Конверсія</span>
+                <span className='text-muted-foreground'>Conversion</span>
                 <span className='font-semibold'>
                   {test.controlGroup.conversion}%
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Оберт</span>
+                <span className='text-muted-foreground'>Turnover</span>
                 <span className='font-semibold'>
                   {test.controlGroup.turnover.toLocaleString()} ₴
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>К-сть транзакцій</span>
+                <span className='text-muted-foreground'>Transaction Count</span>
                 <span className='font-semibold'>
                   {test.controlGroup.txCount}
                 </span>
@@ -267,19 +267,19 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
             className={`rounded-lg border p-3 ${isWinnerTest ? 'border-success/50 bg-success/10' : ''}`}
           >
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-sm font-semibold'>Тестова група</span>
+              <span className='text-sm font-semibold'>Test Group</span>
               {isWinnerTest && (
                 <Badge className='bg-success text-success-foreground text-xs'>
-                  Переможець
+                  Winner
                 </Badge>
               )}
             </div>
             <p className='text-muted-foreground text-xs'>
-              {test.testGroup.size.toLocaleString()} клієнтів
+              {test.testGroup.size.toLocaleString()} clients
             </p>
             <div className='mt-2 space-y-1'>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Конверсія</span>
+                <span className='text-muted-foreground'>Conversion</span>
                 <span className='font-semibold'>
                   {test.testGroup.conversion}%
                   <span
@@ -291,13 +291,13 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>Оберт</span>
+                <span className='text-muted-foreground'>Turnover</span>
                 <span className='font-semibold'>
                   {test.testGroup.turnover.toLocaleString()} ₴
                 </span>
               </div>
               <div className='flex justify-between text-sm'>
-                <span className='text-muted-foreground'>К-сть транзакцій</span>
+                <span className='text-muted-foreground'>Transaction Count</span>
                 <span className='font-semibold'>{test.testGroup.txCount}</span>
               </div>
             </div>
@@ -308,9 +308,9 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
         <div className='mt-3'>
           <div className='mb-1 flex items-center justify-between text-xs'>
             <span className='text-muted-foreground'>
-              Статистична впевненість
+              Statistical Confidence
             </span>
-            <span className='font-medium'>{test.confidence}% / 95% поріг</span>
+            <span className='font-medium'>{test.confidence}% / 95% threshold</span>
           </div>
           <Progress value={test.confidence} className='h-1.5' />
         </div>
@@ -318,7 +318,7 @@ function TestCard({ test }: { test: (typeof activeTests)[0] }) {
       {test.status === 'active' && (
         <CardFooter className='text-muted-foreground text-xs'>
           <IconClock className='mr-1 size-3' />
-          Залишилось {test.daysLeft} днів до завершення
+          {test.daysLeft} days remaining until completion
         </CardFooter>
       )}
     </Card>
@@ -332,9 +332,9 @@ export default function ABTestsPage() {
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>A/B Тести</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>A/B Tests</h2>
             <p className='text-muted-foreground text-sm'>
-              Порівняння тестових і контрольних груп по кешбек-пропозиціях
+              Comparison of test and control groups for cashback offers
             </p>
           </div>
           <div className='flex items-center gap-2'>
@@ -343,10 +343,10 @@ export default function ABTestsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>Всі типи</SelectItem>
-                <SelectItem value='default'>Дефолтні</SelectItem>
-                <SelectItem value='partner'>Партнерські</SelectItem>
-                <SelectItem value='personal'>Персональні</SelectItem>
+                <SelectItem value='all'>All Types</SelectItem>
+                <SelectItem value='default'>Default</SelectItem>
+                <SelectItem value='partner'>Partner</SelectItem>
+                <SelectItem value='personal'>Personal</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -356,25 +356,25 @@ export default function ABTestsPage() {
         <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
           {[
             {
-              label: 'Активних тестів',
+              label: 'Active Tests',
               value: '2',
               icon: <IconFlask className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Завершених (міс.)',
+              label: 'Completed (month)',
               value: '3',
               icon: <IconCircleCheck className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Підтверджених гіпотез',
+              label: 'Confirmed Hypotheses',
               value: '2 / 3',
               icon: <IconTrendingUp className='size-4' />,
               color: 'text-primary'
             },
             {
-              label: 'Середній ліфт конверсії',
+              label: 'Avg Conversion Lift',
               value: '+11.3pp',
               icon: <IconChartBar className='size-4' />,
               color: 'text-primary'
@@ -399,13 +399,13 @@ export default function ABTestsPage() {
         <Tabs defaultValue='active'>
           <TabsList>
             <TabsTrigger value='active'>
-              Активні{' '}
+              Active{' '}
               <Badge className='bg-primary text-primary-foreground ml-2'>
                 {activeTests.length}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value='completed'>
-              Завершені{' '}
+              Completed{' '}
               <Badge className='ml-2' variant='secondary'>
                 {completedTests.length}
               </Badge>
@@ -428,9 +428,9 @@ export default function ABTestsPage() {
         {/* Deep dive chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Детальне порівняння: AB-2025-07</CardTitle>
+            <CardTitle>Detailed Comparison: AB-2025-07</CardTitle>
             <CardDescription>
-              Персональний кешбек Кафе 5% vs 7% — порівняння метрик груп
+              Personal Cashback Café 5% vs 7% — group metrics comparison
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -457,13 +457,13 @@ export default function ABTestsPage() {
                 <ReferenceLine y={0} stroke='var(--border)' />
                 <Bar
                   dataKey='control'
-                  name='Контрольна група'
+                  name='Control Group'
                   fill={C.control}
                   radius={[3, 3, 0, 0]}
                 />
                 <Bar
                   dataKey='test'
-                  name='Тестова група'
+                  name='Test Group'
                   fill={C.test}
                   radius={[3, 3, 0, 0]}
                 />
@@ -471,7 +471,7 @@ export default function ABTestsPage() {
             </ResponsiveContainer>
           </CardContent>
           <CardFooter className='text-muted-foreground text-sm'>
-            Впевненість 87% — тест триває. Очікувана дата результату: 28.02.2025
+            Confidence 87% — test ongoing. Expected result date: 28.02.2025
           </CardFooter>
         </Card>
       </div>
