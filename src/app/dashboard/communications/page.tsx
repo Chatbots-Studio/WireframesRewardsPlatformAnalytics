@@ -204,7 +204,7 @@ const CHANNEL_COLORS: Record<string, string> = {
   SMS: 'bg-channel-sms/15 text-channel-sms border-channel-sms/30',
   Push: 'bg-channel-push/15 text-channel-push border-channel-push/30',
   Viber: 'bg-channel-viber/15 text-channel-viber border-channel-viber/30',
-  Інше: 'bg-muted text-muted-foreground border-border'
+  Other: 'bg-muted text-muted-foreground border-border'
 };
 
 const CHANNEL_ICONS: Record<string, React.ReactNode> = {
@@ -212,7 +212,7 @@ const CHANNEL_ICONS: Record<string, React.ReactNode> = {
   SMS: <IconDeviceMobile className='size-3' />,
   Push: <IconBell className='size-3' />,
   Viber: <IconMessage className='size-3' />,
-  Інше: <IconMailForward className='size-3' />
+  Other: <IconMailForward className='size-3' />
 };
 
 const CHANNEL_ICON_LG: Record<string, React.ReactNode> = {
@@ -220,7 +220,7 @@ const CHANNEL_ICON_LG: Record<string, React.ReactNode> = {
   SMS: <IconDeviceMobile className='size-4' />,
   Push: <IconBell className='size-4' />,
   Viber: <IconMessage className='size-4' />,
-  Інше: <IconMailForward className='size-4' />
+  Other: <IconMailForward className='size-4' />
 };
 
 const BATCH_COLORS = [
@@ -249,16 +249,16 @@ function getTargetActionLabel(
 const MOCK_BATCHES: CommBatch[] = [
   {
     id: '1',
-    name: 'Лютий 2025 — Email + Push',
+    name: 'February 2025 — Email + Push',
     uploadedAt: '23.02.2025',
     productId: 'PRD-RADA-CARD',
     targetActionId: 'TA-RADA-CB-TX',
     rows: [
       {
         customerId: 'CL-00142',
-        name: 'Акція на кешбек АЗС',
+        name: 'Gas Station Cashback Promo',
         channel: 'Email',
-        company: 'WOG АЗС',
+        company: 'WOG Gas',
         date: '18.02.2025',
         sent: 42000,
         delivered: 39900,
@@ -273,7 +273,7 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-00298',
-        name: 'Нагадування Rozetka',
+        name: 'Rozetka Reminder',
         channel: 'Push',
         company: 'Rozetka',
         date: '20.02.2025',
@@ -290,7 +290,7 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-00415',
-        name: 'Персональна пропозиція кафе',
+        name: 'Personalized Café Offer',
         channel: 'Email',
         company: 'Honey',
         date: '19.02.2025',
@@ -307,7 +307,7 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-00533',
-        name: 'Bolt Food — нова категорія',
+        name: 'Bolt Food — New Category',
         channel: 'Push',
         company: 'Bolt Food',
         date: '21.02.2025',
@@ -326,16 +326,16 @@ const MOCK_BATCHES: CommBatch[] = [
   },
   {
     id: '2',
-    name: 'Січень 2025 — SMS-кампанія',
+    name: 'January 2025 — SMS Campaign',
     uploadedAt: '31.01.2025',
     productId: 'PRD-RADA-CARD',
     targetActionId: 'TA-RADA-CATEGORY-SELECT',
     rows: [
       {
         customerId: 'CL-00672',
-        name: 'Зимова акція супермаркети',
+        name: 'Winter Supermarket Promo',
         channel: 'SMS',
-        company: 'Сільпо',
+        company: 'Silpo',
         date: '15.01.2025',
         sent: 55000,
         delivered: 52800,
@@ -350,9 +350,9 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-00781',
-        name: 'Аптеки — знижка 15%',
+        name: 'Pharmacies — 15% Discount',
         channel: 'SMS',
-        company: 'Аптека АНЦ',
+        company: 'ANC Pharmacy',
         date: '20.01.2025',
         sent: 35000,
         delivered: 33600,
@@ -367,9 +367,9 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-00894',
-        name: 'Viber: нові партнери',
+        name: 'Viber: New Partners',
         channel: 'Viber',
-        company: 'Преміум партнери',
+        company: 'Premium Partners',
         date: '25.01.2025',
         sent: 12000,
         delivered: 11520,
@@ -386,14 +386,14 @@ const MOCK_BATCHES: CommBatch[] = [
   },
   {
     id: '3',
-    name: 'Грудень 2024 — Новорічна кампанія',
+    name: 'December 2024 — New Year Campaign',
     uploadedAt: '01.12.2024',
     productId: 'PRD-DEPOSIT',
     targetActionId: 'TA-DEP-OPEN',
     rows: [
       {
         customerId: 'CL-01023',
-        name: 'Email: Новорічні подарунки',
+        name: 'Email: New Year Gifts',
         channel: 'Email',
         company: 'Rozetka',
         date: '01.12.2024',
@@ -408,9 +408,9 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-01156',
-        name: 'Push: Святкові пропозиції',
+        name: 'Push: Holiday Offers',
         channel: 'Push',
-        company: 'Всі партнери',
+        company: 'All Partners',
         date: '10.12.2024',
         sent: 95000,
         delivered: 91200,
@@ -423,9 +423,9 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-01289',
-        name: 'SMS: Нагадування кешбек',
+        name: 'SMS: Cashback Reminder',
         channel: 'SMS',
-        company: 'WOG АЗС',
+        company: 'WOG Gas',
         date: '15.12.2024',
         sent: 22000,
         delivered: 21120,
@@ -438,9 +438,9 @@ const MOCK_BATCHES: CommBatch[] = [
       },
       {
         customerId: 'CL-01402',
-        name: 'Viber: Ексклюзив преміум',
+        name: 'Viber: Premium Exclusive',
         channel: 'Viber',
-        company: 'Преміум клуб',
+        company: 'Premium Club',
         date: '20.12.2024',
         sent: 8500,
         delivered: 8245,
@@ -457,16 +457,16 @@ const MOCK_BATCHES: CommBatch[] = [
 
 const EXTRA_MOCK_BATCH: CommBatch = {
   id: 'extra',
-  name: 'Новий імпорт — Березень 2025',
+  name: 'New Import — March 2025',
   uploadedAt: '01.03.2025',
   productId: 'PRD-SALARY',
   targetActionId: 'TA-SAL-ACTIVE-CARD-TX',
   rows: [
     {
       customerId: 'CL-01530',
-      name: 'Email: Весняна акція',
+      name: 'Email: Spring Promo',
       channel: 'Email',
-      company: 'Сільпо',
+      company: 'Silpo',
       date: '01.03.2025',
       sent: 50000,
       delivered: 47500,
@@ -479,7 +479,7 @@ const EXTRA_MOCK_BATCH: CommBatch = {
     },
     {
       customerId: 'CL-01647',
-      name: 'Push: Повернення клієнтів',
+      name: 'Push: Client Retention',
       channel: 'Push',
       company: 'Bolt Food',
       date: '03.03.2025',
@@ -494,9 +494,9 @@ const EXTRA_MOCK_BATCH: CommBatch = {
     },
     {
       customerId: 'CL-01763',
-      name: 'SMS: Знижка АЗС',
+      name: 'SMS: Gas Station Discount',
       channel: 'SMS',
-      company: 'WOG АЗС',
+      company: 'WOG Gas',
       date: '05.03.2025',
       sent: 30000,
       delivered: 28800,
@@ -514,11 +514,11 @@ const EXTRA_MOCK_BATCH: CommBatch = {
 function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
   const s = batchStats(batch.rows);
   const steps = [
-    { label: 'Надіслано', value: s.sent },
-    { label: 'Доставлено', value: s.delivered },
-    { label: 'Відкрито', value: s.opened },
-    { label: 'Переходи', value: s.clicked },
-    { label: 'Конвертовано', value: s.converted }
+    { label: 'Sent', value: s.sent },
+    { label: 'Delivered', value: s.delivered },
+    { label: 'Opened', value: s.opened },
+    { label: 'Clicks', value: s.clicked },
+    { label: 'Converted', value: s.converted }
   ];
   const maxVal = steps[0].value;
   const W = 300;
@@ -591,7 +591,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                 fontSize={10}
                 fill='var(--muted-foreground)'
               >
-                {Math.round(pctVal * 100)}% від початку
+                {Math.round(pctVal * 100)}% from start
               </text>
               {i > 0 && (
                 <>
@@ -616,7 +616,7 @@ function CommFunnel({ batch, color }: { batch: CommBatch; color: string }) {
                         : 'var(--muted-foreground)'
                     }
                   >
-                    -{dropPct}% відвалилось
+                    -{dropPct}% dropped off
                   </text>
                 </>
               )}
@@ -635,10 +635,10 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
   return (
     <div className='px-4 py-3'>
       <p className='text-muted-foreground mb-2.5 text-xs font-semibold tracking-wide uppercase'>
-        Деталізація по сегментах
+        Segment Breakdown
       </p>
       <div className='grid grid-cols-2 gap-3'>
-        {/* З кешбеком */}
+        {/* With Cashback */}
         {cashback ? (
           <div className='border-primary/30 bg-primary/10 rounded-lg border p-3'>
             <div className='mb-2 flex items-center gap-1.5'>
@@ -646,23 +646,23 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
                 <IconTag className='text-primary size-3' />
               </span>
               <span className='text-primary text-xs font-semibold'>
-                З кешбеком
+                With Cashback
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-muted-foreground'>Клієнтів</span>
+              <span className='text-muted-foreground'>Clients</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.customers)}
               </span>
-              <span className='text-muted-foreground'>Покупок</span>
+              <span className='text-muted-foreground'>Purchases</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(cashback.purchases)}
               </span>
-              <span className='text-muted-foreground'>Загальна сума</span>
+              <span className='text-muted-foreground'>Total Amount</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(cashback.revenue)}
               </span>
-              <span className='text-muted-foreground'>Середній чек</span>
+              <span className='text-muted-foreground'>Average Check</span>
               <span className='text-primary text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   cashback.purchases > 0
@@ -674,11 +674,11 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
           </div>
         ) : (
           <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
-            <span className='text-muted-foreground text-xs'>Немає даних</span>
+            <span className='text-muted-foreground text-xs'>No Data</span>
           </div>
         )}
 
-        {/* Без кешбеку */}
+        {/* Without Cashback */}
         {noCashback ? (
           <div className='border-border bg-muted/50 rounded-lg border p-3'>
             <div className='mb-2 flex items-center gap-1.5'>
@@ -686,23 +686,23 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
                 <IconMailOpened className='text-muted-foreground size-3' />
               </span>
               <span className='text-muted-foreground text-xs font-semibold'>
-                Без кешбеку (отримали повідомлення)
+                Without Cashback (received message)
               </span>
             </div>
             <div className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs'>
-              <span className='text-muted-foreground'>Клієнтів</span>
+              <span className='text-muted-foreground'>Clients</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.customers)}
               </span>
-              <span className='text-muted-foreground'>Покупок</span>
+              <span className='text-muted-foreground'>Purchases</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtNum(noCashback.purchases)}
               </span>
-              <span className='text-muted-foreground'>Загальна сума</span>
+              <span className='text-muted-foreground'>Total Amount</span>
               <span className='text-foreground text-right font-medium tabular-nums'>
                 {fmtMoney(noCashback.revenue)}
               </span>
-              <span className='text-muted-foreground'>Середній чек</span>
+              <span className='text-muted-foreground'>Average Check</span>
               <span className='text-muted-foreground text-right font-semibold tabular-nums'>
                 {fmtMoney(
                   noCashback.purchases > 0
@@ -714,7 +714,7 @@ function CashbackDetailPanel({ row }: { row: CommRow }) {
           </div>
         ) : (
           <div className='border-border flex items-center justify-center rounded-lg border border-dashed p-3'>
-            <span className='text-muted-foreground text-xs'>Немає даних</span>
+            <span className='text-muted-foreground text-xs'>No Data</span>
           </div>
         )}
       </div>
@@ -753,21 +753,21 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
       <Table>
         <TableHeader>
           <TableRow className='bg-muted'>
-            <TableHead className='pl-4'>Назва кампанії</TableHead>
-            <TableHead>Канал</TableHead>
-            {hasCompany && <TableHead>Компанія</TableHead>}
-            {hasDate && <TableHead>Дата</TableHead>}
-            <TableHead className='text-right'>Надіслано</TableHead>
+            <TableHead className='pl-4'>Campaign Name</TableHead>
+            <TableHead>Channel</TableHead>
+            {hasCompany && <TableHead>Company</TableHead>}
+            {hasDate && <TableHead>Date</TableHead>}
+            <TableHead className='text-right'>Sent</TableHead>
             <TableHead className='text-right font-semibold'>
-              Зробили покупку
+              Made Purchase
             </TableHead>
-            <TableHead className='text-right'>Кількість покупок</TableHead>
+            <TableHead className='text-right'>Purchase Count</TableHead>
             {hasRevenue && (
-              <TableHead className='text-right'>Середній чек</TableHead>
+              <TableHead className='text-right'>Average Check</TableHead>
             )}
             {hasRevenue && (
               <TableHead className={cn('text-right', !hasSegments && 'pr-4')}>
-                Приріст обороту
+                Revenue Lift
               </TableHead>
             )}
             {hasSegments && <TableHead className='w-8 pr-3' />}
@@ -809,10 +809,10 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                     <span
                       className={cn(
                         'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium',
-                        CHANNEL_COLORS[r.channel] ?? CHANNEL_COLORS['Інше']
+                        CHANNEL_COLORS[r.channel] ?? CHANNEL_COLORS['Other']
                       )}
                     >
-                      {CHANNEL_ICONS[r.channel] ?? CHANNEL_ICONS['Інше']}
+                      {CHANNEL_ICONS[r.channel] ?? CHANNEL_ICONS['Other']}
                       {r.channel}
                     </span>
                   </TableCell>
@@ -877,7 +877,7 @@ function CampaignDetailTable({ rows }: { rows: CommRow[] }) {
                             e.stopPropagation();
                             setExpandedKey(isExpanded ? null : rowKey);
                           }}
-                          title='Деталізація по сегментах'
+                          title='Segment Breakdown'
                         >
                           {isExpanded ? (
                             <IconChevronUp className='size-3.5' />
@@ -915,10 +915,10 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
     <div>
       <div className='mb-3'>
         <p className='text-foreground text-sm font-semibold'>
-          Ефективність каналів
+          Channel Effectiveness
         </p>
         <p className='text-muted-foreground text-xs'>
-          Агрегат по всіх завантаженнях · сортування за приростом обороту
+          Aggregate across all uploads · sorted by revenue lift
         </p>
       </div>
 
@@ -965,20 +965,20 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                 <span
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold',
-                    CHANNEL_COLORS[s.channel] ?? CHANNEL_COLORS['Інше']
+                    CHANNEL_COLORS[s.channel] ?? CHANNEL_COLORS['Other']
                   )}
                 >
-                  {CHANNEL_ICON_LG[s.channel] ?? CHANNEL_ICON_LG['Інше']}
+                  {CHANNEL_ICON_LG[s.channel] ?? CHANNEL_ICON_LG['Other']}
                   {s.channel}
                 </span>
                 <span className='text-muted-foreground text-xs'>
-                  {s.campaigns} кампаній
+                  {s.campaigns} campaigns
                 </span>
               </div>
 
-              {/* Hero: Зробили покупку */}
+              {/* Hero: Made Purchase */}
               <div className='mb-3'>
-                <p className='text-muted-foreground text-xs'>Зробили покупку</p>
+                <p className='text-muted-foreground text-xs'>Made Purchase</p>
                 <p
                   className={cn(
                     'text-3xl leading-none font-black tabular-nums',
@@ -988,7 +988,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                   {s.overallConv}%
                 </p>
                 <p className='text-muted-foreground mt-0.5 text-xs'>
-                  {fmtNum(s.converted)} з {fmtNum(s.sent)} отримали повідомлення
+                  {fmtNum(s.converted)} of {fmtNum(s.sent)} received message
                 </p>
               </div>
 
@@ -997,7 +997,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                 <>
                   <div className='bg-primary/10 mb-2 rounded-lg px-2.5 py-2'>
                     <p className='text-muted-foreground text-[10px]'>
-                      Приріст обороту на учасника
+                      Revenue Lift per Participant
                     </p>
                     <p
                       className={cn(
@@ -1007,23 +1007,23 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
                           : 'text-muted-foreground'
                       )}
                     >
-                      +{fmtNum(s.liftPerUser)} ₴/міс
+                      +{fmtNum(s.liftPerUser)} ₴/month
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                      {fmtNum(s.avgSpendWithComm)} ₴ з комунікацією ·{' '}
-                      {fmtNum(s.avgSpendControl)} ₴ без
+                      {fmtNum(s.avgSpendWithComm)} ₴ with communication ·{' '}
+                      {fmtNum(s.avgSpendControl)} ₴ without
                     </p>
                   </div>
 
                   <div className='bg-primary/10 mb-3 rounded-lg px-2.5 py-2'>
                     <p className='text-muted-foreground text-[10px]'>
-                      Загальний приріст обороту
+                      Total Revenue Lift
                     </p>
                     <p className='text-primary text-sm font-bold tabular-nums'>
                       {fmtMoney(s.totalLift)}
                     </p>
                     <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                      по {fmtNum(s.converted)} учасниках
+                      across {fmtNum(s.converted)} participants
                     </p>
                   </div>
                 </>
@@ -1032,7 +1032,7 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
               {/* Best campaign */}
               <div className='border-border/50 border-t pt-2'>
                 <p className='text-muted-foreground text-[10px]'>
-                  Топ-кампанія
+                  Top Campaign
                 </p>
                 <p className='text-muted-foreground mt-0.5 truncate text-xs font-medium'>
                   {s.bestCampaign}
@@ -1044,8 +1044,8 @@ function ChannelSummarySection({ batches }: { batches: CommBatch[] }) {
       </div>
 
       <p className='text-muted-foreground mt-2 text-[11px]'>
-        * Приріст обороту — порівняння середнього місячного обороту тих, хто
-        отримав повідомлення, з клієнтами без будь-яких комунікацій і кешбеків
+        * Revenue lift — comparison of average monthly turnover of those who
+        received a message with clients without any communications or cashbacks
       </p>
     </div>
   );
@@ -1122,13 +1122,13 @@ function BatchCard({
 
         <div className='mb-3 grid grid-cols-2 gap-2'>
           <div className='bg-muted rounded-lg px-3 py-2'>
-            <p className='text-muted-foreground text-xs'>Надіслано</p>
+            <p className='text-muted-foreground text-xs'>Sent</p>
             <p className='text-foreground text-base font-bold tabular-nums'>
               {fmtNum(s.sent)}
             </p>
           </div>
           <div className='bg-primary/10 rounded-lg px-3 py-2'>
-            <p className='text-muted-foreground text-xs'>Зробили покупку</p>
+            <p className='text-muted-foreground text-xs'>Made Purchase</p>
             <p
               className={cn(
                 'text-base font-bold tabular-nums',
@@ -1147,7 +1147,7 @@ function BatchCard({
         {s.revenue > 0 && (
           <div className='bg-primary/10 mb-3 rounded-lg px-3 py-2'>
             <p className='text-muted-foreground text-xs'>
-              Згенеровані оберти по покупках
+              Generated Turnover from Purchases
             </p>
             <p className='text-primary text-base font-bold tabular-nums'>
               {fmtMoney(s.revenue)}
@@ -1157,9 +1157,9 @@ function BatchCard({
 
         <div className='mb-3 space-y-1.5'>
           {[
-            { label: 'Доставка', val: pct(s.delivered, s.sent), ref: 95 },
-            { label: 'Відкриття', val: pct(s.opened, s.delivered), ref: 30 },
-            { label: 'Переходи', val: pct(s.clicked, s.opened), ref: 20 }
+            { label: 'Delivery', val: pct(s.delivered, s.sent), ref: 95 },
+            { label: 'Opens', val: pct(s.opened, s.delivered), ref: 30 },
+            { label: 'Clicks', val: pct(s.clicked, s.opened), ref: 20 }
           ].map((m) => (
             <div key={m.label} className='flex items-center gap-2'>
               <span className='text-muted-foreground w-16 shrink-0 text-xs'>
@@ -1187,15 +1187,15 @@ function BatchCard({
               key={ch}
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium',
-                CHANNEL_COLORS[ch] ?? CHANNEL_COLORS['Інше']
+                CHANNEL_COLORS[ch] ?? CHANNEL_COLORS['Other']
               )}
             >
-              {CHANNEL_ICONS[ch] ?? CHANNEL_ICONS['Інше']}
+              {CHANNEL_ICONS[ch] ?? CHANNEL_ICONS['Other']}
               {ch}
             </span>
           ))}
           <span className='border-border bg-muted text-muted-foreground inline-flex items-center rounded-full border px-2 py-0.5 text-xs'>
-            {batch.rows.length} кампаній
+            {batch.rows.length} campaigns
           </span>
         </div>
 
@@ -1256,35 +1256,35 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
   const cols: { key: MetricKey; label: string; desc: string }[] = [
     {
       key: 'deliveryRate',
-      label: 'Доставка',
-      desc: 'Доставлено / Надіслано'
+      label: 'Delivery',
+      desc: 'Delivered / Sent'
     },
     {
       key: 'openRate',
-      label: 'Відкрили',
-      desc: 'Відкрито / Доставлено'
+      label: 'Opened',
+      desc: 'Opened / Delivered'
     },
     {
       key: 'clickRate',
-      label: 'Перейшли',
-      desc: 'Переходи / Відкрито'
+      label: 'Clicked',
+      desc: 'Clicks / Opened'
     },
     {
       key: 'convRate',
-      label: 'Конверсія',
-      desc: 'Зробили покупку / Перейшли'
+      label: 'Conversion',
+      desc: 'Made Purchase / Clicked'
     },
     {
       key: 'overallConv',
-      label: 'Зробили покупку',
-      desc: 'Зробили покупку / Надіслано'
+      label: 'Made Purchase',
+      desc: 'Made Purchase / Sent'
     },
     ...(hasRevenue
       ? [
           {
             key: 'revenue' as MetricKey,
-            label: 'Приріст обороту',
-            desc: 'Сума транзакцій'
+            label: 'Revenue Lift',
+            desc: 'Transaction Amount'
           }
         ]
       : [])
@@ -1295,7 +1295,7 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-[220px]'>Завантаження</TableHead>
+            <TableHead className='w-[220px]'>Upload</TableHead>
             {cols.map((c) => (
               <TableHead key={c.key} className='text-right'>
                 <div>
@@ -1352,25 +1352,25 @@ function ComparisonTable({ batches }: { batches: CommBatch[] }) {
 // ─── CSV Format Card ─────────────────────────────────────────
 function FormatCard() {
   const columns = [
-    { col: 'customer_id', type: 'рядок', example: 'CL-00142', required: true },
-    { col: 'campaign_id', type: 'рядок', example: 'CMP-001', required: true },
-    { col: 'name', type: 'рядок', example: 'Email про акцію', required: true },
-    { col: 'channel', type: 'рядок', example: 'Email', required: true },
-    { col: 'sent', type: 'дата', example: '18.02.2025', required: true },
-    { col: 'delivered', type: 'дата', example: '18.02.2025', required: false },
-    { col: 'opened', type: 'дата', example: '19.02.2025', required: false },
-    { col: 'clicked', type: 'дата', example: '19.02.2025', required: false },
-    { col: 'company', type: 'рядок', example: 'Rozetka', required: false }
+    { col: 'customer_id', type: 'string', example: 'CL-00142', required: true },
+    { col: 'campaign_id', type: 'string', example: 'CMP-001', required: true },
+    { col: 'name', type: 'string', example: 'Email promo', required: true },
+    { col: 'channel', type: 'string', example: 'Email', required: true },
+    { col: 'sent', type: 'date', example: '18.02.2025', required: true },
+    { col: 'delivered', type: 'date', example: '18.02.2025', required: false },
+    { col: 'opened', type: 'date', example: '19.02.2025', required: false },
+    { col: 'clicked', type: 'date', example: '19.02.2025', required: false },
+    { col: 'company', type: 'string', example: 'Rozetka', required: false }
   ];
 
   function downloadSample() {
     const header =
       'customer_id,campaign_id,name,channel,sent,delivered,opened,clicked,company';
     const rows = [
-      'CL-00142,CMP-001,Email про акцію,Email,18.02.2025,18.02.2025,19.02.2025,19.02.2025,Rozetka',
-      'CL-00298,CMP-002,SMS нагадування,SMS,20.02.2025,20.02.2025,21.02.2025,,WOG АЗС',
+      'CL-00142,CMP-001,Email promo,Email,18.02.2025,18.02.2025,19.02.2025,19.02.2025,Rozetka',
+      'CL-00298,CMP-002,SMS reminder,SMS,20.02.2025,20.02.2025,21.02.2025,,WOG Gas',
       'CL-00415,CMP-001,Push — Rozetka,Push,22.02.2025,22.02.2025,,,Rozetka',
-      'CL-00533,CMP-003,Viber преміум,Viber,23.02.2025,23.02.2025,23.02.2025,24.02.2025,Преміум клуб'
+      'CL-00533,CMP-003,Viber premium,Viber,23.02.2025,23.02.2025,23.02.2025,24.02.2025,Premium Club'
     ];
     const csv = [header, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1387,9 +1387,9 @@ function FormatCard() {
       <CardHeader className='pb-3'>
         <div className='flex items-start justify-between gap-2'>
           <div>
-            <CardTitle className='text-base'>Очікувана структура CSV</CardTitle>
+            <CardTitle className='text-base'>Expected CSV Structure</CardTitle>
             <CardDescription className='mt-0.5'>
-              Перший рядок — заголовки, кодування UTF-8, роздільник — кома
+              First row — headers, encoding UTF-8, delimiter — comma
             </CardDescription>
           </div>
           <Button
@@ -1399,7 +1399,7 @@ function FormatCard() {
             className='shrink-0 gap-1.5'
           >
             <IconDownload className='size-3.5' />
-            Зразок
+            Sample
           </Button>
         </div>
       </CardHeader>
@@ -1407,10 +1407,10 @@ function FormatCard() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='pl-6'>Колонка</TableHead>
-              <TableHead>Тип</TableHead>
-              <TableHead>Приклад</TableHead>
-              <TableHead className='pr-6 text-right'>Обов.</TableHead>
+              <TableHead className='pl-6'>Column</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Example</TableHead>
+              <TableHead className='pr-6 text-right'>Req.</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -1441,15 +1441,15 @@ function FormatCard() {
         <div className='border-border/50 flex items-start gap-2 border-t px-6 py-3'>
           <IconInfoCircle className='text-muted-foreground mt-0.5 size-3.5 shrink-0' />
           <p className='text-muted-foreground text-xs'>
-            Один рядок = один клієнт. <strong>customer_id</strong> — унікальний
-            ідентифікатор клієнта; <strong>campaign_id</strong> — унікальний
-            ідентифікатор маркетингової кампанії (обовʼязково).{' '}
-            <strong>sent</strong> — дата надсилання (обов&apos;язково);{' '}
+            One row = one client. <strong>customer_id</strong> — unique
+            client identifier; <strong>campaign_id</strong> — unique
+            marketing campaign identifier (required).{' '}
+            <strong>sent</strong> — send date (required);{' '}
             <strong>delivered</strong>, <strong>opened</strong>,{' '}
-            <strong>clicked</strong> — дати подій (порожньо, якщо не відбулось).
-            Значення каналу: <strong>Email</strong>, <strong>SMS</strong>,{' '}
-            <strong>Push</strong>, <strong>Viber</strong> або{' '}
-            <strong>Інше</strong>.
+            <strong>clicked</strong> — event dates (empty if not occurred).
+            Channel values: <strong>Email</strong>, <strong>SMS</strong>,{' '}
+            <strong>Push</strong>, <strong>Viber</strong> or{' '}
+            <strong>Other</strong>.
           </p>
         </div>
       </CardContent>
@@ -1484,23 +1484,23 @@ function UploadCard({
   return (
     <Card className='h-full'>
       <CardHeader className='pb-3'>
-        <CardTitle className='text-base'>Завантажити комунікації</CardTitle>
+        <CardTitle className='text-base'>Upload Communications</CardTitle>
         <CardDescription>
-          Оберіть продукт та цільову дію, потім завантажте CSV
+          Select product and target action, then upload CSV
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
         <div className='grid gap-3'>
           <div className='grid gap-1.5'>
             <label className='text-foreground text-xs font-medium'>
-              Продукт
+              Product
             </label>
             <Select
               value={selectedProductId}
               onValueChange={handleProductChange}
             >
               <SelectTrigger className='w-full text-sm'>
-                <SelectValue placeholder='Оберіть продукт...' />
+                <SelectValue placeholder='Select product...' />
               </SelectTrigger>
               <SelectContent>
                 {PRODUCT_DICTIONARY.map((p) => (
@@ -1521,7 +1521,7 @@ function UploadCard({
                   : 'text-muted-foreground/50'
               )}
             >
-              Цільова дія
+              Target Action
             </label>
             <Select
               value={selectedTargetActionId}
@@ -1532,8 +1532,8 @@ function UploadCard({
                 <SelectValue
                   placeholder={
                     selectedProductId
-                      ? 'Оберіть цільову дію...'
-                      : 'Спочатку оберіть продукт'
+                      ? 'Select target action...'
+                      : 'Select product first'
                   }
                 />
               </SelectTrigger>
@@ -1583,10 +1583,10 @@ function UploadCard({
             />
           </div>
           <p className='text-foreground text-sm font-medium'>
-            Перетягніть CSV сюди
+            Drag CSV here
           </p>
           <p className='text-muted-foreground mt-1 text-xs'>
-            {canUpload ? 'або натисніть для вибору' : 'оберіть продукт та дію'}
+            {canUpload ? 'or click to select' : 'select product and action'}
           </p>
           <Badge variant='outline' className='mt-3 text-xs'>
             .csv · UTF-8
@@ -1595,9 +1595,9 @@ function UploadCard({
 
         <div className='grid grid-cols-3 gap-2 text-center'>
           {[
-            { label: 'Канали', value: 'Email, SMS, Push, Viber' },
-            { label: 'Рядків', value: 'Без обмежень' },
-            { label: 'Формат', value: 'CSV (UTF-8)' }
+            { label: 'Channels', value: 'Email, SMS, Push, Viber' },
+            { label: 'Rows', value: 'No limit' },
+            { label: 'Format', value: 'CSV (UTF-8)' }
           ].map((item) => (
             <div key={item.label} className='bg-muted rounded-lg px-2 py-2'>
               <p className='text-muted-foreground text-[10px]'>{item.label}</p>
@@ -1621,15 +1621,15 @@ export default function CommunicationsPage() {
 
   function handleUpload(productId: string, targetActionId: string) {
     if (batches.find((b) => b.id === EXTRA_MOCK_BATCH.id)) {
-      toast.info('Це завантаження вже є в списку');
+      toast.info('This upload is already in the list');
       return;
     }
     setBatches((prev) => [
       { ...EXTRA_MOCK_BATCH, productId, targetActionId },
       ...prev
     ]);
-    toast.success('Файл успішно завантажено', {
-      description: `${EXTRA_MOCK_BATCH.name} · ${EXTRA_MOCK_BATCH.rows.length} кампанії`
+    toast.success('File uploaded successfully', {
+      description: `${EXTRA_MOCK_BATCH.name} · ${EXTRA_MOCK_BATCH.rows.length} campaigns`
     });
   }
 
@@ -1659,12 +1659,11 @@ export default function CommunicationsPage() {
         <div className='flex items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Маркетинг · Канальні комунікації
+              Marketing · Channel Communications
             </p>
-            <h2 className='text-2xl font-bold tracking-tight'>Комунікації</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Communications</h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
-              Завантажуйте звіти, аналізуйте конверсію та порівнюйте кампанії
-              між собою
+              Upload reports, analyze conversion, and compare campaigns
             </p>
           </div>
           <Button
@@ -1673,7 +1672,7 @@ export default function CommunicationsPage() {
             variant={showUpload ? 'outline' : 'default'}
           >
             <IconUpload className='size-4' />
-            {showUpload ? 'Сховати' : 'Завантажити проведені комунікації'}
+            {showUpload ? 'Hide' : 'Upload Past Communications'}
           </Button>
         </div>
 
@@ -1693,16 +1692,16 @@ export default function CommunicationsPage() {
           <div className='mb-3 flex items-center justify-between gap-2'>
             <div>
               <p className='text-foreground text-sm font-semibold'>
-                Завантажені кампанії
+                Uploaded Campaigns
               </p>
               <p className='text-muted-foreground text-xs'>
-                {batches.length} завантажень · Оберіть 2+ для порівняння
+                {batches.length} uploads · Select 2+ to compare
               </p>
             </div>
             {selectedIds.length > 0 && (
               <Badge variant='secondary' className='gap-1'>
-                Обрано: {selectedIds.length}
-                {canCompare && ' · порівняння активне'}
+                Selected: {selectedIds.length}
+                {canCompare && ' · comparison active'}
               </Badge>
             )}
           </div>
@@ -1710,10 +1709,10 @@ export default function CommunicationsPage() {
             <div className='border-border flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-16 text-center'>
               <IconMailForward className='text-muted-foreground/40 mb-3 size-10' />
               <p className='text-muted-foreground text-sm font-medium'>
-                Немає завантажених даних
+                No uploaded data
               </p>
               <p className='text-muted-foreground mt-1 text-xs'>
-                Завантажте перший CSV-файл щоб розпочати
+                Upload the first CSV file to get started
               </p>
             </div>
           ) : (
@@ -1744,7 +1743,7 @@ export default function CommunicationsPage() {
                             {b.name}
                           </p>
                           <p className='text-muted-foreground text-xs'>
-                            Деталі по {b.rows.length} кампаніях
+                            Details for {b.rows.length} campaigns
                           </p>
                           {(() => {
                             const label = getTargetActionLabel(
@@ -1789,7 +1788,7 @@ export default function CommunicationsPage() {
             <div className='flex items-center gap-3'>
               <div className='bg-border h-px flex-1' />
               <p className='text-muted-foreground shrink-0 text-xs font-semibold tracking-widest uppercase'>
-                Порівняння {selectedBatches.length} завантажень
+                Comparing {selectedBatches.length} uploads
               </p>
               <div className='bg-border h-px flex-1' />
             </div>
@@ -1819,7 +1818,7 @@ export default function CommunicationsPage() {
                       <CardTitle className='text-sm'>{batch.name}</CardTitle>
                     </div>
                     <CardDescription className='text-xs'>
-                      {batch.rows.length} кампаній · {batch.uploadedAt}
+                      {batch.rows.length} campaigns · {batch.uploadedAt}
                     </CardDescription>
                     {(() => {
                       const label = getTargetActionLabel(
@@ -1850,19 +1849,19 @@ export default function CommunicationsPage() {
                           <div className='mt-3 grid grid-cols-2 gap-2'>
                             {[
                               {
-                                label: 'Відкрили',
+                                label: 'Opened',
                                 val: pct(s.opened, s.delivered)
                               },
                               {
-                                label: 'Перейшли',
+                                label: 'Clicked',
                                 val: pct(s.clicked, s.opened)
                               },
                               {
-                                label: 'Конверсія',
+                                label: 'Conversion',
                                 val: pct(s.converted, s.clicked)
                               },
                               {
-                                label: 'Зробили покупку',
+                                label: 'Made Purchase',
                                 val: pct(s.converted, s.sent)
                               }
                             ].map((m) => (
@@ -1885,7 +1884,7 @@ export default function CommunicationsPage() {
                                 {fmtMoney(s.revenue)}
                               </p>
                               <p className='text-muted-foreground mt-0.5 text-[10px]'>
-                                Згенеровані оберти
+                                Generated Turnover
                               </p>
                             </div>
                           )}
@@ -1902,7 +1901,7 @@ export default function CommunicationsPage() {
         {!canCompare && selectedIds.length === 1 && (
           <div className='border-primary/30 bg-primary/10 text-primary flex items-center gap-2 rounded-lg border px-4 py-3 text-sm'>
             <IconInfoCircle className='size-4 shrink-0' />
-            Оберіть ще одне завантаження для порівняння
+            Select one more upload to compare
           </div>
         )}
       </div>
