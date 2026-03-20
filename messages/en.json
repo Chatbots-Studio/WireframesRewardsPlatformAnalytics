@@ -226,6 +226,7 @@
     "tableConv": "Conv.",
     "tableTarget": "Target",
     "tableDeviation": "Deviation",
+    "tableMom": "MoM",
     "funnelOfferShown": "Offer Shown",
     "funnelSelectedCashback": "Selected Cashback",
     "funnelMadeTransaction": "Made Transaction",

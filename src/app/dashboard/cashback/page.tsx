@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import PageContainer from '@/components/layout/page-container';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -163,32 +164,6 @@ function getStatus(cat: Category): Status {
   return 'critical';
 }
 
-// Воронка по категорії
-function funnelSteps(cat: Category) {
-  return [
-    {
-      label: 'Offer Shown',
-      value: cat.shown,
-      icon: <IconEye className='size-3.5' />
-    },
-    {
-      label: 'Selected Cashback',
-      value: cat.chosen,
-      icon: <IconClick className='size-3.5' />
-    },
-    {
-      label: 'Made Transaction',
-      value: cat.transacted,
-      icon: <IconCreditCard className='size-3.5' />
-    },
-    {
-      label: 'Received Cashback',
-      value: cat.received,
-      icon: <IconUsers className='size-3.5' />
-    }
-  ];
-}
-
 // Конверсія по категоріях (sorted worst first)
 const sortedByProblems = [...categories].sort(
   (a, b) => a.convRate - a.benchmark - (b.convRate - b.benchmark)
@@ -196,10 +171,10 @@ const sortedByProblems = [...categories].sort(
 
 // ─── Sub-components ─────────────────────────────────────────
 
-const typeLabel: Record<CashbackType, string> = {
-  default: 'Default',
-  partner: 'Partner',
-  personal: 'Personal'
+const typeKey: Record<CashbackType, string> = {
+  default: 'typeDefault',
+  partner: 'typePartner',
+  personal: 'typePersonal'
 };
 const typeVariant: Record<CashbackType, 'secondary' | 'outline' | 'default'> = {
   default: 'secondary',
@@ -230,7 +205,29 @@ const statusText = {
 
 // ─── SVG Funnel ─────────────────────────────────────────────
 function SvgFunnel({ cat }: { cat: Category }) {
-  const steps = funnelSteps(cat);
+  const t = useTranslations('cashback');
+  const steps = [
+    {
+      label: t('funnelOfferShown'),
+      value: cat.shown,
+      icon: <IconEye className='size-3.5' />
+    },
+    {
+      label: t('funnelSelectedCashback'),
+      value: cat.chosen,
+      icon: <IconClick className='size-3.5' />
+    },
+    {
+      label: t('funnelMadeTransaction'),
+      value: cat.transacted,
+      icon: <IconCreditCard className='size-3.5' />
+    },
+    {
+      label: t('funnelReceivedCashback'),
+      value: cat.received,
+      icon: <IconUsers className='size-3.5' />
+    }
+  ];
   const color = typeColor[cat.type];
   const maxVal = steps[0].value;
   const W = 420;
@@ -307,7 +304,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
               fontSize={10}
               fill='var(--muted-foreground)'
             >
-              {Math.round(pct * 100)}% from start
+              {Math.round(pct * 100)}{t('fromStart')}
             </text>
             {/* Dropout між кроками */}
             {i > 0 && (
@@ -333,7 +330,7 @@ function SvgFunnel({ cat }: { cat: Category }) {
                       : 'var(--muted-foreground)'
                   }
                 >
-                  -{dropPct}% dropped off
+                  -{dropPct}% {t('droppedOff')}
                 </text>
               </>
             )}
@@ -354,6 +351,7 @@ function HealthCard({
   onClick: () => void;
   selected: boolean;
 }) {
+  const t = useTranslations('cashback');
   const status = getStatus(cat);
   const diff = cat.convRate - cat.benchmark;
   return (
@@ -376,7 +374,7 @@ function HealthCard({
               variant={typeVariant[cat.type]}
               className='mt-1 py-0 text-xs'
             >
-              {typeLabel[cat.type]}
+              {t(typeKey[cat.type])}
             </Badge>
           </div>
         </div>
@@ -390,7 +388,7 @@ function HealthCard({
             className={`text-xs font-medium ${diff >= 0 ? 'text-primary' : 'text-muted-foreground'}`}
           >
             {diff >= 0 ? '+' : ''}
-            {diff}pp vs target
+            {diff}pp {t('vsTarget')}
           </p>
         </div>
       </div>
@@ -410,10 +408,10 @@ function HealthCard({
               {cat.trend > 0 ? '+' : ''}
               {cat.trend}pp
             </span>
-            <span>vs previous month</span>
+            <span>{t('vsPreviousMonth')}</span>
           </>
         )}
-        {cat.trend === 0 && <span>No change vs previous month</span>}
+        {cat.trend === 0 && <span>{t('noChange')}</span>}
       </div>
     </button>
   );
@@ -421,6 +419,7 @@ function HealthCard({
 
 // ─── Main Component ─────────────────────────────────────────
 export default function ProductDashboard() {
+  const t = useTranslations('cashback');
   const [selectedId, setSelectedId] = useState<string>('all');
   const [filterType, setFilterType] = useState('all');
   const [filterSegment, setFilterSegment] = useState('all');
@@ -454,7 +453,7 @@ export default function ProductDashboard() {
 
   const allAggregate: Category = {
     id: 'all',
-    name: 'All Categories & Offers',
+    name: t('allCategoriesLabel'),
     type: 'default',
     segment: `${filtered.length} categories`,
     shown: totalShown,
@@ -479,15 +478,15 @@ export default function ProductDashboard() {
         <div className='flex flex-wrap items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Product Manager · Cashback Program
+              {t('breadcrumb')}
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Offer Details
+              {t('title')}
             </h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
               {criticalCount > 0
-                ? `${criticalCount} categor${criticalCount === 1 ? 'y needs' : 'ies need'} immediate attention`
-                : 'All categories normal or above target'}
+                ? t('categoriesNeedAttention', { count: criticalCount })
+                : t('allNormal')}
             </p>
           </div>
 
@@ -497,32 +496,32 @@ export default function ProductDashboard() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='feb2025'>February 2025</SelectItem>
-                <SelectItem value='jan2025'>January 2025</SelectItem>
-                <SelectItem value='q1'>Q1 2025</SelectItem>
-                <SelectItem value='custom'>Custom...</SelectItem>
+                <SelectItem value='feb2025'>{t('periodFeb2025')}</SelectItem>
+                <SelectItem value='jan2025'>{t('periodJan2025')}</SelectItem>
+                <SelectItem value='q1'>{t('periodQ1')}</SelectItem>
+                <SelectItem value='custom'>{t('periodCustom')}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className='w-[150px]'>
-                <SelectValue placeholder='Cashback type' />
+                <SelectValue placeholder={t('typePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All types</SelectItem>
-                <SelectItem value='default'>Default</SelectItem>
-                <SelectItem value='partner'>Partner</SelectItem>
-                <SelectItem value='personal'>Personal</SelectItem>
+                <SelectItem value='all'>{t('allTypes')}</SelectItem>
+                <SelectItem value='default'>{t('typeDefault')}</SelectItem>
+                <SelectItem value='partner'>{t('typePartner')}</SelectItem>
+                <SelectItem value='personal'>{t('typePersonal')}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterSegment} onValueChange={setFilterSegment}>
               <SelectTrigger className='w-[150px]'>
-                <SelectValue placeholder='Segment' />
+                <SelectValue placeholder={t('segmentPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All segments</SelectItem>
-                <SelectItem value='youth'>Youth 18-35</SelectItem>
-                <SelectItem value='active'>Active 25-45</SelectItem>
-                <SelectItem value='premium'>Premium</SelectItem>
+                <SelectItem value='all'>{t('allSegments')}</SelectItem>
+                <SelectItem value='youth'>{t('segmentYouth')}</SelectItem>
+                <SelectItem value='active'>{t('segmentActive')}</SelectItem>
+                <SelectItem value='premium'>{t('segmentPremium')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -533,7 +532,7 @@ export default function ProductDashboard() {
           {/* Всі категорії та пропозиції — клікабельний список */}
           <div className='space-y-2 lg:col-span-2'>
             <p className='text-muted-foreground px-1 text-xs font-semibold tracking-wide uppercase'>
-              All categories & offers · deviation from target
+              {t('categoriesListLabel')}
             </p>
             <div className='space-y-2 overflow-y-auto pr-1'>
               {/* Пункт «Всі» — зведена воронка */}
@@ -555,10 +554,10 @@ export default function ProductDashboard() {
                     </div>
                     <div className='min-w-0'>
                       <p className='text-foreground text-sm leading-tight font-semibold'>
-                        All Categories & Offers
+                        {t('allCategoriesLabel')}
                       </p>
                       <p className='text-muted-foreground mt-0.5 text-xs'>
-                        {filtered.length} categories · aggregated funnel
+                        {t('categoriesFunnel', { count: filtered.length })}
                       </p>
                     </div>
                   </div>
@@ -566,7 +565,7 @@ export default function ProductDashboard() {
                     <p className='text-primary text-lg font-black tabular-nums'>
                       {avgConv}%
                     </p>
-                    <p className='text-muted-foreground text-xs'>overall conv.</p>
+                    <p className='text-muted-foreground text-xs'>{t('overallConv')}</p>
                   </div>
                 </div>
               </button>
@@ -602,15 +601,15 @@ export default function ProductDashboard() {
                   <div className='mt-1 flex items-center gap-2'>
                     {isAll ? (
                       <span className='text-muted-foreground text-xs'>
-                        Total across {filtered.length} categories
+                        {t('totalAcross', { count: filtered.length })}
                       </span>
                     ) : (
                       <>
                         <Badge variant={typeVariant[selectedCat.type]}>
-                          {typeLabel[selectedCat.type]}
+                          {t(typeKey[selectedCat.type])}
                         </Badge>
                         <span className='text-muted-foreground text-xs'>
-                          Segment: {selectedCat.segment}
+                          {t('segment')} {selectedCat.segment}
                         </span>
                       </>
                     )}
@@ -623,13 +622,12 @@ export default function ProductDashboard() {
                     {selectedCat.convRate}%
                   </p>
                   <p className='text-muted-foreground text-xs'>
-                    Target: {selectedCat.benchmark}%
+                    {t('tableTarget')}: {selectedCat.benchmark}%
                   </p>
                 </div>
               </div>
               <CardDescription className='mt-1'>
-                Funnel: Shown → Selected → Transaction → Cashback · Red
-                dropout {'>'} 25%
+                {t('funnelDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className='pt-0'>
@@ -638,21 +636,21 @@ export default function ProductDashboard() {
               <div className='mt-4 grid grid-cols-3 gap-3'>
                 {[
                   {
-                    label: 'Shown → Selected',
+                    label: t('shownToSelected'),
                     val: Math.round(
                       (selectedCat.chosen / selectedCat.shown) * 100
                     ),
                     ref: 75
                   },
                   {
-                    label: 'Selected → Transaction',
+                    label: t('selectedToTransaction'),
                     val: Math.round(
                       (selectedCat.transacted / selectedCat.chosen) * 100
                     ),
                     ref: 85
                   },
                   {
-                    label: 'Transaction → Received',
+                    label: t('transactionToReceived'),
                     val: Math.round(
                       (selectedCat.received / selectedCat.transacted) * 100
                     ),
@@ -684,7 +682,7 @@ export default function ProductDashboard() {
                           ok ? 'text-primary' : 'text-muted-foreground'
                         )}
                       >
-                        target {m.ref}%{' '}
+                        {t('target')} {m.ref}%{' '}
                         {ok ? (
                           <IconCheck className='size-3' />
                         ) : (
@@ -713,11 +711,17 @@ export default function ProductDashboard() {
                   )}
                   <span>
                     {selectedCat.convRate < selectedCat.benchmark
-                      ? `Conversion ${selectedCat.convRate}% below target ${selectedCat.benchmark}% by ${selectedCat.benchmark - selectedCat.convRate}pp. `
+                      ? t('conversionBelow', {
+                          actual: selectedCat.convRate,
+                          benchmark: selectedCat.benchmark,
+                          diff: selectedCat.benchmark - selectedCat.convRate
+                        })
                       : ''}
                     {selectedCat.trend < 0
-                      ? `Dropping ${Math.abs(selectedCat.trend)}pp per month — negative trend. A/B test recommended.`
-                      : 'Stable state.'}
+                      ? t('droppingTrend', {
+                          value: Math.abs(selectedCat.trend)
+                        })
+                      : t('stableState')}
                   </span>
                 </div>
               </CardFooter>
@@ -729,26 +733,25 @@ export default function ProductDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>
-              All Categories — Details
+              {t('detailsTableTitle')}
             </CardTitle>
             <CardDescription>
-              Sorted by deviation from target · Click row to see funnel ·
-              Red = below benchmark
+              {t('detailsTableDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Category</TableHead>
-                  <TableHead className='text-right'>Shown</TableHead>
-                  <TableHead className='text-right'>Selected</TableHead>
-                  <TableHead className='text-right'>Transaction</TableHead>
-                  <TableHead className='text-right'>Received</TableHead>
-                  <TableHead className='text-right'>Conv.</TableHead>
-                  <TableHead className='text-right'>Target</TableHead>
-                  <TableHead className='text-right'>Deviation</TableHead>
-                  <TableHead className='text-right'>MoM</TableHead>
+                  <TableHead>{t('tableCategory')}</TableHead>
+                  <TableHead className='text-right'>{t('tableShown')}</TableHead>
+                  <TableHead className='text-right'>{t('tableSelected')}</TableHead>
+                  <TableHead className='text-right'>{t('tableTransaction')}</TableHead>
+                  <TableHead className='text-right'>{t('tableReceived')}</TableHead>
+                  <TableHead className='text-right'>{t('tableConv')}</TableHead>
+                  <TableHead className='text-right'>{t('tableTarget')}</TableHead>
+                  <TableHead className='text-right'>{t('tableDeviation')}</TableHead>
+                  <TableHead className='text-right'>{t('tableMom')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -776,7 +779,7 @@ export default function ProductDashboard() {
                               variant={typeVariant[cat.type]}
                               className='mt-0.5 py-0 text-xs'
                             >
-                              {typeLabel[cat.type]}
+                              {t(typeKey[cat.type])}
                             </Badge>
                           </div>
                         </div>
