@@ -6,18 +6,18 @@ import { NavItem } from '@/types';
  */
 export const navItems: NavItem[] = [
   {
-    title: 'Топ-менеджмент',
+    title: 'Top Management',
     url: '/dashboard/exec',
     icon: 'exec',
     isActive: true,
     shortcut: ['t', 't'],
     items: [
-      { title: 'Загальний ROI', url: '/dashboard/exec' },
-      { title: 'Вплив кешбеків', url: '/dashboard/exec/cashback-impact' }
+      { title: 'Overall ROI', url: '/dashboard/exec' },
+      { title: 'Cashback Impact', url: '/dashboard/exec/cashback-impact' }
     ]
   },
   {
-    title: 'Продакт-менеджер',
+    title: 'Product Manager',
     url: '/dashboard/cashback',
     icon: 'cashback',
     isActive: false,
@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Комунікації',
+    title: 'Communications',
     url: '/dashboard/communications',
     icon: 'communications',
     isActive: false,
@@ -33,7 +33,7 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Довідники',
+    title: 'Dictionaries',
     url: '/dashboard/cashback/dictionaries',
     icon: 'workspace',
     isActive: false,
@@ -41,14 +41,14 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Звіти',
+    title: 'Reports',
     url: '/dashboard/reports/quick-cashback-refund',
     icon: 'reports',
     isActive: false,
     shortcut: ['z', 'v'],
     items: [
       {
-        title: 'Швидкий вивід + повернення',
+        title: 'Quick Withdrawal + Refund',
         url: '/dashboard/reports/quick-cashback-refund'
       }
     ]

@@ -34,8 +34,8 @@ const SOURCE_TYPE_LABEL: Record<DataSourceType, string> = {
 };
 
 const SOURCE_STATUS_LABEL: Record<DataSourceStatus, string> = {
-  active: 'Активне',
-  planned: 'Заплановане'
+  active: 'Active',
+  planned: 'Planned'
 };
 
 const SOURCE_STATUS_VARIANT: Record<
@@ -70,38 +70,38 @@ export default function CashbackDictionariesPage() {
         <div className='flex flex-wrap items-start justify-between gap-4'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Продакт-менеджер · Аналітика
+              Product Manager · Analytics
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Довідники цільових дій та джерел
+              Target Actions & Sources Dictionaries
             </h2>
             <p className='text-muted-foreground mt-1 max-w-3xl text-sm'>
-              Каталог продуктів для аналітики з джерелом інформації, умовами
-              активності/неактивності та переліком цільових дій. Довідник джерел
-              даних використовується повторно для продуктів і комунікацій.
+              Product catalog for analytics with information source, activity/inactivity
+              conditions, and target actions list. The data sources dictionary is
+              reused across products and communications.
             </p>
           </div>
           <Badge variant='secondary' className='h-fit'>
-            v2-структура довідників
+            v2 dictionary structure
           </Badge>
         </div>
 
         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Продукти</CardDescription>
+              <CardDescription>Products</CardDescription>
               <CardTitle className='text-2xl'>{PRODUCT_DICTIONARY.length}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Цільові дії</CardDescription>
+              <CardDescription>Target Actions</CardDescription>
               <CardTitle className='text-2xl'>{totalTargetActions}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Джерела даних (v2)</CardDescription>
+              <CardDescription>Data Sources (v2)</CardDescription>
               <CardTitle className='text-2xl'>
                 {ANALYTICS_DATA_SOURCES.length}
               </CardTitle>
@@ -112,9 +112,9 @@ export default function CashbackDictionariesPage() {
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-5'>
           <Card className='lg:col-span-2'>
             <CardHeader>
-              <CardTitle className='text-base'>Довідник продуктів</CardTitle>
+              <CardTitle className='text-base'>Product Dictionary</CardTitle>
               <CardDescription>
-                Оберіть продукт, щоб переглянути джерело, умови та цільові дії
+                Select a product to view source, conditions, and target actions
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-2'>
@@ -133,7 +133,7 @@ export default function CashbackDictionariesPage() {
                   >
                     <p className='text-sm font-semibold'>{product.name}</p>
                     <p className='text-muted-foreground mt-1 text-xs'>
-                      {product.targetActions.length} цільових дій
+                      {product.targetActions.length} target actions
                     </p>
                   </button>
                 );
@@ -145,24 +145,24 @@ export default function CashbackDictionariesPage() {
             <CardHeader>
               <CardTitle className='text-base'>{selectedProduct.name}</CardTitle>
               <CardDescription>
-                Джерело інформації про продукт та умови активності
+                Product information source and activity conditions
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-5'>
               <div className='space-y-2 rounded-lg border p-3'>
                 <div className='flex flex-wrap items-center gap-2'>
                   <p className='text-xs font-semibold tracking-wide uppercase'>
-                    Джерело інформації про продукт
+                    Product Information Source
                   </p>
                   <Badge variant='outline'>v2</Badge>
                 </div>
                 <p className='text-sm'>{selectedProduct.productSourceDescription}</p>
                 <p className='text-muted-foreground text-xs'>
-                  Джерело:{' '}
+                  Source:{' '}
                   <span className='text-foreground font-medium'>
                     {selectedProduct.productSourceId
                       ? dataSourceById[selectedProduct.productSourceId]?.name
-                      : 'Не задано'}
+                      : 'Not Set'}
                   </span>
                 </p>
               </div>
@@ -171,7 +171,7 @@ export default function CashbackDictionariesPage() {
                 <div className='rounded-lg border p-3'>
                   <div className='mb-2 flex items-center gap-2'>
                     <p className='text-xs font-semibold tracking-wide uppercase'>
-                      Умови активності
+                      Activity Conditions
                     </p>
                     <Badge variant='outline'>v2</Badge>
                   </div>
@@ -187,7 +187,7 @@ export default function CashbackDictionariesPage() {
                 <div className='rounded-lg border p-3'>
                   <div className='mb-2 flex items-center gap-2'>
                     <p className='text-xs font-semibold tracking-wide uppercase'>
-                      Умови неактивності
+                      Inactivity Conditions
                     </p>
                     <Badge variant='outline'>v2</Badge>
                   </div>
@@ -207,11 +207,11 @@ export default function CashbackDictionariesPage() {
         <Card>
           <CardHeader>
             <CardTitle className='text-base'>
-              Список цільових дій по продукту
+              Product Target Actions List
             </CardTitle>
             <CardDescription>
-              Поля: ID, назва, опис, метод ідентифікації (v2), джерело (v2,
-              опціонально)
+              Fields: ID, name, description, identification method (v2), source (v2,
+              optional)
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
@@ -219,10 +219,10 @@ export default function CashbackDictionariesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Назва</TableHead>
-                  <TableHead>Опис як визначаємо</TableHead>
-                  <TableHead>Як ідентифікувати</TableHead>
-                  <TableHead>Джерело інформації</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>How We Define</TableHead>
+                  <TableHead>How to Identify</TableHead>
+                  <TableHead>Data Source</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -241,7 +241,7 @@ export default function CashbackDictionariesPage() {
                         </span>
                       ) : (
                         <span className='text-muted-foreground text-sm'>
-                          Не задано (опціонально)
+                          Not Set (optional)
                         </span>
                       )}
                     </TableCell>
@@ -254,10 +254,9 @@ export default function CashbackDictionariesPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className='text-base'>Довідник джерел даних</CardTitle>
+            <CardTitle className='text-base'>Data Sources Dictionary</CardTitle>
             <CardDescription>
-              Централізований каталог джерел для продуктової аналітики та
-              комунікацій
+              Centralized source catalog for product analytics and communications
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
@@ -265,12 +264,12 @@ export default function CashbackDictionariesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Назва</TableHead>
-                  <TableHead>Тип</TableHead>
-                  <TableHead>Власник</TableHead>
-                  <TableHead>Оновлення</TableHead>
-                  <TableHead>Статус</TableHead>
-                  <TableHead>Опис</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Owner</TableHead>
+                  <TableHead>Refresh</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Description</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

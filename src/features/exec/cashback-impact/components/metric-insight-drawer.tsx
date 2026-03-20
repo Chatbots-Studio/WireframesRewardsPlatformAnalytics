@@ -55,7 +55,7 @@ export function MetricInsightDrawer({
 
         <div className='space-y-5 px-4'>
           <section>
-            <h3 className='text-sm font-semibold'>Як рахується</h3>
+            <h3 className='text-sm font-semibold'>How It&apos;s Calculated</h3>
             <p className='text-muted-foreground mt-1 text-sm'>
               {metric.formula.expression}
             </p>
@@ -67,7 +67,7 @@ export function MetricInsightDrawer({
             {metric.formula.example && (
               <div className='bg-muted/60 mt-3 rounded-md border px-3 py-2.5'>
                 <p className='text-muted-foreground mb-1 text-[11px] font-semibold tracking-wide uppercase'>
-                  Приклад
+                  Example
                 </p>
                 <p className='text-sm leading-relaxed'>
                   {metric.formula.example}
@@ -79,7 +79,7 @@ export function MetricInsightDrawer({
           <Separator />
 
           <section>
-            <h3 className='text-sm font-semibold'>Що рухає метрику</h3>
+            <h3 className='text-sm font-semibold'>What Drives the Metric</h3>
             <ul className='mt-1 space-y-1 text-sm'>
               {metric.drivers.map((driver) => (
                 <li key={driver} className='list-inside list-disc'>
@@ -92,7 +92,7 @@ export function MetricInsightDrawer({
           <Separator />
 
           <section>
-            <h3 className='text-sm font-semibold'>Що робити</h3>
+            <h3 className='text-sm font-semibold'>What to Do</h3>
             <div className='mt-2 space-y-2'>
               {metric.actions.map((item) => (
                 <ActionItem key={`${metric.id}-${item.role}`} action={item} />
@@ -103,7 +103,7 @@ export function MetricInsightDrawer({
           <Separator />
 
           <section>
-            <h3 className='text-sm font-semibold'>Пороги інтерпретації</h3>
+            <h3 className='text-sm font-semibold'>Interpretation Thresholds</h3>
             <div className='mt-2 space-y-2'>
               {metric.thresholds.map((item) => (
                 <div
@@ -140,7 +140,7 @@ export function MetricInsightDrawer({
           <Separator />
 
           <section>
-            <h3 className='text-sm font-semibold'>Зауваження</h3>
+            <h3 className='text-sm font-semibold'>Caveats</h3>
             <ul className='mt-1 space-y-1 text-sm'>
               {metric.caveats.map((item) => (
                 <li key={item} className='list-inside list-disc'>
@@ -153,8 +153,8 @@ export function MetricInsightDrawer({
 
         <SheetFooter className='pb-0'>
           <p className='text-muted-foreground text-xs'>
-            Для порівняння з попереднім періодом використовується та сама
-            методика розрахунку та однакова база клієнтів.
+            The same calculation methodology and identical client base are used
+            for comparison with the previous period.
           </p>
         </SheetFooter>
       </SheetContent>

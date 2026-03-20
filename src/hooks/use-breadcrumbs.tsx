@@ -13,19 +13,19 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
   '/dashboard': [{ title: 'Dashboard', link: '/dashboard' }],
   '/dashboard/exec': [
     { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Топ-менеджмент', link: '/dashboard/exec' }
+    { title: 'Top Management', link: '/dashboard/exec' }
   ],
   '/dashboard/cashback': [
     { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Продакт-менеджер', link: '/dashboard/cashback' }
+    { title: 'Product Manager', link: '/dashboard/cashback' }
   ],
   '/dashboard/ab-tests': [
     { title: 'Dashboard', link: '/dashboard' },
-    { title: 'A/B Тести', link: '/dashboard/ab-tests' }
+    { title: 'A/B Tests', link: '/dashboard/ab-tests' }
   ],
   '/dashboard/communications': [
     { title: 'Dashboard', link: '/dashboard' },
-    { title: 'Комунікації', link: '/dashboard/communications' }
+    { title: 'Communications', link: '/dashboard/communications' }
   ]
 };
 

@@ -24,10 +24,10 @@ export function MetricInfoTrigger({ metric, onOpen }: MetricInfoTriggerProps) {
           size='icon'
           className='h-6 w-6 shrink-0'
           onClick={() => onOpen(metric.id)}
-          aria-label={`Пояснення метрики ${metric.title}`}
+          aria-label={`Metric explanation: ${metric.title}`}
         >
           <CircleHelp className='h-3.5 w-3.5' />
-          <span className='sr-only'>Відкрити пояснення</span>
+          <span className='sr-only'>Open explanation</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent className='max-w-xs space-y-1'>

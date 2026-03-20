@@ -69,20 +69,20 @@ export default function QuickCashbackRefundReportPage() {
         <div className='flex flex-wrap items-start justify-between gap-3'>
           <div>
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
-              Звіти · Антифрод
+              Reports · Anti-Fraud
             </p>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Швидкий вивід кешбеку + повернення
+              Quick Cashback Withdrawal + Refund
             </h2>
             <p className='text-muted-foreground mt-1 text-sm'>
-              Клієнти з підозрілим сценарієм: максимальний кешбек в одній
-              транзакції, вивід за 10-40 хвилин і подальше повернення товару.
+              Clients with suspicious patterns: maximum cashback in a single
+              transaction, withdrawal within 10-40 minutes, and subsequent product return.
             </p>
           </div>
 
           <div className='flex items-center gap-2'>
             <Badge variant='outline' className='text-xs'>
-              Період
+              Period
             </Badge>
             <Select
               value={String(periodDays)}
@@ -94,9 +94,9 @@ export default function QuickCashbackRefundReportPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='7'>Останні 7 днів</SelectItem>
-                <SelectItem value='14'>Останні 14 днів</SelectItem>
-                <SelectItem value='30'>Останні 30 днів</SelectItem>
+                <SelectItem value='7'>Last 7 Days</SelectItem>
+                <SelectItem value='14'>Last 14 Days</SelectItem>
+                <SelectItem value='30'>Last 30 Days</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -105,14 +105,14 @@ export default function QuickCashbackRefundReportPage() {
         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Підозрілих клієнтів</CardDescription>
+              <CardDescription>Suspicious Clients</CardDescription>
               <CardTitle className='text-2xl'>{rows.length}</CardTitle>
             </CardHeader>
           </Card>
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Сумарний max кешбек</CardDescription>
+              <CardDescription>Total Max Cashback</CardDescription>
               <CardTitle className='text-primary text-2xl'>
                 {formatMoney(summary.maxCashbackTotal)}
               </CardTitle>
@@ -121,7 +121,7 @@ export default function QuickCashbackRefundReportPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardDescription>Сумарно виведено кешбеку</CardDescription>
+              <CardDescription>Total Cashback Withdrawn</CardDescription>
               <CardTitle className='text-2xl'>
                 {formatMoney(summary.withdrawnCashbackTotal)}
               </CardTitle>
@@ -131,21 +131,21 @@ export default function QuickCashbackRefundReportPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Перелік клієнтів</CardTitle>
+            <CardTitle>Client List</CardTitle>
             <CardDescription>
-              Сортування за датою події: від нових до старих
+              Sorted by event date: newest first
             </CardDescription>
           </CardHeader>
           <CardContent className='p-0'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID клієнта</TableHead>
-                  <TableHead className='text-right'>Сума покупки</TableHead>
-                  <TableHead className='text-right'>Макс кешбек</TableHead>
-                  <TableHead className='text-right'>Виведений кешбек</TableHead>
-                  <TableHead className='text-right'>Поточний баланс</TableHead>
-                  <TableHead className='text-right'>Дата події</TableHead>
+                  <TableHead>Client ID</TableHead>
+                  <TableHead className='text-right'>Purchase Amount</TableHead>
+                  <TableHead className='text-right'>Max Cashback</TableHead>
+                  <TableHead className='text-right'>Withdrawn Cashback</TableHead>
+                  <TableHead className='text-right'>Current Balance</TableHead>
+                  <TableHead className='text-right'>Event Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -155,7 +155,7 @@ export default function QuickCashbackRefundReportPage() {
                       colSpan={6}
                       className='text-muted-foreground h-24 text-center'
                     >
-                      Немає кейсів за вибраний період
+                      No cases for selected period
                     </TableCell>
                   </TableRow>
                 ) : (
