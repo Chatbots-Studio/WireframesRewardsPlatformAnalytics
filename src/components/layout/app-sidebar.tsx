@@ -46,6 +46,11 @@ export default function AppSidebar() {
   const { isOpen } = useMediaQuery();
   const itemsToShow = useFilteredNavItems(navItems);
   const t = useTranslations('sidebar');
+  const tNav = useTranslations('nav');
+
+  // Resolve nav item title via i18n key if available
+  const navTitle = (item: { title: string; titleKey?: string }) =>
+    item.titleKey ? tNav(item.titleKey) : item.title;
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -70,11 +75,11 @@ export default function AppSidebar() {
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
-                        tooltip={item.title}
+                        tooltip={navTitle(item)}
                         isActive={pathname === item.url}
                       >
                         {item.icon && <Icon />}
-                        <span>{item.title}</span>
+                        <span>{navTitle(item)}</span>
                         <IconChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
@@ -87,7 +92,7 @@ export default function AppSidebar() {
                               isActive={pathname === subItem.url}
                             >
                               <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
+                                <span>{navTitle(subItem)}</span>
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -100,12 +105,12 @@ export default function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.title}
+                    tooltip={navTitle(item)}
                     isActive={pathname === item.url}
                   >
                     <Link href={item.url}>
                       <Icon />
-                      <span>{item.title}</span>
+                      <span>{navTitle(item)}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

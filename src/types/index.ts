@@ -2,6 +2,8 @@ import { Icons } from '@/components/icons';
 
 export interface NavItem {
   title: string;
+  /** Translation key for i18n (resolved via useTranslations('nav')) */
+  titleKey?: string;
   url: string;
   disabled?: boolean;
   external?: boolean;

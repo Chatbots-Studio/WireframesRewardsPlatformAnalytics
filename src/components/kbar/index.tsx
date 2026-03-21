@@ -18,6 +18,11 @@ export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const filteredItems = useFilteredNavItems(navItems);
   const t = useTranslations('search');
+  const tNav = useTranslations('nav');
+
+  // Resolve nav item title via i18n key if available
+  const navTitle = (item: { title: string; titleKey?: string }) =>
+    item.titleKey ? tNav(item.titleKey) : item.title;
 
   const actions = useMemo(() => {
     const navigateTo = (url: string) => {
@@ -25,33 +30,37 @@ export default function KBar({ children }: { children: React.ReactNode }) {
     };
 
     return filteredItems.flatMap((navItem) => {
+      const name = navTitle(navItem);
       const baseAction =
         navItem.url !== '#'
           ? {
               id: `${navItem.title.toLowerCase()}Action`,
-              name: navItem.title,
+              name,
               shortcut: navItem.shortcut,
-              keywords: navItem.title.toLowerCase(),
+              keywords: `${navItem.title.toLowerCase()} ${name.toLowerCase()}`,
               section: t('navigation'),
-              subtitle: t('goTo', { title: navItem.title }),
+              subtitle: t('goTo', { title: name }),
               perform: () => navigateTo(navItem.url)
             }
           : null;
 
       const childActions =
-        navItem.items?.map((childItem) => ({
-          id: `${childItem.title.toLowerCase()}Action`,
-          name: childItem.title,
-          shortcut: childItem.shortcut,
-          keywords: childItem.title.toLowerCase(),
-          section: navItem.title,
-          subtitle: t('goTo', { title: childItem.title }),
-          perform: () => navigateTo(childItem.url)
-        })) ?? [];
+        navItem.items?.map((childItem) => {
+          const childName = navTitle(childItem);
+          return {
+            id: `${childItem.title.toLowerCase()}Action`,
+            name: childName,
+            shortcut: childItem.shortcut,
+            keywords: `${childItem.title.toLowerCase()} ${childName.toLowerCase()}`,
+            section: name,
+            subtitle: t('goTo', { title: childName }),
+            perform: () => navigateTo(childItem.url)
+          };
+        }) ?? [];
 
       return baseAction ? [baseAction, ...childActions] : childActions;
     });
-  }, [router, filteredItems, t]);
+  }, [router, filteredItems, t, tNav]);
 
   return (
     <KBarProvider actions={actions}>
