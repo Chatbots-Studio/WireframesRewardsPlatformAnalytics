@@ -1,249 +1,227 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-21
 
 ## Tech Debt
 
-**100% Mock Data -- No Real API Integration:**
-- Issue: Every dashboard page renders hardcoded mock data defined inline or in `.mock.ts` files. There are zero `fetch()` calls, no API routes, and no backend integration anywhere in the codebase. The entire application is a static wireframe/prototype.
+**Monolithic Page Components:**
+- Issue: Large dashboard page components (1914 lines, 1252 lines, 981 lines) bundle business logic, calculations, rendering, and mock data together
 - Files:
-  - `src/app/dashboard/communications/page.tsx` (lines 222-477 -- ~250 lines of inline mock data)
-  - `src/app/dashboard/ab-tests/page.tsx` (lines 78-159 -- inline mock data)
-  - `src/app/dashboard/exec/page.tsx` (lines 60-250 -- inline mock data)
-  - `src/app/dashboard/exec/cashback-impact/page.tsx` (lines 47-600 -- inline mock data)
-  - `src/app/dashboard/cashback/page.tsx` (lines 64+ -- inline mock data)
-  - `src/features/reports/data/quick-cashback-refund.mock.ts`
-  - `src/features/cashback/data/analytics-dictionaries.mock.ts`
-  - `src/features/exec/cashback-impact/data/metric-catalog.ts`
-  - `src/constants/mock-api.ts` (fake product database using `@faker-js/faker`)
-  - `src/constants/data.ts` (hardcoded sample users with external image URLs)
-- Impact: The application cannot display real data. Transitioning to real APIs will require restructuring every page component to separate data fetching from rendering.
-- Fix approach: Introduce a data layer (API routes or server actions) and move mock data behind an adapter pattern. Each page should fetch data through a service interface that can be swapped between mock and real implementations.
+  - `src/app/dashboard/communications/page.tsx` (1914 lines)
+  - `src/app/dashboard/exec/cashback-impact/page.tsx` (1252 lines)
+  - `src/app/dashboard/exec/page.tsx` (981 lines)
+  - `src/app/dashboard/cashback/page.tsx` (860 lines)
+- Impact: Difficult to test, refactor, or reuse components. Makes debugging complex analytics logic harder. Performance optimization blocked by tight coupling.
+- Fix approach: Extract calculation functions to separate utility modules (`src/features/communications/utils/stats.ts`), extract render components to feature directory (`src/features/communications/components/`), separate mock data to isolated files
 
-**Monolithic Page Components (God Components):**
-- Issue: Dashboard pages contain everything -- types, helpers, mock data, sub-components, and the main page component -- all in a single file. No separation of concerns.
+**Mock Data Embedded in Pages:**
+- Issue: Large mock datasets defined inline within page components (MOCK_BATCHES, ROI_CATEGORIES, etc.)
+- Files: `src/app/dashboard/communications/page.tsx` (lines 250-477), `src/app/dashboard/exec/cashback-impact/page.tsx` (lines 47-350)
+- Impact: Cannot easily swap real API data. Makes component testing with different data scenarios difficult. Increases page component size.
+- Fix approach: Move all MOCK_* constants to `src/features/[feature]/data/` directory with feature-specific files like existing `analytics-dictionaries.mock.ts`
+
+**Inline Calculation Logic:**
+- Issue: Complex metric calculations (revenue aggregation, channel stats, KPI computations) defined directly in components with nested loops and map operations
 - Files:
-  - `src/app/dashboard/communications/page.tsx` -- 1,727 lines (types, helpers, 6+ sub-components, mock data, SVG funnel renderer, CSV export, file upload UI)
-  - `src/app/dashboard/exec/cashback-impact/page.tsx` -- 1,254 lines
-  - `src/app/dashboard/exec/page.tsx` -- 947 lines
-  - `src/app/dashboard/cashback/page.tsx` -- 857 lines
-  - `src/app/dashboard/ab-tests/page.tsx` -- 480 lines
-- Impact: Files are difficult to navigate, impossible to test individual pieces, and prone to merge conflicts. Adding features requires editing massive files.
-- Fix approach: Extract sub-components to `src/features/{domain}/components/`, types to `src/features/{domain}/types.ts`, helpers/utils to `src/features/{domain}/utils.ts`, and mock data to `src/features/{domain}/data/`. The `cashback-impact` feature already demonstrates this pattern partially with `src/features/exec/cashback-impact/components/` and `src/features/exec/cashback-impact/data/`.
+  - `src/app/dashboard/communications/page.tsx` (batchStats, getChannelStats, pct, fmtNum, fmtMoney functions at lines 91-247)
+  - `src/app/dashboard/exec/cashback-impact/page.tsx` (metric aggregation logic)
+- Impact: Hard to unit test. Performance issues if data grows (O(n²) in channel stats calculation). No reuse across pages.
+- Fix approach: Extract to `src/features/communications/utils/stats.ts` and `src/features/exec/utils/metrics.ts`, write unit tests for each calculation function
 
-**Duplicated Utility Functions:**
-- Issue: Number and money formatting functions are redefined locally in multiple page files instead of using shared utilities.
+**Hardcoded Color Mappings:**
+- Issue: Channel colors and chart colors hardcoded as constants within components
 - Files:
-  - `src/app/dashboard/communications/page.tsx` -- defines `fmtNum()` (line 92), `fmtMoney()` (line 98), `pct()` (line 87)
-  - `src/app/dashboard/reports/quick-cashback-refund/page.tsx` -- defines `formatMoney()` (line 33), `formatDate()` (line 37)
-  - `src/lib/format.ts` -- contains a shared `formatDate()` but is only used by `src/components/ui/table/data-table-date-filter.tsx`
-- Impact: Inconsistent formatting across pages. Bug fixes must be applied in multiple places.
-- Fix approach: Create `src/lib/format.ts` utilities for `formatNumber()`, `formatMoney()`, `formatPercent()` with Ukrainian locale (`uk-UA`) as default. Replace all local implementations.
+  - `src/app/dashboard/communications/page.tsx` (CHANNEL_COLORS, BATCH_COLORS at lines 203-234)
+  - Multiple chart pages
+- Impact: Difficult to implement theme switching or dark mode adjustments. Duplication across files.
+- Fix approach: Move to `src/lib/chart-theme.ts`, centralize color management using CSS variables
 
-**Starter Template Remnants:**
-- Issue: The project is forked from `next-shadcn-dashboard-starter` by Kiranism. Several files from the starter template remain unused and unrelated to the cashback analytics domain.
-- Files:
-  - `src/constants/mock-api.ts` -- fake product database (Electronics, Furniture, etc.) unrelated to cashback analytics
-  - `src/constants/data.ts` -- sample users (Olivia Martin, Jackson Lee) with external avatar URLs from `api.slingacademy.com`
-  - `src/config/infoconfig.ts` -- generic "Product Management" info content about CRUD operations
-  - `src/components/forms/demo-form.tsx` -- 303-line demo form with `console.log` on submit
-  - `src/components/file-uploader.tsx` -- generic file uploader component (317 lines)
-  - `src/app/layout.tsx` metadata still says "Next Shadcn" / "Basic dashboard with Next.js and Shadcn"
-  - `src/app/dashboard/layout.tsx` metadata says "Next Shadcn Dashboard Starter"
-  - `package.json` name is `next-shadcn-dashboard-starter`
-- Impact: Confusing codebase navigation. External dependencies (`@faker-js/faker`, `match-sorter`) are bundled for unused code. Misleading metadata in production.
-- Fix approach: Remove unused starter files, update metadata and `package.json` name, remove `@faker-js/faker` and `match-sorter` from dependencies (or move to devDependencies if needed for development mocks).
-
-**Stub Components:**
-- Issue: Some components are empty stubs returning null, placeholder implementations with no functionality.
-- Files:
-  - `src/components/layout/user-nav.tsx` -- returns `null` (entire component is a no-op)
-  - `src/hooks/use-nav.ts` -- `useFilteredNavItems()` returns items unchanged (no filtering logic)
-  - `src/components/layout/app-sidebar.tsx` line 48-50 -- empty `useEffect` with comment "Side effects based on sidebar state changes"
-- Impact: Dead code that adds confusion. Components are imported and rendered but do nothing.
-- Fix approach: Either implement the intended functionality or remove the stubs entirely.
-
-**All Dashboard Pages Are Client Components:**
-- Issue: Every dashboard `page.tsx` is marked `'use client'` at the top. With mock data being static, these pages lose all Next.js SSR/SSG benefits.
-- Files:
-  - `src/app/dashboard/exec/page.tsx`
-  - `src/app/dashboard/exec/cashback-impact/page.tsx`
-  - `src/app/dashboard/cashback/page.tsx`
-  - `src/app/dashboard/cashback/dictionaries/page.tsx`
-  - `src/app/dashboard/communications/page.tsx`
-  - `src/app/dashboard/ab-tests/page.tsx`
-  - `src/app/dashboard/reports/quick-cashback-refund/page.tsx`
-- Impact: Entire page JavaScript is shipped to the client. No SEO benefit. No streaming/Suspense boundaries. When real data integration happens, the architecture won't support server-side data fetching at the page level.
-- Fix approach: When integrating real data, make page components server components that fetch data, and pass data to client sub-components that need interactivity.
-
-**Dual Lockfiles:**
-- Issue: Both `bun.lock` and `package-lock.json` exist in the project root.
-- Files:
-  - `bun.lock`
-  - `package-lock.json`
-- Impact: Inconsistent installs between developers using different package managers. Potential for dependency version drift.
-- Fix approach: Standardize on one package manager. Remove the unused lockfile. Document the chosen package manager in README.
-
-## Known Bugs
-
-**`@ts-nocheck` Suppressing Type Errors:**
-- Symptoms: Two UI components have `@ts-nocheck` at the top, completely disabling TypeScript checking.
-- Files:
-  - `src/components/ui/chart.tsx` (line 1)
-  - `src/components/ui/resizable.tsx` (line 1)
-- Trigger: These are likely shadcn/ui generated components that had type incompatibilities with the current TypeScript or React version.
-- Workaround: The `@ts-nocheck` directive suppresses all errors in the file.
-
-**Unsafe Type Casts (`as any`):**
-- Symptoms: AB tests page casts test data `as any` to satisfy component props, bypassing type safety.
-- Files:
-  - `src/app/dashboard/ab-tests/page.tsx` (lines 417, 423) -- `test={test as any}`
-- Trigger: The `activeTests` and `completedTests` arrays have different shapes (e.g., `winner: null` vs `winner: 'test'`), and the `TestCard` component type expects `(typeof activeTests)[0]`.
-- Workaround: Cast to `any` hides the structural type mismatch.
-
-**Docker Compose References Non-Existent Routes:**
-- Symptoms: Docker compose environment variables reference Clerk auth routes (`/auth/sign-in`, `/auth/sign-up`) and redirect to `/dashboard/overview`, but no auth system is implemented and no `/dashboard/overview` route exists.
-- Files:
-  - `docker-compose.yml` (lines 14-17)
-- Trigger: Starting the app in Docker and navigating to auth URLs will 404.
-- Workaround: These environment variables are inactive since Clerk is not installed.
-
-## Security Considerations
-
-**Sentry `sendDefaultPii: true` in Production:**
-- Risk: Sentry is configured to send Personally Identifiable Information (request headers, IP addresses) in both server and client configurations. For a financial analytics dashboard, this could leak sensitive user data to Sentry's servers.
-- Files:
-  - `src/instrumentation.ts` (line 11)
-  - `src/instrumentation-client.ts` (line 14)
-- Current mitigation: Sentry can be disabled via `NEXT_PUBLIC_SENTRY_DISABLED` environment variable.
-- Recommendations: Set `sendDefaultPii: false` or carefully review what PII is acceptable to send. For a banking/fintech dashboard, this is especially sensitive.
-
-**Sentry `tracesSampleRate: 1` (100% Sampling):**
-- Risk: Every single request is traced and sent to Sentry. In production with real traffic, this will generate excessive data volume and costs, and may impact performance.
-- Files:
-  - `src/instrumentation.ts` (line 14)
-  - `src/instrumentation-client.ts` (line 17)
-- Current mitigation: None. Comments say "Adjust this value in production" but it has not been adjusted.
-- Recommendations: Set `tracesSampleRate` to 0.1-0.2 for production. Use `tracesSampler` function for finer control.
-
-**No Authentication or Authorization:**
-- Risk: The dashboard has no auth layer. Any user can access any dashboard page. Docker compose references Clerk configuration but Clerk is not installed or integrated.
-- Files:
-  - `src/proxy.ts` -- middleware that does nothing (returns `NextResponse.next()`)
-  - `docker-compose.yml` (lines 13-17) -- dead Clerk environment variables
-  - No middleware.ts file exists
-- Current mitigation: None. The app is wide open.
-- Recommendations: Implement authentication before deploying with real financial data. The `src/proxy.ts` file appears to be a placeholder for middleware -- rename to `middleware.ts` and add auth guards.
-
-**`dangerouslySetInnerHTML` Usage:**
-- Risk: Inline script injection in the root layout for theme detection.
-- Files:
-  - `src/app/layout.tsx` (line 40) -- theme color meta tag script
-  - `src/components/ui/chart.tsx` (line 85) -- chart CSS injection
-- Current mitigation: The injected content is hardcoded strings, not user input.
-- Recommendations: Low risk since no user input is interpolated, but worth noting for security audits.
-
-**External Image Domains:**
-- Risk: `next.config.ts` allows images from `api.slingacademy.com`, an external sample data API. This is a starter template remnant.
-- Files:
-  - `next.config.ts` (lines 8-13)
-  - `src/constants/data.ts` -- references `api.slingacademy.com` for avatar images
-- Current mitigation: None.
-- Recommendations: Remove the external domain from `remotePatterns` when starter template remnants are cleaned up.
-
-## Performance Bottlenecks
-
-**Large Client-Side JavaScript Bundles:**
-- Problem: All dashboard pages are `'use client'` with hundreds of lines of inline mock data, meaning all data is shipped as JavaScript to the browser.
-- Files: All `src/app/dashboard/**/page.tsx` files.
-- Cause: No code splitting within pages. Mock data arrays (some 200+ lines) are bundled into client JavaScript.
-- Improvement path: Move static data to server components or API routes. Use dynamic imports for heavy sub-components. Split large pages into smaller client boundary components.
-
-**Recharts Bundle Size:**
-- Problem: Multiple pages import large subsets of Recharts components. Recharts is a heavy charting library.
-- Files:
-  - `src/app/dashboard/exec/page.tsx` -- imports AreaChart, BarChart, LineChart, etc.
-  - `src/app/dashboard/exec/cashback-impact/page.tsx` -- imports BarChart, LineChart, ScatterChart, etc.
-  - `src/app/dashboard/ab-tests/page.tsx` -- imports BarChart
-- Cause: Multiple chart types imported across pages. No lazy loading of chart components.
-- Improvement path: Lazy load chart sections with `React.lazy()` or `next/dynamic`. Consider lighter charting alternatives for simpler visualizations.
-
-**No Data Caching Strategy:**
-- Problem: When real API integration happens, there is no caching layer planned (no React Query, no SWR, no Next.js cache configuration).
-- Files: N/A -- no data fetching exists yet.
-- Cause: Prototype phase -- all data is static mock.
-- Improvement path: Adopt a data fetching library (TanStack Query or SWR) when integrating real APIs. Configure Next.js fetch cache for server components.
-
-## Fragile Areas
-
-**Communications Page:**
-- Files: `src/app/dashboard/communications/page.tsx` (1,727 lines)
-- Why fragile: This single file contains 6+ React components, SVG rendering logic, CSV export, file upload simulation, channel statistics aggregation, batch management state, and all UI rendering. Any change risks breaking unrelated functionality.
-- Safe modification: Extract components first. Test each extracted component in isolation.
-- Test coverage: Zero tests.
-
-**Inline Tooltip Components:**
-- Files:
-  - `src/app/dashboard/exec/page.tsx` (lines 261-360) -- 5 different tooltip components
-  - `src/app/dashboard/exec/cashback-impact/page.tsx` (lines 456-590) -- 6+ tooltip components
-  - `src/app/dashboard/ab-tests/page.tsx` (lines 57-69)
-- Why fragile: Every chart has its own tooltip component defined inline with `any` typed props. They all follow the same pattern but are copy-pasted and slightly modified.
-- Safe modification: Create a generic `ChartTooltip` component that accepts a config for which fields to display.
-- Test coverage: Zero tests.
-
-**Mock Data Coupled to UI:**
-- Files: All dashboard page files.
-- Why fragile: Mock data shapes are tightly coupled to component rendering logic. Changing a data field name requires finding all rendering references in the same 800-1700 line file.
-- Safe modification: Extract types to separate files. Use TypeScript strict mode to catch shape mismatches.
-- Test coverage: Zero tests.
-
-## Scaling Limits
-
-**Single-File Page Architecture:**
-- Current capacity: Works for prototype/wireframe phase with 6-8 dashboard pages.
-- Limit: Adding more features (filters, drill-downs, comparisons) to existing pages will push already-large files past maintainability limits.
-- Scaling path: Adopt feature-based folder structure (partially started in `src/features/`) for all pages. Each page should be a thin orchestrator importing feature components.
-
-## Dependencies at Risk
-
-**`@faker-js/faker` in Production Dependencies:**
-- Risk: `@faker-js/faker` is listed in `devDependencies` but is imported by `src/constants/mock-api.ts` which could be bundled into production. It is a large library (~6MB unpacked).
-- Impact: Increased bundle size if tree-shaking doesn't eliminate it completely.
-- Migration plan: Move mock data that uses faker to a development-only module, or remove the dependency entirely and use static seed data.
-
-**`kbar` at Beta Version:**
-- Risk: `kbar` is pinned at `^0.1.0-beta.45`, a pre-release version. Beta APIs may change without following semver.
-- Impact: Updating dependencies could break the command palette functionality.
-- Migration plan: Monitor for stable 1.0 release. Pin exact version to avoid surprise breakage.
-
-## Missing Critical Features
-
-**No Authentication System:**
-- Problem: No user authentication, authorization, or session management exists.
-- Blocks: Cannot deploy with real financial data. Cannot implement role-based access (the nav config suggests multiple roles: "Top Management", "Product Manager").
-
-**No Real Data Integration Layer:**
-- Problem: No API routes, server actions, database connections, or external service integrations exist.
-- Blocks: The application cannot display real data. Every page needs a data source implementation.
-
-**No Error Boundaries Per Page:**
-- Problem: Only a global error boundary exists (`src/app/global-error.tsx`). Individual dashboard pages have no error boundaries.
-- Blocks: A rendering error in one chart crashes the entire page rather than showing a fallback for just that section.
-
-## Test Coverage Gaps
-
-**Zero Test Files:**
-- What's not tested: The entire codebase. There are no test files (`.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`) anywhere in the project. No test configuration (jest.config, vitest.config) exists.
-- Files: All `src/**/*.ts` and `src/**/*.tsx` files.
-- Risk: Any refactoring (especially the critical task of splitting monolithic page components) could silently break functionality with no safety net.
-- Priority: High -- establish testing infrastructure and add tests for utility functions and key components before any major refactoring.
-
-**No Linting CI/CD Pipeline:**
-- What's not tested: No GitHub Actions or CI pipeline exists (`.github/` only contains `FUNDING.yml`). Lint and build checks only run locally via husky pre-commit hooks.
-- Files: `.github/FUNDING.yml` (no workflow files)
-- Risk: Contributors who skip hooks (`--no-verify`) can push broken code. No automated quality gates on PRs.
-- Priority: Medium -- add a basic CI workflow with `lint`, `type-check`, and `build` steps.
+**Locale Switching Causes Full Page Reload:**
+- Issue: `window.location.reload()` used in `LocaleSwitcher` component to switch languages
+- Files: `src/components/locale-switcher.tsx` (line 23)
+- Impact: Loss of user state, focus position, scroll position. Poor UX on slow networks. Cannot preserve client-side state like form data or filter selections.
+- Fix approach: Use Next.js router.push() with locale prefix pattern, implement proper next-intl language switching without full page reload
 
 ---
 
-*Concerns audit: 2026-03-10*
+## Known Bugs
+
+**LocaleSwitcher Full Reload Loses User State:**
+- Symptoms: When user switches language via button, entire page reloads. Any unsaved form data, scroll position, or filter selections are lost.
+- Files: `src/components/locale-switcher.tsx`
+- Trigger: Click locale button (flag icon) in header
+- Workaround: None - user must manually navigate back
+- Root cause: `window.location.reload()` at line 23 forces full page refresh instead of using proper routing
+
+**Sentry Configuration Incomplete:**
+- Symptoms: Sentry error tracking is non-functional without environment setup
+- Files: `next.config.ts` (lines 27-29)
+- Trigger: Any error in production, or checking error tracking dashboard
+- Workaround: Set `NEXT_PUBLIC_SENTRY_DISABLED=true` to disable Sentry
+- Notes: FIXME comment in code indicates developer awareness of incomplete setup
+
+---
+
+## Security Considerations
+
+**dangerouslySetInnerHTML Usage:**
+- Risk: Potential XSS vulnerability if content becomes user-controlled
+- Files:
+  - `src/app/layout.tsx` (line 45-54) - Theme color meta tag script (LOW RISK - static hardcoded string)
+  - `src/components/ui/chart.tsx` (line 85) - Chart context CSS injection (LOW RISK - static string)
+- Current mitigation: Both instances use only static strings, no user input interpolation
+- Recommendations: Add ESLint rule to catch future uses. Document why necessary. For layout.tsx, consider using CSS custom properties instead
+
+**External Image Source Allowlisting:**
+- Risk: Remote image domains could be exploited
+- Files: `next.config.ts` (lines 9-15) - Allows `api.slingacademy.com`
+- Current mitigation: Whitelist approach prevents arbitrary image loading
+- Recommendations: Audit before adding new external domains. Prioritize removing test/demo domains before production
+
+**No Input Validation on File Upload:**
+- Risk: File upload accepts any file type at client level with no server-side verification
+- Files: `src/components/file-uploader.tsx` (line 69-77 - maxSize and acceptedTypes only)
+- Current mitigation: Client-side checks only
+- Recommendations: When connected to real backend, implement server-side file type validation, size limits, malware scanning
+
+---
+
+## Performance Bottlenecks
+
+**Channel Stats Calculation is O(n²):**
+- Problem: `getChannelStats()` filters entire dataset multiple times per channel iteration
+- Files: `src/app/dashboard/communications/page.tsx` (lines 133-201)
+- Cause: For each channel, code filters all rows (O(n)), then filters again for lift data, then reduces multiple times - repeating work per channel
+- Benchmark: With 50 batches × 10 campaigns each = 500 rows, O(n²) means 250,000 operations per render
+- Improvement path: Single pass through data with `Map<channel, stats>`. Pre-compute aggregations instead of repeated filtering
+
+**Large Component Re-renders:**
+- Problem: 1900+ line page components likely re-render entire subtree on minimal state changes
+- Files: `src/app/dashboard/communications/page.tsx`, `src/app/dashboard/exec/cashback-impact/page.tsx`
+- Cause: No component boundaries. Multiple useState hooks without useCallback or React.memo. No memoization of sub-components.
+- Impact: When user selects batch, entire page with all charts re-renders
+- Improvement path: Extract sections to memoized components, wrap event handlers with useCallback, use virtualization for long tables
+
+**UI Component Bundle Overhead:**
+- Problem: Large number of UI component imports (shadows, dropdowns, menus, tables, etc.) from Shadcn/UI in communications page
+- Files: `src/app/dashboard/communications/page.tsx` (lines 1-53)
+- Cause: 50+ imports for UI components, many potentially unused in current view
+- Impact: Initial page load delay
+- Improvement path: Lazy load less-critical UI components, analyze actual usage vs imports
+
+---
+
+## Fragile Areas
+
+**Communications Page - Massive State Management:**
+- Files: `src/app/dashboard/communications/page.tsx` (entire 1914-line file)
+- Why fragile: Multiple useState hooks managing selectedBatches, expandedRows, sortColumn, plus inline state mutations. No clear state flow. Business logic (calculations) intertwined with UI rendering.
+- Safe modification: Before changes, extract state management to custom hook (useCommsBatchState), add unit tests for calculations
+- Test coverage: Zero tests. No test file exists.
+
+**Data Table Hook with Complex State Integration:**
+- Files: `src/hooks/use-data-table.ts` (296 lines)
+- Why fragile: Complex integration between React Table, nuqs query state, pagination, sorting, filtering. Manages 7+ interdependent state variables. Easy to introduce bugs in combo scenarios (pagination + sorting + filtering).
+- Safe modification: Add integration tests for all state combinations. Document state flow diagram.
+- Test coverage: No tests
+
+**Metric Catalog - Large Unvalidated Data:**
+- Files: `src/features/exec/cashback-impact/data/metric-catalog.ts` (471 lines)
+- Why fragile: Flat array of metric objects with no schema validation. Adding/modifying metrics requires careful manual verification. No TypeScript enforcement of required fields.
+- Safe modification: Add Zod schema for runtime validation of metric structure
+- Test coverage: No validation tests
+
+---
+
+## Scaling Limits
+
+**Mock Data Cannot Scale Beyond Prototype:**
+- Current capacity: ~40-50 mock communication batches and campaigns (500 rows). Calculations complete instantly.
+- Limit: Beyond 500 rows, O(n²) calculations noticeably slow (1ms → 10ms+). UI responsiveness degrades.
+- Scaling path: Integrate real API. Move calculations to backend. Implement pagination. Use caching (React Query/SWR).
+
+**Page Component File Size at Ceiling:**
+- Current capacity: 1914 lines is maximum maintainable size for single component
+- Limit: Adding new analytics pages or features will push files beyond 2000 lines. Merge conflicts increase. Developer onboarding gets harder.
+- Scaling path: Extract features to separate modules NOW before adding more pages. Establish feature structure: `src/features/{feature}/components/`, `src/features/{feature}/utils/`, `src/features/{feature}/data/`
+
+**Translation Key Organization:**
+- Current capacity: ~479 flat translation keys per language
+- Limit: As dashboard grows to 15+ pages, flat key structure causes collisions and naming confusion
+- Scaling path: Move to namespaced keys: `pages.dashboard.communications.channelStats` instead of `channelStats`
+
+---
+
+## Dependencies at Risk
+
+**Sentry Configuration Incomplete:**
+- Risk: Error tracking and monitoring disabled in production
+- Impact: Production errors go untraced. Cannot diagnose customer issues.
+- Fix timeline: Set environment variables (`NEXT_PUBLIC_SENTRY_ORG`, `NEXT_PUBLIC_SENTRY_PROJECT`) before deployment
+- Migration: Test Sentry setup in staging with manual error triggers
+
+**next-intl Locale Switching Pattern Non-Standard:**
+- Risk: Using `window.location.reload()` is not idiomatic for next-intl. May conflict with future updates.
+- Impact: Poor UX. State loss. Blocks client-side state preservation.
+- Migration path: Use next-intl's recommended locale switching with router navigation and proper cache invalidation
+
+**Recharts Multiple Instance Loading:**
+- Risk: 5+ chart components in single page with large datasets
+- Impact: Page responsiveness degrades as dataset size grows
+- Migration: Implement lazy loading with React.lazy() or next/dynamic. Profile bundle size with @next/bundle-analyzer.
+
+---
+
+## Missing Critical Features
+
+**No Error Boundaries:**
+- Problem: Only global error boundary exists (`src/app/global-error.tsx`). Dashboard pages have no per-section error boundaries.
+- Blocks: Chart rendering error crashes entire page instead of showing fallback
+- Recommendation: Add `<ErrorBoundary>` wrapper around major sections (charts, tables)
+
+**No Loading/Skeleton States:**
+- Problem: Mock data loads instantly. No loading UI skeleton or shimmer effects defined.
+- Blocks: When real API is added, users will see blank page until data loads
+- Recommendation: Create skeleton components for table rows, chart placeholders before API integration
+
+**No Authentication/Authorization:**
+- Problem: No auth system, role-based access, or session management
+- Blocks: Cannot deploy with real financial data. Navigation suggests multiple roles ("Top Management", "Product Manager") but no role enforcement exists.
+- Recommendation: Critical before production deployment
+
+---
+
+## Test Coverage Gaps
+
+**Zero Unit Tests:**
+- What's not tested:
+  - Calculation functions: `batchStats()`, `getChannelStats()`, `pct()`, `fmtNum()`, `fmtMoney()`
+  - KPI aggregation logic in exec pages
+  - Metric catalog data structure validation
+  - Data table state transitions (pagination, sorting, filtering)
+- Files:
+  - `src/app/dashboard/communications/page.tsx`
+  - `src/app/dashboard/exec/cashback-impact/page.tsx`
+  - `src/features/exec/cashback-impact/data/metric-catalog.ts`
+  - `src/hooks/use-data-table.ts`
+- Risk: Critical business logic (numbers shown to executives) has no validation. Silent data corruption possible.
+- Priority: **HIGH** - Business logic must be tested before real data deployment
+
+**No Component Integration Tests:**
+- What's not tested:
+  - Batch selection state changes + chart updates
+  - Data table pagination + sorting + filtering combinations
+  - Locale switching doesn't break rendered content
+  - File upload state management
+- Files: All dashboard pages
+- Risk: UI regressions unnoticed. Complex state combinations work locally but fail in production.
+- Priority: **MEDIUM** - Add before deploying new features
+
+**No E2E Tests:**
+- What's not tested: Full user flows (select batch → see stats → export CSV), filter interactions, locale switching
+- Risk: Manual testing only. Regression testing is manual.
+- Priority: **MEDIUM** - Establish framework (Playwright/Cypress) before scaling to more pages
+
+---
+
+*Concerns audit: 2026-03-21*

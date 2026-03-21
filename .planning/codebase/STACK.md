@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-21
 
 ## Languages
 
@@ -28,9 +28,16 @@
 - React 19.2.0 (`react`, `react-dom` ^19.2.0) - UI rendering
 - Tailwind CSS 4.2.1 (`tailwindcss` ^4.2.1) - Utility-first CSS via PostCSS plugin
 
+**Internationalization (i18n):**
+- next-intl 4.8.3 - Multi-language support (English, Ukrainian) via `src/i18n/config.ts`
+  - Locale detection: Cookie-based (NEXT_LOCALE cookie) with fallback to defaultLocale
+  - Message loading: `messages/{locale}.json` files (e.g., `messages/en.json`, `messages/uk.json`)
+  - Integration: Server-side config in `src/i18n/request.ts`, client provider in root layout
+
 **UI Component System:**
 - shadcn/ui (new-york style) - Pre-built Radix-based components (`components.json`, `src/components/ui/`)
 - Radix UI - Headless primitives (25+ `@radix-ui/react-*` packages)
+  - Accordion, Alert Dialog, Avatar, Checkbox, Collapsible, Context Menu, Dialog, Dropdown Menu, Hover Card, Label, Menubar, Navigation Menu, Popover, Progress, Radio Group, Scroll Area, Select, Separator, Slider, Switch, Tabs, Toggle, Toggle Group, Tooltip
 - class-variance-authority 0.7.1 - Component variant management
 
 **Build/Dev:**
@@ -67,6 +74,7 @@
 - `react-resizable-panels` 4.6.5 - Resizable panel layout (`src/components/ui/resizable.tsx`)
 - `react-responsive` 10.0.0 - Media query hooks
 - `@dnd-kit/*` - Drag and drop (core 6.3.1, sortable 10.0.0, modifiers 9.0.0, utilities 3.2.2)
+- `input-otp` 1.4.2 - OTP input component
 
 **Infrastructure:**
 - `@sentry/nextjs` 10.39.0 + `@sentry/webpack-plugin` 5.0.0 - Error tracking and monitoring
@@ -93,6 +101,7 @@
 - Remote image patterns: `api.slingacademy.com` (sample user avatars)
 - Transpile packages: `geist` (font package)
 - Sentry tunnel route: `/monitoring`
+- next-intl plugin enabled for i18n support
 
 **shadcn/ui:**
 - Config: `components.json`
@@ -109,6 +118,8 @@
 - Key rules: `no-console: warn`, `@typescript-eslint/no-unused-vars: warn`, `react-hooks/exhaustive-deps: warn`
 
 **Prettier:**
+- Config: `.prettierrc` with Tailwind plugin
+- Settings: arrowParens always, bracketSpacing true, semi true, tabWidth 2, trailingComma none, jsxSingleQuote true, singleQuote true, endOfLine lf
 - Plugin: `prettier-plugin-tailwindcss` for class sorting
 
 **Environment:**
@@ -146,4 +157,4 @@
 
 ---
 
-*Stack analysis: 2026-03-10*
+*Stack analysis: 2026-03-21*

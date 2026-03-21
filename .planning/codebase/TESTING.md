@@ -1,185 +1,328 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-21
 
 ## Test Framework
 
-**Runner:**
-- No test framework is installed or configured
-- No test runner (Jest, Vitest, Playwright, Cypress) present in `package.json` dependencies or devDependencies
-- No test configuration files detected (`jest.config.*`, `vitest.config.*`, `playwright.config.*`, `cypress.config.*`)
+**Status:** No testing framework configured
 
-**Assertion Library:**
-- None
+**Note:** The codebase has no Jest, Vitest, or other testing framework configured. No test files (`.test.ts`, `.test.tsx`, `.spec.ts`, `.spec.tsx`) found in the project.
+
+**Dependencies observed:**
+- `@faker-js/faker` v10.3.0 in devDependencies (suggests testing was considered or in development)
+- No test runner configuration files present
 
 **Run Commands:**
+Currently there are no test commands in `package.json`. Available commands:
 ```bash
-# No test scripts defined in package.json
-# Only available scripts:
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run lint         # Run ESLint via next lint
-npm run lint:fix     # Fix ESLint issues + format
-npm run lint:strict  # Lint with zero warnings threshold
-npm run format       # Run Prettier
-npm run format:check # Check Prettier formatting
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run linting
+npm run lint:fix         # Run linting with fixes + format
+npm run lint:strict      # Run linting with zero warnings
+npm run format           # Format code with Prettier
+npm run format:check     # Check formatting
 ```
 
 ## Test File Organization
 
-**Location:**
-- No test files exist anywhere in the codebase
-- Zero `.test.*`, `.spec.*`, or `__tests__` directories found
+**Not Applicable** - No test framework is currently configured.
 
-**Naming:**
-- Not established
-
-**Structure:**
-- Not established
+**Recommendation for future implementation:**
+- Co-locate tests with source files: `Button.tsx` and `Button.test.tsx` in same directory
+- Use `.test.ts` suffix for unit tests
+- Use `.spec.ts` suffix for integration/specification tests
+- Place E2E tests in dedicated `e2e/` directory at project root
 
 ## Test Structure
 
-**Suite Organization:**
-- Not established. No tests exist.
+**Not Applicable** - No tests are currently written.
 
-**Patterns:**
-- None
+**If implementing Jest/Vitest, suggested patterns based on codebase:**
+
+For React component testing:
+```typescript
+// Button.test.tsx
+import { render, screen } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders with text content', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+});
+```
+
+For hook testing:
+```typescript
+// use-breadcrumbs.test.tsx
+import { renderHook } from '@testing-library/react';
+import { useBreadcrumbs } from './use-breadcrumbs';
+
+describe('useBreadcrumbs', () => {
+  it('returns breadcrumbs for current path', () => {
+    const { result } = renderHook(() => useBreadcrumbs());
+    expect(result.current).toEqual(expectedBreadcrumbs);
+  });
+});
+```
+
+For utility testing:
+```typescript
+// utils.test.ts
+import { formatBytes, cn } from './utils';
+
+describe('formatBytes', () => {
+  it('formats bytes correctly', () => {
+    expect(formatBytes(1024)).toBe('1 KB');
+  });
+});
+```
 
 ## Mocking
 
-**Framework:** `@faker-js/faker` is installed as a devDependency
+**Framework:** Not configured
 
-**Current Usage:**
-- `@faker-js/faker` is used exclusively for generating mock UI data in `src/constants/mock-api.ts`, not for test mocking
-- Mock data files use `.mock.ts` suffix convention and live alongside feature code:
-  - `src/features/cashback/data/analytics-dictionaries.mock.ts`
-  - `src/features/reports/data/quick-cashback-refund.mock.ts`
-  - `src/constants/mock-api.ts`
+**Recommended approach when tests are added:**
+- Use Jest/Vitest's built-in mocking
+- Mock Next.js hooks (`useRouter`, `usePathname`, `useSearchParams`)
+- Mock external libraries:
+  - `next-intl` hooks and components
+  - `next-themes` provider
+  - Form libraries (react-hook-form)
+  - UI library components (Radix UI)
 
-**Mock Data Pattern:**
+**Pattern for mocking Next.js modules:**
 ```typescript
-// Pattern from src/features/reports/data/quick-cashback-refund.mock.ts
-export interface QuickCashbackRefundEvent {
-  id: string;
-  clientId: string;
-  purchaseAmount: number;
-  // ... typed fields
-}
-
-export const QUICK_CASHBACK_REFUND_EVENTS: QuickCashbackRefundEvent[] = [
-  {
-    id: 'F-001',
-    clientId: 'CL-19002',
-    purchaseAmount: 12450,
-    // ... static mock data
-  },
-  // ...
-];
-
-// Filtering/query functions operate on mock data
-export function getQuickCashbackRefundRows(
-  periodDays: FraudReportPeriodDays
-): QuickCashbackRefundEvent[] {
-  // Filter and sort logic
-}
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => '/dashboard',
+  useSearchParams: () => new URLSearchParams()
+}));
 ```
 
-**What to Mock (when tests are added):**
-- External API calls (none exist yet -- all data is currently mock)
-- Sentry error reporting (`@sentry/nextjs`)
-- Next.js server functions (`cookies()`, `redirect()`)
-- Browser APIs (`window.matchMedia`, `document.cookie`)
+**What to Mock:**
+- External API calls
+- Next.js router and navigation
+- Browser APIs (localStorage, window.location)
+- Date/time for consistent snapshots
+- Random generators (use faker for consistent test data)
 
 **What NOT to Mock:**
-- UI component rendering (test with real shadcn/ui components)
-- `cn()` utility and Tailwind class merging
-- Zod schemas in `src/lib/parsers.ts` (test with real validation)
+- Pure utility functions
+- Custom hooks that don't depend on external APIs
+- UI component libraries (render real components for integration tests)
+- Internal business logic layers
 
 ## Fixtures and Factories
 
-**Test Data:**
-- No test fixtures or factory patterns exist
-- Mock data for UI is defined as static typed arrays in `.mock.ts` files
-- `@faker-js/faker` generates dynamic sample data in `src/constants/mock-api.ts`
+**Test Data Pattern:**
+The codebase uses mock data patterns in `src/constants/` and `src/features/*/data/`:
 
-**Pattern from `src/constants/mock-api.ts`:**
 ```typescript
+// src/constants/data.ts - Example of test data pattern
+export const recentSalesData: SaleUser[] = [
+  {
+    id: 1,
+    name: 'Olivia Martin',
+    email: 'olivia.martin@email.com',
+    amount: '+$1,999.00',
+    image: 'https://api.slingacademy.com/public/sample-users/1.png',
+    initials: 'OM'
+  },
+  // More items...
+];
+```
+
+**Factory pattern with faker:**
+Since `@faker-js/faker` is installed, use it for generating test data:
+```typescript
+// test/factories/user.factory.ts
 import { faker } from '@faker-js/faker';
 
-function generateRandomProductData(id: number): Product {
+export function createMockUser(overrides?: Partial<SaleUser>): SaleUser {
   return {
-    id,
-    name: faker.commerce.productName(),
-    description: faker.commerce.productDescription(),
-    price: parseFloat(faker.commerce.price({ min: 5, max: 500, dec: 2 })),
-    category: faker.helpers.arrayElement(categories),
-    // ...
+    id: faker.number.int(),
+    name: faker.person.fullName(),
+    email: faker.internet.email(),
+    amount: `+$${faker.finance.amount()}`,
+    image: faker.image.avatar(),
+    initials: 'AB',
+    ...overrides
   };
 }
 ```
 
 **Location:**
-- Feature mock data: `src/features/{feature}/data/*.mock.ts`
-- General mock data: `src/constants/mock-api.ts`
+- Place fixtures in `test/fixtures/` directory
+- Place factories in `test/factories/` directory at project root
+- Export from barrel file: `test/index.ts`
 
 ## Coverage
 
-**Requirements:** None enforced. No coverage tool configured.
+**Requirements:** Not enforced
 
-**View Coverage:**
+Currently no coverage thresholds are configured. When implementing tests:
+- Aim for 80%+ statement coverage for critical paths
+- 100% coverage for utility functions
+- 70%+ coverage for React components
+- Focus on behavior testing over line coverage
+
+**View Coverage (when configured):**
 ```bash
-# Not available -- no test runner configured
+npm test -- --coverage        # Generate coverage report
+npm test -- --coverage --watch # Watch mode with coverage
 ```
 
 ## Test Types
 
 **Unit Tests:**
-- Not present. Candidates for unit testing:
-  - `src/lib/utils.ts` -- `cn()`, `formatBytes()`
-  - `src/lib/format.ts` -- `formatDate()`
-  - `src/lib/parsers.ts` -- `getSortingStateParser()`, `getFiltersStateParser()`
-  - `src/features/reports/data/quick-cashback-refund.mock.ts` -- `getQuickCashbackRefundRows()` filter logic
-  - `src/features/exec/cashback-impact/data/metric-catalog.ts` -- `getMetricById()`
-  - `src/lib/chart-theme.ts` -- `chartGradientId()`
+- Scope: Individual functions, hooks, components in isolation
+- Approach: Mock external dependencies
+- Examples to test:
+  - `formatBytes()` utility function in `src/lib/utils.ts`
+  - `cn()` className utility in `src/lib/utils.ts`
+  - Individual form field components in `src/components/forms/`
+  - Custom hooks like `useDataTable`, `useBreadcrumbs`, `useMediaQuery`
 
 **Integration Tests:**
-- Not present. Candidates:
-  - `src/hooks/use-data-table.ts` -- complex hook integrating nuqs, TanStack Table, debouncing
-  - Form components in `src/components/forms/` -- form validation with react-hook-form + zod
+- Scope: Multiple components working together, features
+- Approach: Render components with their dependencies, test user interactions
+- Examples:
+  - Form submission with validation via react-hook-form
+  - Data table with filtering, sorting, pagination (`src/hooks/use-data-table.ts`)
+  - Navigation with breadcrumb updates (`src/hooks/use-breadcrumbs.tsx`)
+  - Theme switching with locale switching (`src/components/locale-switcher.tsx`)
 
 **E2E Tests:**
-- Not present. No Playwright or Cypress configured.
-- Candidates: dashboard navigation flow, sidebar collapse, theme switching
+- Framework: Not configured (Playwright, Cypress recommended)
+- Scope: Full user workflows across pages
+- Examples:
+  - User navigation flow through dashboard pages
+  - Form submission and data persistence
+  - Authentication and authorization flows
+  - Multi-language support across the application
 
-## Quality Gates
+## Common Patterns
 
-**Pre-commit:** Husky runs `lint-staged` (Prettier only) via `src/.husky/pre-commit`
-**Pre-push:** No checks (placeholder script in `.husky/pre-push`)
-**CI:** Not analyzed (no CI config found in repo root)
-**Build:** `next build` serves as a type-checking gate (`strict: true` in tsconfig)
-
-## Recommended Test Setup (When Adding Tests)
-
-**Suggested Framework:** Vitest (aligns with the Vite/Next.js ecosystem)
-
-**Suggested File Pattern:**
-- Co-locate tests with source: `src/lib/utils.test.ts`, `src/hooks/use-data-table.test.ts`
-- Feature tests: `src/features/exec/cashback-impact/data/metric-catalog.test.ts`
-
-**Suggested Commands:**
-```bash
-npm run test         # Run all tests
-npm run test:watch   # Watch mode
-npm run test:coverage # Coverage report
+**Async Testing:**
+Since Next.js layout component is async:
+```typescript
+// For async components - render within appropriate wrapper
+it('renders with fetched locale', async () => {
+  const component = await RootLayout({ children: <div>test</div> });
+  expect(component).toBeDefined();
+});
 ```
 
-**Priority Test Targets (by risk):**
-1. `src/lib/parsers.ts` -- Zod parsing logic used by data table URL state
-2. `src/hooks/use-data-table.ts` -- Core hook with complex state management
-3. `src/features/reports/data/quick-cashback-refund.mock.ts` -- Business logic filtering
-4. `src/features/exec/cashback-impact/data/metric-catalog.ts` -- Data lookup functions
-5. `src/lib/format.ts` and `src/lib/utils.ts` -- Shared utility functions
+For async hooks/functions:
+```typescript
+it('handles async data loading', async () => {
+  const { result, waitForNextUpdate } = renderHook(() => useAsyncData());
+  expect(result.current.loading).toBe(true);
+
+  await waitForNextUpdate();
+  expect(result.current.data).toBeDefined();
+});
+```
+
+**Error Testing:**
+```typescript
+describe('Error handling', () => {
+  it('throws when context not found', () => {
+    expect(() => {
+      renderHook(() => useSidebar());
+    }).toThrow('useSidebar must be used within a SidebarProvider.');
+  });
+
+  it('shows toast error on upload failure', async () => {
+    const { getByText } = render(<FileUploader />);
+    // Trigger error condition
+    // Assert toast was called
+  });
+});
+```
+
+**React Hook Form Testing:**
+```typescript
+it('validates form input', async () => {
+  const { render } = renderWithFormProvider();
+  const { getByRole, getByText } = render(<FormInput name="email" required />);
+
+  const input = getByRole('textbox');
+  await userEvent.clear(input);
+  await userEvent.type(input, 'invalid');
+
+  expect(getByText(/invalid/i)).toBeInTheDocument();
+});
+```
+
+## Testing Setup Recommendations
+
+**When implementing tests, configure:**
+
+1. **Package.json scripts:**
+```json
+{
+  "test": "vitest",
+  "test:ui": "vitest --ui",
+  "test:coverage": "vitest --coverage"
+}
+```
+
+2. **Vitest config:** `vitest.config.ts`
+```typescript
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./test/setup.ts']
+  }
+});
+```
+
+3. **Test setup file:** `test/setup.ts`
+```typescript
+import '@testing-library/jest-dom';
+import { expect, afterEach, vi } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+afterEach(() => cleanup());
+```
+
+4. **Testing library dependencies:**
+- `@testing-library/react`
+- `@testing-library/jest-dom`
+- `@testing-library/user-event`
+- `vitest`
+- `@vitest/ui`
+- `@vitest/coverage-v8`
+
+## Current Testing Gaps
+
+**Areas without tests:**
+- All React components lack unit/integration tests
+- All custom hooks lack tests (`useDataTable`, `useBreadcrumbs`, `useMediaQuery`, `useMobile`, `useDebounce`, `useCallbackRef`, etc.)
+- Utility functions not tested (`formatBytes`, `cn`, parsers in `src/lib/`)
+- Form validation and submission flows not tested
+- i18n configuration and locale switching not tested
+- Data table functionality (filtering, sorting, pagination) not tested
+- Route navigation and breadcrumb logic not tested
+
+**Priority for test implementation:**
+1. **High:** `useDataTable` hook in `src/hooks/use-data-table.ts` (complex, heavily used)
+2. **High:** Form components in `src/components/forms/` and validation with react-hook-form
+3. **High:** Utility functions (`formatBytes`, `cn`) in `src/lib/utils.ts`
+4. **Medium:** Custom hooks (`useBreadcrumbs`, `useMediaQuery`, `useMobile`) in `src/hooks/`
+5. **Medium:** Critical UI components (Button, Input, Select)
+6. **Low:** Presentational components with minimal logic
 
 ---
 
-*Testing analysis: 2026-03-10*
+*Testing analysis: 2026-03-21*

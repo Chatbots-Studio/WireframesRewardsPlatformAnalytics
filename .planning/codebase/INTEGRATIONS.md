@@ -1,6 +1,6 @@
 # External Integrations
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-21
 
 ## APIs & External Services
 
@@ -41,7 +41,11 @@
 - Local filesystem only (public assets in `public/`)
 
 **Caching:**
-- None - No Redis, Memcached, or other caching layer
+- Browser cookies for:
+  - Theme preference (via `src/components/themes/active-theme.tsx`)
+  - Locale preference (NEXT_LOCALE cookie via `src/i18n/request.ts`)
+- Next.js built-in caching (ISR, static generation)
+- No Redis, Memcached, or external caching layer
 
 ## Authentication & Identity
 
@@ -98,8 +102,9 @@
   - Restart policy: `unless-stopped`
 
 **CI Pipeline:**
-- GitHub-hosted repository (`Chatbots-Studio/WireframesRewardsPlatformAnalytics`)
+- GitHub-hosted repository
 - No CI config detected (no `.github/workflows/`, no `Jenkinsfile`, no `.gitlab-ci.yml`)
+- Vercel configuration present (`.vercelignore`) - Vercel deployment support likely
 
 ## Environment Configuration
 
@@ -145,6 +150,24 @@
   - Architects Daughter (display/handwriting)
 - Self-hosted at build time via Next.js font optimization (no runtime requests to Google)
 
+## Internationalization Integration
+
+**i18n Framework:**
+- next-intl 4.8.3
+- Supported locales: `en` (English), `uk` (Ukrainian)
+- Default locale: `en`
+- Configuration: `src/i18n/config.ts`
+- Server-side message loading: `src/i18n/request.ts`
+- Locale detection:
+  1. Check NEXT_LOCALE cookie (set via cookie store)
+  2. Fall back to defaultLocale if cookie not found or invalid
+- Message files: `messages/{locale}.json`
+  - `messages/en.json` - English translations
+  - `messages/uk.json` - Ukrainian translations
+- Client-side translations: `useTranslations()` hook from next-intl
+- Server-side translations: `getTranslations()` function from next-intl
+- Navigation: Locale switcher component changes locale via cookie and page refresh
+
 ---
 
-*Integration audit: 2026-03-10*
+*Integration audit: 2026-03-21*

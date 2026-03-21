@@ -1,17 +1,19 @@
 # Architecture
 
-**Analysis Date:** 2026-03-10
+**Analysis Date:** 2026-03-21
 
 ## Pattern Overview
 
-**Overall:** Next.js App Router with feature-based organization
+**Overall:** Next.js 16+ App Router with feature-based organization and framework-level internationalization
 
 **Key Characteristics:**
-- Server-rendered shell (layouts) with client-side dashboard pages (`'use client'`)
+- Server-rendered layouts with client-side dashboard pages (`'use client'`)
 - Feature-sliced data/components co-located under `src/features/`
 - All data is mock/static -- no real API calls, databases, or server actions
 - Shared UI component library (shadcn/ui pattern) under `src/components/ui/`
-- Ukrainian-language domain content (banking cashback analytics platform)
+- Multi-language support (English, Ukrainian) via next-intl at framework level
+- Cookie-based locale and theme persistence
+- Recharts visualizations with Tailwind CSS theming
 
 ## Layers
 
@@ -31,14 +33,26 @@
 - Sub-features:
   - `src/features/exec/cashback-impact/` -- KPI metric catalog, cards, drawers for executive dashboard
   - `src/features/cashback/data/` -- Analytics dictionaries mock data
-  - `src/features/reports/data/` -- Fraud report mock data
+  - `src/features/reports/data/` -- Report mock datasets
 
 **Shared Components:**
 - Purpose: Reusable layout shells, navigation, and generic UI primitives
 - Location: `src/components/`
-- Contains: Layout components (`layout/`), UI primitives (`ui/`), forms (`forms/`), command palette (`kbar/`), theming (`themes/`), modal (`modal/`)
+- Contains: Layout components (`layout/`), UI primitives (`ui/`), forms (`forms/`), command palette (`kbar/`), theming (`themes/`), modal (`modal/`), locale switcher
 - Depends on: Lib utilities, Types, Config
 - Used by: App routes and Feature components
+
+**Layout Components:**
+- Purpose: Page structure and navigation framework
+- Location: `src/components/layout/`
+- Contains:
+  - `app-sidebar.tsx` (159 lines) - Renders collapsible navigation menu with i18n support
+  - `header.tsx` (31 lines) - Top bar with breadcrumbs, search, locale switcher, theme toggle
+  - `info-sidebar.tsx` (110 lines) - Right-side contextual information panel
+  - `page-container.tsx` - Standard page wrapper
+  - `providers.tsx` - Provider wrapper for root layout
+- Depends on: Sidebar context, theme providers, i18n
+- Used by: Dashboard layout (`src/app/dashboard/layout.tsx`)
 
 **UI Primitives (shadcn/ui):**
 - Purpose: Low-level, design-system-aligned UI components (buttons, cards, tables, dialogs, etc.)
@@ -57,7 +71,7 @@
 **Configuration:**
 - Purpose: Centralized app config for navigation, data tables, and info panels
 - Location: `src/config/`
-- Contains: `nav-config.ts` (sidebar navigation items), `data-table.ts` (filter/sort operator definitions), `infoconfig.ts` (info sidebar content)
+- Contains: `nav-config.ts` (sidebar navigation items with i18n keys), `data-table.ts` (filter/sort operator definitions), `infoconfig.ts` (info sidebar content)
 - Depends on: Types
 - Used by: Layout components, Data table utilities
 
@@ -65,7 +79,7 @@
 - Purpose: Custom React hooks for cross-cutting UI concerns
 - Location: `src/hooks/`
 - Contains: `use-breadcrumbs.tsx`, `use-media-query.ts`, `use-mobile.tsx`, `use-data-table.ts`, `use-nav.ts`, `use-debounce.tsx`, `use-callback-ref.ts`, `use-controllable-state.tsx`, `use-multistep-form.tsx`, `use-debounced-callback.ts`
-- Depends on: React, Types
+- Depends on: React, Types, next-intl
 - Used by: Components, Pages
 
 **Types:**
@@ -82,96 +96,175 @@
 - Depends on: `@faker-js/faker`, `match-sorter`
 - Used by: Possibly legacy pages (not actively used by current dashboard routes)
 
+**Internationalization (i18n):**
+- Purpose: Framework-level multi-language support
+- Location: `src/i18n/`
+- Contains:
+  - `config.ts` - Defines supported locales (['en', 'uk']) and default locale
+  - `request.ts` - Cookie-based locale detection and message loading
+- Depends on: next-intl library, cookies
+- Used by: Root layout, all pages and components via useTranslations() hook
+
+**Theme & Styling:**
+- Purpose: Multi-theme support and global styling
+- Location: `src/components/themes/`, `src/styles/`
+- Contains:
+  - `font.config.ts` - Font variable definitions
+  - `theme.config.ts` - Theme palette and styling constants
+  - `theme-provider.tsx` - Wrapper for next-themes
+  - `theme-mode-toggle.tsx` - UI for switching dark/light/system
+  - `active-theme.tsx` - Hook to read current theme from cookies
+  - `globals.css` - Tailwind CSS with CSS custom properties
+- Depends on: next-themes, Tailwind CSS 4
+- Used by: Root layout, all components
+
 **Styles:**
 - Purpose: Global CSS, theme definitions, and CSS custom property tokens
 - Location: `src/styles/`
-- Contains: `globals.css`, `theme.css`, `themes/42flows.css`
-- Depends on: Tailwind CSS
+- Contains: `globals.css`, theme variables, Tailwind config
+- Depends on: Tailwind CSS, CSS custom properties
 - Used by: Root layout (`src/app/layout.tsx`)
 
 ## Data Flow
 
+**Root Application Initialization:**
+
+1. User requests any route
+2. `src/app/layout.tsx` (root server component) executes:
+   - Reads cookies for theme persistence
+   - Calls `getLocale()` and `getMessages()` from next-intl/server
+   - Wraps app with NuqsAdapter (URL search param state)
+   - Wraps app with NextIntlClientProvider (i18n context)
+   - Wraps app with ThemeProvider (dark/light/system mode)
+   - Renders Toaster (Sonner) for notifications
+   - Sets HTML lang attribute and data-theme
+
 **Dashboard Page Rendering:**
 
-1. User navigates to a URL (e.g., `/dashboard/exec`)
-2. Next.js App Router matches `src/app/dashboard/exec/page.tsx`
-3. Root layout (`src/app/layout.tsx`) wraps with providers: NuqsAdapter, ThemeProvider, ActiveThemeProvider, Toaster
-4. Dashboard layout (`src/app/dashboard/layout.tsx`) wraps with KBar, SidebarProvider, InfobarProvider, AppSidebar, Header
-5. Page component renders with hardcoded mock data inline or imported from `src/features/*/data/`
-6. Recharts renders visualizations client-side using `chartPalette` CSS variables
+1. User navigates to `/dashboard/exec` or similar route
+2. Next.js App Router matches `src/app/dashboard/[feature]/page.tsx`
+3. `src/app/dashboard/layout.tsx` wraps page with:
+   - KBar (command palette with keyboard shortcuts)
+   - SidebarProvider (manages sidebar open/close state via cookie)
+   - InfobarProvider (context for right info sidebar)
+   - AppSidebar component (navigation)
+   - Header component (top bar)
+   - InfoSidebar component (right panel)
+4. Feature page component renders with mock data imported from `src/features/*/data/`
+5. Client-side hooks manage filtering, sorting, pagination
+6. Recharts visualizations render client-side using `chartPalette` CSS variables
 
-**Navigation:**
+**Navigation & Localization Flow:**
 
-1. `src/config/nav-config.ts` defines `navItems` array with titles, URLs, icons, keyboard shortcuts
-2. `src/components/layout/app-sidebar.tsx` reads `navItems`, renders sidebar with collapsible sub-items
-3. `src/components/kbar/index.tsx` registers same `navItems` for Cmd+K command palette
-4. `src/components/breadcrumbs.tsx` derives breadcrumbs from current pathname
+1. `src/config/nav-config.ts` defines `navItems` array with:
+   - `title`: English fallback
+   - `titleKey`: i18n translation key (resolved via `useTranslations('nav')`)
+   - `url`: Route path
+   - `icon`: Icon key from Icons registry
+   - `items`: Optional nested items
+2. `src/components/layout/app-sidebar.tsx` renders navigation:
+   - Calls `useTranslations('nav')` to get translation function
+   - Renders collapsible menu with localized titles
+   - Uses `usePathname()` to highlight active route
+   - Calls `useFilteredNavItems()` hook for role-based filtering (placeholder)
+3. `src/components/kbar/` registers same navItems for Cmd+K command palette
+4. Breadcrumbs derived from pathname via `use-breadcrumbs` hook
 
-**Feature Data (Metric Insight Drill-down):**
+**Locale Switching:**
 
-1. Page renders KPI cards from `KPI_CARDS` array with `metricId` references
-2. `getMetricById()` from `src/features/exec/cashback-impact/data/metric-catalog.ts` resolves full metric definition
-3. User clicks card or info icon -- `KpiMetricCard` calls `onInfoOpen(metricId)`
-4. `MetricInsightDrawer` (Sheet component) opens with formula, drivers, actions, thresholds from catalog
+1. User clicks locale switcher button in header (`src/components/locale-switcher.tsx`)
+2. Component calls `window.location.reload()` with new locale query param
+3. Next.js routing handles locale switch
+4. Cookie updated with new locale preference
+5. Messages re-fetched for new locale
+6. Page re-renders with translated strings
 
-**State Management:**
-- **URL state**: `nuqs` library for search/filter/sort params serialized to URL query strings (`src/lib/parsers.ts`, `src/lib/searchparams.ts`)
-- **Local component state**: `useState` for page-level UI state (selected category, drawer open/close, filters)
-- **Global state**: `zustand` is listed as a dependency but not actively used in current codebase
-- **Theme state**: Cookie-based theme persistence via `cookies()` server function + `ActiveThemeProvider` context
+**Theme Persistence:**
+
+1. Root layout reads `active_theme` cookie value
+2. Applies `data-theme` attribute to HTML element
+3. ThemeProvider manages class-based dark mode via next-themes
+4. Script in head sets meta theme-color based on localStorage
+5. User toggles theme via ThemeModeToggle component
+6. Cookie updated; page re-renders with new theme
+
+**Feature Data Display (Metric Insight Example):**
+
+1. `src/app/dashboard/exec/page.tsx` renders
+2. Page imports feature components from `src/features/exec/cashback-impact/components/`
+3. KpiMetricCard components display KPI values with metricId references
+4. User clicks card or info icon
+5. Card calls `onInfoOpen(metricId)` callback
+6. MetricInsightDrawer opens (Sheet component)
+7. Drawer imports metric definition from `src/features/exec/cashback-impact/data/metric-catalog.ts`
+8. Displays formula, drivers, actions, thresholds from catalog
+9. useInfobar() hook populates right sidebar with related context
+
+**State Management Flows:**
+
+- **URL state**: nuqs library for search/filter/sort params serialized to URL query strings
+- **Local component state**: useState for page-level UI state
+- **Theme state**: Cookie-based via next-themes + custom themes
 - **Sidebar state**: Cookie-based open/close persistence
+- **Locale state**: Cookie-based via next-intl
+- **Info sidebar content**: Managed via InfobarProvider context
 
 ## Key Abstractions
 
+**NavItem Interface:**
+- Purpose: Represents a navigation menu entry with i18n support
+- Location: `src/types/index.ts`
+- Properties: title, titleKey (i18n key), url, icon, isActive, items (nested), shortcut, disabled, external
+- Pattern: Recursive structure enables nested menu hierarchies; titleKey enables translation without duplication
+
 **PageContainer:**
-- Purpose: Standard page wrapper providing scroll area, loading skeleton, access control, optional page header with title/description/info
-- Examples: `src/components/layout/page-container.tsx`
-- Pattern: Every dashboard page wraps content in `<PageContainer>` -- some use the `pageTitle`/`pageDescription` props, others render their own header inside
+- Purpose: Standard page wrapper providing scroll area, loading skeleton, access control, optional page header
+- Location: `src/components/layout/page-container.tsx`
+- Pattern: Every dashboard page wraps content in `<PageContainer>` -- can use `pageTitle`/`pageDescription` props or render custom header inside
 
 **Chart Palette:**
 - Purpose: Theme-aware color system for all Recharts visualizations using CSS custom properties
-- Examples: `src/lib/chart-theme.ts`
-- Pattern: Import `chartPalette` object, use `chartPalette.primary` etc. as `fill`/`stroke` values. Tokens resolve from `--chart-primary` etc. CSS variables defined per theme in `src/styles/themes/`
-
-**Navigation Config:**
-- Purpose: Single source of truth for all sidebar items, Cmd+K shortcuts, and breadcrumbs
-- Examples: `src/config/nav-config.ts`
-- Pattern: Array of `NavItem` objects with `title`, `url`, `icon`, `shortcut`, optional nested `items`
+- Location: `src/lib/chart-theme.ts`
+- Pattern: Import `chartPalette` object, use `chartPalette.primary` etc. as fill/stroke values. Tokens resolve from `--chart-primary` CSS variables defined per theme
 
 **Metric Catalog:**
 - Purpose: Structured knowledge base for KPI metrics with formulas, drivers, actions, thresholds, and caveats
-- Examples: `src/features/exec/cashback-impact/data/metric-catalog.ts`
-- Pattern: `MetricCatalogItem[]` array with `getMetricById()` lookup. Each metric has `id`, `title`, `shortDefinition`, `quickFormula`, `formula`, `drivers`, `actions`, `thresholds`, `caveats`
+- Location: `src/features/exec/cashback-impact/data/metric-catalog.ts`
+- Types:
+  - `MetricCatalogItem`: id, title, shortDefinition, quickFormula, formula, drivers, actions, thresholds, caveats
+  - `MetricThreshold`: level (good|watch|risk), label, condition, interpretation
+  - `MetricAction`: role (Product|CRM|Risk|Finance), action, expectedImpact
+- Pattern: Array with `getMetricById()` lookup function
 
 **Data Table Config:**
-- Purpose: Centralized filter/sort operator definitions for TanStack React Table integration
-- Examples: `src/config/data-table.ts`, `src/lib/data-table.ts`, `src/types/data-table.ts`
-- Pattern: `dataTableConfig` defines all operators, variants, and join operators. `getFiltersStateParser()`/`getSortingStateParser()` from `src/lib/parsers.ts` serialize table state to URL
+- Purpose: Centralized filter/sort operator definitions for TanStack React Table
+- Location: `src/config/data-table.ts`, `src/lib/data-table.ts`, `src/types/data-table.ts`
+- Pattern: `dataTableConfig` defines operators by type (text, numeric, date, select). URL serialization via `src/lib/parsers.ts`
 
 **Icons Registry:**
 - Purpose: Named icon map used by nav config and components
-- Examples: `src/components/icons.tsx`
-- Pattern: `Icons` object maps string keys to Tabler icon components. Nav items reference icons by key name
+- Location: `src/components/icons.tsx`
+- Pattern: `Icons` object maps string keys to Tabler icon components. Nav items reference icons by key
+
+**Internationalization Context:**
+- Purpose: Provide translation function throughout app
+- Pattern: Root layout wraps with NextIntlClientProvider. Components call `useTranslations('namespace')` to get `t()` function. All user-facing text use keys: `t('key')`
 
 ## Entry Points
 
 **Root Layout (`src/app/layout.tsx`):**
-- Location: `src/app/layout.tsx`
 - Triggers: Every page load (Next.js root layout)
-- Responsibilities: HTML shell, font config, meta theme color, providers (NuqsAdapter, ThemeProvider, ActiveThemeProvider), Toaster, NextTopLoader
+- Responsibilities: HTML shell, font config, meta theme color, i18n setup, providers (NuqsAdapter, ThemeProvider, NextIntlClientProvider, Toaster, TopLoader)
 
 **Dashboard Layout (`src/app/dashboard/layout.tsx`):**
-- Location: `src/app/dashboard/layout.tsx`
 - Triggers: All `/dashboard/*` routes
-- Responsibilities: KBar command palette, SidebarProvider with cookie-persisted state, InfobarProvider, AppSidebar, Header, InfoSidebar
+- Responsibilities: KBar, SidebarProvider with cookie-persisted state, InfobarProvider, AppSidebar, Header, InfoSidebar
 
 **Root Page (`src/app/page.tsx`):**
-- Location: `src/app/page.tsx`
 - Triggers: Visiting `/`
 - Responsibilities: Redirects to `/dashboard/exec`
 
 **Dashboard Index (`src/app/dashboard/page.tsx`):**
-- Location: `src/app/dashboard/page.tsx`
 - Triggers: Visiting `/dashboard`
 - Responsibilities: Redirects to `/dashboard/exec`
 
@@ -185,35 +278,34 @@
 - Triggers: Unhandled errors in any route
 - Responsibilities: Captures exception to Sentry, renders fallback error page
 
-**Proxy / Middleware:**
-- Location: `src/proxy.ts`
-- Triggers: All matched requests via path matcher
-- Responsibilities: Currently a pass-through (`NextResponse.next()`) -- placeholder for future middleware
-
 ## Error Handling
 
-**Strategy:** Minimal -- relies on Next.js error boundaries and Sentry
+**Strategy:** Error boundaries with Sentry integration and graceful fallbacks
 
 **Patterns:**
-- Global error boundary (`src/app/global-error.tsx`) captures to Sentry and renders `NextError`
-- 404 handler (`src/app/not-found.tsx`) renders custom "go back" / "back to home" UI
+- Global error boundary (`src/app/global-error.tsx`) captures to Sentry and renders fallback UI
+- 404 handler (`src/app/not-found.tsx`) renders custom "go back" UI
 - URL parser functions in `src/lib/parsers.ts` use `try/catch` with `safeParse()` returning `null` on failure
 - Mock data functions are infallible (no external I/O)
-- No explicit error boundaries at page or component level
-- No toast-based error notifications (Sonner toaster exists but used for success actions only)
+- Toast notifications via Sonner for user feedback
+- Sentry client-side error capturing via @sentry/nextjs wrapper
 
 ## Cross-Cutting Concerns
 
-**Logging:** No structured logging framework. Sentry captures runtime exceptions. No console.log patterns observed in production code.
+**Logging:** Sentry for production error tracking; development mode uses Spotlight. No custom logging framework.
 
-**Validation:** Zod schemas in `src/lib/parsers.ts` for URL search param parsing. `react-hook-form` + `@hookform/resolvers` available for form validation (form components exist in `src/components/forms/`). No server-side validation (no API routes or server actions).
+**Validation:** Zod schemas in `src/lib/parsers.ts` for URL search param parsing. React Hook Form + @hookform/resolvers available for form components. No server-side validation (no API routes).
 
-**Authentication:** None implemented. No auth provider, no session management, no protected routes. Sidebar shows placeholder "Sign in to manage your account" text.
+**Authentication:** None implemented. All pages accessible. Sidebar shows placeholder text for sign-in.
 
-**Theming:** Multi-theme support via `next-themes` + custom `ActiveThemeProvider`. Themes defined as CSS custom properties in `src/styles/themes/`. Cookie-persisted active theme. Chart colors use CSS variable references for automatic theme adaptation.
+**Authorization:** Navigation filtering stub via `useFilteredNavItems()` hook in `src/hooks/use-nav.ts`. Ready for role-based logic.
 
-**Internationalization:** Not implemented. UI text is hardcoded in Ukrainian for dashboard content. Some boilerplate text remains in English (404 page, metadata descriptions).
+**Theming:** Multi-theme support via next-themes + custom themes. Themes defined as CSS custom properties in `src/styles/`. Cookie-persisted active theme. Chart colors use CSS variables for automatic theme adaptation.
+
+**Internationalization:** next-intl framework-level support. Locales: ['en', 'uk']. Locale stored in cookie, detected on request. All user text uses i18n keys with namespaces: `t('key')` from `useTranslations('namespace')`.
+
+**Monitoring:** Sentry with source maps, custom domain tunnel (/monitoring), widenClientFileUpload enabled, Spotlight in development.
 
 ---
 
-*Architecture analysis: 2026-03-10*
+*Architecture analysis: 2026-03-21*
