@@ -2,19 +2,17 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-05)
+See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Де кожна наступна гривня кешбеку дасть найбільший приріст обороту, якого б не було без програми — і де забрати гроші від тих, хто і так купує.
-**Current focus:** Phase 1 — Navigation Restructuring
+**Current focus:** Milestone v1.1 — Редизайн довідника продуктів
 
 ## Current Position
 
-Phase: 1 of 5 (Navigation Restructuring)
-Plan: All phases complete
-Status: All 5 phases executed
-Last activity: 2026-03-05 — Phases 2–5 implemented
-
-Progress: [░░░░░░░░░░] 0%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-21 — Milestone v1.1 started
 
 ## Performance Metrics
 
@@ -38,7 +36,10 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Roadmap: 5 phases derived from requirements; CONV-03 in Phase 2 (with KPI/filters) for early visibility of zero-conversion categories
+- Side sheet замість модалок для деталей продукту
+- Data Sources прибрати зі сторінки довідників (буде окрема сторінка)
+- Фейковий CRUD на моках (useState, без persist)
+- v1.0 phases 1-5 completed (cashback impact dashboard)
 
 ### Pending Todos
 
@@ -50,6 +51,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-05
-Stopped at: Phase 1 plan created (.planning/phases/01-navigation-restructuring/PLAN.md), 3 tasks ready
+Last session: 2026-03-21
+Stopped at: Milestone v1.1 started, defining requirements
 Resume file: None
