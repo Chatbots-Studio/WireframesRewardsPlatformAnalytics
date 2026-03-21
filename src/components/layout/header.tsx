@@ -5,6 +5,7 @@ import { Breadcrumbs } from '../breadcrumbs';
 import SearchInput from '../search-input';
 import { UserNav } from './user-nav';
 import { ThemeModeToggle } from '../themes/theme-mode-toggle';
+import { LocaleSwitcher } from '../locale-switcher';
 import CtaGithub from './cta-github';
 
 export default function Header() {
@@ -22,6 +23,7 @@ export default function Header() {
           <SearchInput />
         </div>
         <UserNav />
+        <LocaleSwitcher />
         <ThemeModeToggle />
       </div>
     </header>
