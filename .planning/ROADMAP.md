@@ -15,6 +15,8 @@
 - [x] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
 - [x] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
 - [x] **Phase 5: Incrementality Block** - Before/after, cohort, canibalization
+- [x] **Phase 6: Portfolio Analysis** - 2×2 Conversion vs ROI matrix, top categories for invest/review
+- [x] **Phase 7: Retention & Efficiency** - Stickiness Factor, Redemption Rate
 
 ## Phase Details
 
@@ -69,10 +71,30 @@
   3. User sees cannibalization chart: whether spending grew or just redistributed between categories
 **Plans**: `.planning/phases/05-incrementality/PLAN.md` (1 task)
 
+### Phase 6: Portfolio Analysis
+**Goal**: Портфельний аналіз категорій через матрицю Конверсія vs ROI та топ-3 рекомендації
+**Depends on**: Phase 5
+**Requirements**: PORT-01, PORT-02
+**Success Criteria** (what must be TRUE):
+  1. User sees 2×2 scatter matrix with 4 labeled quadrants: Stars (high conv + high ROI), Potential (low conv + high ROI), Efficient (high conv + low ROI), Review (low conv + low ROI)
+  2. User sees action recommendation for each quadrant
+  3. User sees top-3 categories recommended for investment with ROI and conversion metrics
+  4. User sees top-3 categories recommended for review/restructuring with action items
+
+### Phase 7: Retention & Efficiency
+**Goal**: Аналіз утримання через Stickiness Factor та ефективності через Redemption Rate
+**Depends on**: Phase 6
+**Requirements**: RET-01, RET-02
+**Success Criteria** (what must be TRUE):
+  1. User sees horizontal bar chart of stickiness factor per category (% clients choosing same category 3 months in a row), sorted high to low
+  2. User sees color-coded bars: green ≥50%, yellow 30–49%, gray <30%
+  3. User sees grouped bar chart of accrued vs redeemed cashback per category
+  4. User sees table with redemption rate per category, color-coded (green ≥70%, amber 50–69%, red <50%)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -81,3 +103,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. ROI Charts | 1/1 | Done | 2026-03-05 |
 | 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
 | 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
+| 6. Portfolio Analysis | 1/1 | Done | 2026-03-22 |
+| 7. Retention & Efficiency | 1/1 | Done | 2026-03-22 |
