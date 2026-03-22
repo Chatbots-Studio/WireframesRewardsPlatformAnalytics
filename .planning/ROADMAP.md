@@ -105,7 +105,9 @@ Plans:
   6. User clicks "Cancel" — changes discarded, returns to read mode
   7. Mock data initialized via `structuredClone()`, not mutated directly
   8. All new UI strings have i18n keys in both en.json and uk.json
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 07-01-PLAN.md — Tabs, GeneralTab (view/edit), TargetActionsTab, updateProduct, toast, i18n
 
 ## Progress
 
@@ -120,4 +122,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
 | 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
 | 6. Products DataTable + Side Sheet | 0/2 | Planning complete | — |
-| 7. Sheet Tabs + Inline Edit + Fake CRUD | — | Not started | — |
+| 7. Sheet Tabs + Inline Edit + Fake CRUD | 0/1 | Planning complete | — |
