@@ -2,7 +2,7 @@
 
 ## Overview
 
-Від навігаційної реструктуризації до повноцінної сторінки аналітики впливу кешбеків: KPI-картки, ROI-чарти, конверсійна воронка та інкрементальність. П'ять фаз, кожна доставляє перевірюваний результат.
+Від навігаційної реструктуризації до повноцінної сторінки аналітики впливу кешбеків: KPI-картки, ROI-чарти, конверсійна воронка та інкрементальність. Milestone v1.1 — редизайн сторінки довідників продуктів.
 
 ## Phases
 
@@ -10,11 +10,16 @@
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
+### v1.0 — Cashback Impact Dashboard (COMPLETED)
 - [x] **Phase 1: Navigation Restructuring** - «Топ-менеджмент» стає collapsible-групою з двома підпунктами
 - [x] **Phase 2: Page Scaffold + KPI + Filters** - Сторінка з 6 KPI-картками, фільтрами та блоком нульової конверсії
 - [x] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
 - [x] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
 - [x] **Phase 5: Incrementality Block** - Before/after, cohort, canibalization
+
+### v1.1 — Dictionaries Redesign (ACTIVE)
+- [ ] **Phase 6: Products DataTable + Side Sheet** - Міграція на DataTable, пошук, Sheet з read-only General tab, стат-картки, видалення Data Sources
+- [ ] **Phase 7: Sheet Tabs + Inline Edit + Fake CRUD** - Таби General/Target Actions, inline edit form, Save/Cancel, toast, i18n
 
 ## Phase Details
 
@@ -44,7 +49,7 @@
 **Depends on**: Phase 2
 **Requirements**: ROI-01, ROI-02, ROI-03
 **Success Criteria** (what must be TRUE):
-  1. User sees horizontal bar chart of categories sorted by ROI with color zones (red <50x, yellow 50–200x, green >200x)
+  1. User sees horizontal bar chart of categories sorted by ROI with color zones (red <50x, yellow 50-200x, green >200x)
   2. User sees scatter plot «Оборот vs Кешбек» with bubble size = transaction count; anomalies highlighted in tooltip
   3. User sees line chart of ROI dynamics for top-5 categories over 6 months
 **Plans**: `.planning/phases/03-roi-charts/PLAN.md` (1 task)
@@ -54,7 +59,7 @@
 **Depends on**: Phase 3
 **Requirements**: CONV-01, CONV-02
 **Success Criteria** (what must be TRUE):
-  1. User sees funnel diagram with steps: Transactions → Saw offer → Chose category → Activated (with % conversion per step)
+  1. User sees funnel diagram with steps: Transactions -> Saw offer -> Chose category -> Activated (with % conversion per step)
   2. User can switch funnel between categories when category filter is applied
   3. User sees heatmap «Конверсія vs Середній чек» — categories as rows, check ranges as columns, color = % conversion
 **Plans**: `.planning/phases/04-conversion-funnel/PLAN.md` (1 task)
@@ -69,10 +74,40 @@
   3. User sees cannibalization chart: whether spending grew or just redistributed between categories
 **Plans**: `.planning/phases/05-incrementality/PLAN.md` (1 task)
 
+### Phase 6: Products DataTable + Side Sheet
+**Goal**: Сторінка довідників трансформована — продукти в DataTable з пошуком, клік по рядку відкриває Sheet з деталями продукту (read-only)
+**Depends on**: Phase 5 (v1.0 complete)
+**Requirements**: DICT-01, DICT-02, DICT-03, DICT-04, DICT-05, DICT-06, DICT-07, DICT-09, DICT-17, DICT-18, DICT-19, DICT-20, DICT-22
+**Success Criteria** (what must be TRUE):
+  1. User sees products as table rows with columns: Product name, Target Actions count, Data Source
+  2. User can search products by name via toolbar input
+  3. User clicks a row — Sheet opens on the right with product details (name, description, source, conditions)
+  4. Selected row has visual highlight while Sheet is open
+  5. Data Sources section is removed from the page
+  6. Stat cards show Products count and Target Actions count (Data Sources card removed)
+  7. Feature code lives in `src/features/cashback/dictionaries/`
+  8. State is in `useDictionariesState()` hook, page.tsx is a thin shell
+**Plans**: TBD
+
+### Phase 7: Sheet Tabs + Inline Edit + Fake CRUD
+**Goal**: Sheet має таби General/Target Actions, inline-редагування в General tab з Save/Cancel та toast feedback
+**Depends on**: Phase 6
+**Requirements**: DICT-08, DICT-10, DICT-11, DICT-12, DICT-13, DICT-14, DICT-15, DICT-16, DICT-21
+**Success Criteria** (what must be TRUE):
+  1. User sees two tabs in Sheet: "Загальне" and "Цільові дії"
+  2. User switches to "Цільові дії" — sees read-only table of target actions for selected product
+  3. Scroll position resets when switching tabs
+  4. User clicks "Edit" in General tab — fields become editable (name, description, conditions)
+  5. User clicks "Save" — local state updates, toast shows "demo mode" disclaimer
+  6. User clicks "Cancel" — changes discarded, returns to read mode
+  7. Mock data initialized via `structuredClone()`, not mutated directly
+  8. All new UI strings have i18n keys in both en.json and uk.json
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -81,3 +116,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. ROI Charts | 1/1 | Done | 2026-03-05 |
 | 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
 | 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
+| 6. Products DataTable + Side Sheet | — | Not started | — |
+| 7. Sheet Tabs + Inline Edit + Fake CRUD | — | Not started | — |

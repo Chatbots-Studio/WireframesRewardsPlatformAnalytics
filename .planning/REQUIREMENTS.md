@@ -33,41 +33,83 @@
 - [x] **UX-02**: Select-фільтр по периоду «Останні 6 місяців / 3 місяці / З початку року» у header (впливає на всі часові чарти)
 - [x] **UX-03**: Всі дані — моки у файлі сторінки, реалістичні цифри по ~17 категоріях кешбеку
 
+---
+
+## v1.1 Requirements — Редизайн довідника продуктів
+
+### Таблиця продуктів
+- [ ] **DICT-01**: Продукти відображаються як рядки DataTable (TanStack Table) замість кнопок — колонки: назва, кількість цільових дій, джерело даних
+- [ ] **DICT-02**: Текстовий пошук по назві продукту через DataTableToolbar
+- [ ] **DICT-03**: Підсвітка обраного рядка при відкритій бічній панелі (`bg-muted` або `data-[state=selected]`)
+- [ ] **DICT-04**: Hover state на рядках таблиці (`cursor-pointer hover:bg-muted/50`) — індикація що рядок клікабельний
+
+### Бічна панель (Side Sheet)
+- [ ] **DICT-05**: Клік по рядку таблиці відкриває Sheet (shadcn) справа з деталями продукту
+- [ ] **DICT-06**: Sheet ширина `sm:max-w-[560px]`, overlay поверх таблиці (паттерн MetricInsightDrawer)
+- [ ] **DICT-07**: Sheet Header з назвою продукту та кнопкою закриття
+
+### Таби в панелі
+- [ ] **DICT-08**: Tabs всередині Sheet: "Загальне" / "Цільові дії" (shadcn Tabs)
+- [ ] **DICT-09**: Tab "Загальне" — відображає: назву, опис, джерело, активні/неактивні умови
+- [ ] **DICT-10**: Tab "Цільові дії" — read-only таблиця targetActions для обраного продукту
+- [ ] **DICT-11**: Скидання scroll позиції панелі при перемиканні табів
+
+### Inline-редагування (Fake CRUD)
+- [ ] **DICT-12**: Кнопка "Edit" в Tab "Загальне" перемикає у режим редагування
+- [ ] **DICT-13**: Редагуються поля: назва, опис, активні/неактивні умови (textarea)
+- [ ] **DICT-14**: Кнопки Save / Cancel у footer Sheet; Save оновлює локальний стан (useState)
+- [ ] **DICT-15**: Toast (Sonner) після Save з повідомленням "demo mode — зміни не зберігаються"
+- [ ] **DICT-16**: Mock дані копіюються через `structuredClone()` в useState при mount
+
+### Стат-картки та очищення
+- [ ] **DICT-17**: Залишити 2 стат-картки (Products count, Target Actions count); прибрати Data Sources картку
+- [ ] **DICT-18**: Видалити секцію Data Sources з сторінки довідників
+
+### Архітектура та якість
+- [ ] **DICT-19**: Стан винесений в хук `useDictionariesState()` — page.tsx як тонкий shell
+- [ ] **DICT-20**: Feature-файли в `src/features/cashback/dictionaries/` (components, hooks, columns)
+- [ ] **DICT-21**: i18n — всі нові рядки мають ключі в `messages/en.json` та `messages/uk.json`
+- [ ] **DICT-22**: Стилі та розміри узгоджені з рештою дашборду (Card, Badge, Button sizes, spacing)
+
+---
+
 ## v2 Requirements (Deferred)
 
-- **PORT-01**: 2×2 матриця «Конверсія vs ROI» з 4 квадрантами та action items
+- **PORT-01**: 2x2 матриця «Конверсія vs ROI» з 4 квадрантами та action items
 - **PORT-02**: Топ-3 категорії для інвестування і топ-3 для перегляду
 - **RET-01**: Stickiness Factor — % клієнтів, що обирають категорії 3 місяці поспіль
 - **RET-02**: Redemption Rate — співвідношення виведеного кешбеку до нарахованого
 - **UX-04**: Drill-down з категорії до конкретного мерчанта
 - **EXP-01**: PDF export для борду, CSV для аналітиків
 - **ALERT-01**: Авто-флаг при ROI < порогу або різкому падінні конверсії
+- **DICT-P2-01**: Додавання/видалення цільових дій з Tab 2
+- **DICT-P2-02**: Badge колонка з кількістю цільових дій
+- **DICT-P2-03**: Tag-chip редагування умов (замість textarea)
+- **DICT-P2-04**: URL state для обраного продукту (`?product=PRD-RADA-CARD`)
 
 ## Out of Scope
 
 - Real-time / T+1 оновлення — немає бекенду в цьому проєкті
 - Автентифікація та RBAC на рівні сторінки — не потрібна для демо
+- Data Sources управління — окрема сторінка в майбутньому
+- Реальний бекенд/API — все на моках
+- Drag-and-drop сортування
+- Bulk operations (масове редагування)
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | NAV-01 | Phase 1 | Done |
-| KPI-01 | Phase 2 | Done |
-| KPI-02 | Phase 2 | Done |
-| KPI-03 | Phase 2 | Done |
-| KPI-04 | Phase 2 | Done |
-| KPI-05 | Phase 2 | Done |
-| KPI-06 | Phase 2 | Done |
-| UX-01 | Phase 2 | Done |
-| UX-02 | Phase 2 | Done |
-| UX-03 | Phase 2 | Done |
+| KPI-01..06 | Phase 2 | Done |
+| UX-01..03 | Phase 2 | Done |
 | CONV-03 | Phase 2 | Done |
-| ROI-01 | Phase 3 | Done |
-| ROI-02 | Phase 3 | Done |
-| ROI-03 | Phase 3 | Done |
-| CONV-01 | Phase 4 | Done |
-| CONV-02 | Phase 4 | Done |
-| INC-01 | Phase 5 | Done |
-| INC-02 | Phase 5 | Done |
-| INC-03 | Phase 5 | Done |
+| ROI-01..03 | Phase 3 | Done |
+| CONV-01..02 | Phase 4 | Done |
+| INC-01..03 | Phase 5 | Done |
+| DICT-01..04 | Phase 6 | Planned |
+| DICT-05..07 | Phase 6 | Planned |
+| DICT-08..11 | Phase 7 | Planned |
+| DICT-12..16 | Phase 7 | Planned |
+| DICT-17..18 | Phase 6 | Planned |
+| DICT-19..22 | Phase 6-7 | Planned |
