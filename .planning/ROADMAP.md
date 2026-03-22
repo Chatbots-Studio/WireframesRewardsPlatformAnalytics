@@ -87,7 +87,10 @@
   6. Stat cards show Products count and Target Actions count (Data Sources card removed)
   7. Feature code lives in `src/features/cashback/dictionaries/`
   8. State is in `useDictionariesState()` hook, page.tsx is a thin shell
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 06-01-PLAN.md — Feature scaffold: hook, column defs, ProductsTable component
+- [ ] 06-02-PLAN.md — ProductSideSheet, page.tsx rewrite, i18n, Data Sources removal
 
 ### Phase 7: Sheet Tabs + Inline Edit + Fake CRUD
 **Goal**: Sheet має таби General/Target Actions, inline-редагування в General tab з Save/Cancel та toast feedback
@@ -116,5 +119,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. ROI Charts | 1/1 | Done | 2026-03-05 |
 | 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
 | 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
-| 6. Products DataTable + Side Sheet | — | Not started | — |
+| 6. Products DataTable + Side Sheet | 0/2 | Planning complete | — |
 | 7. Sheet Tabs + Inline Edit + Fake CRUD | — | Not started | — |
