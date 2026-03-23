@@ -421,7 +421,22 @@
     "demoModeNotice": "Demo mode — changes are not persisted",
     "fieldName": "Name",
     "fieldDescription": "Description",
-    "noTargetActions": "No target actions"
+    "noTargetActions": "No target actions",
+    "addProductButton": "Add product",
+    "addProductTitle": "New product",
+    "addProductDescription": "Fill in the basic information. Target actions can be added after creation.",
+    "addProductNamePlaceholder": "e.g. Credit Card Premium",
+    "addProductDescPlaceholder": "Brief description of the analytics data source",
+    "addProductSource": "Data source",
+    "addProductConditionsPlaceholder": "One condition per line",
+    "addProductSubmit": "Create",
+    "addProductSuccess": "Product added",
+    "addTargetAction": "Add action",
+    "newTargetAction": "New target action",
+    "taNamePlaceholder": "e.g. Category Selection",
+    "taDefinitionPlaceholder": "How is this action defined?",
+    "taIdentPlaceholder": "SQL or event condition",
+    "targetActionAdded": "Target action added"
   },
   "reports": {
     "breadcrumb": "Reports · Anti-Fraud",

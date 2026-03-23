@@ -11,6 +11,9 @@ import {
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 
+import { PlusIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import { DataTablePagination } from '@/components/ui/table/data-table-pagination';
 import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import {
@@ -32,13 +35,19 @@ interface ProductsTableProps {
   selectedId: string | null;
   sheetOpen: boolean;
   onRowClick: (id: string) => void;
+  productsCount: number;
+  targetActionsCount: number;
+  onAddProduct: () => void;
 }
 
 export function ProductsTable({
   data,
   selectedId,
   sheetOpen,
-  onRowClick
+  onRowClick,
+  productsCount,
+  targetActionsCount,
+  onAddProduct
 }: ProductsTableProps) {
   const t = useTranslations('dictionaries');
   const columns = useMemo(() => createProductColumns(t), [t]);
@@ -66,7 +75,23 @@ export function ProductsTable({
 
   return (
     <div className='flex flex-1 flex-col space-y-4'>
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table}>
+        <div className='text-muted-foreground flex items-center gap-3 text-xs whitespace-nowrap'>
+          <span>
+            {t('products')}:{' '}
+            <strong className='text-foreground'>{productsCount}</strong>
+          </span>
+          <span className='text-border'>|</span>
+          <span>
+            {t('targetActions')}:{' '}
+            <strong className='text-foreground'>{targetActionsCount}</strong>
+          </span>
+        </div>
+        <Button size='sm' onClick={onAddProduct}>
+          <PlusIcon className='size-4' />
+          {t('addProductButton')}
+        </Button>
+      </DataTableToolbar>
       <div className='relative flex flex-1'>
         <div className='absolute inset-0 flex overflow-hidden rounded-lg border'>
           <ScrollArea className='h-full w-full'>

@@ -1,27 +1,34 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   PRODUCT_DICTIONARY,
   type ProductDictionaryEntry
 } from '@/features/cashback/data/analytics-dictionaries.mock';
 
-export function useDictionariesState(): {
-  products: ProductDictionaryEntry[];
-  selectedProduct: ProductDictionaryEntry | null;
-  selectedId: string | null;
-  sheetOpen: boolean;
-  setSheetOpen: (open: boolean) => void;
-  selectProduct: (id: string) => void;
-  totalTargetActions: number;
-  updateProduct: (updated: ProductDictionaryEntry) => void;
-} {
-  const [products, setProducts] = useState<ProductDictionaryEntry[]>(() =>
-    structuredClone(PRODUCT_DICTIONARY)
-  );
+const STORAGE_KEY = 'dictionaries:products';
+
+function loadProducts(): ProductDictionaryEntry[] {
+  if (typeof window === 'undefined') return structuredClone(PRODUCT_DICTIONARY);
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw) as ProductDictionaryEntry[];
+  } catch {
+    /* corrupted — fall back to defaults */
+  }
+  return structuredClone(PRODUCT_DICTIONARY);
+}
+
+export function useDictionariesState() {
+  const [products, setProducts] =
+    useState<ProductDictionaryEntry[]>(loadProducts);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  }, [products]);
 
   const selectProduct = useCallback((id: string) => {
     setSelectedId(id);
@@ -42,6 +49,10 @@ export function useDictionariesState(): {
     setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
   }, []);
 
+  const addProduct = useCallback((product: ProductDictionaryEntry) => {
+    setProducts((prev) => [...prev, product]);
+  }, []);
+
   return {
     products,
     selectedProduct,
@@ -50,6 +61,7 @@ export function useDictionariesState(): {
     setSheetOpen,
     selectProduct,
     totalTargetActions,
-    updateProduct
+    updateProduct,
+    addProduct
   };
 }

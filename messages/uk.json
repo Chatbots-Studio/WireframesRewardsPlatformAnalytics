@@ -421,7 +421,22 @@
     "demoModeNotice": "Демо-режим — зміни не зберігаються",
     "fieldName": "Назва",
     "fieldDescription": "Опис",
-    "noTargetActions": "Немає цільових дій"
+    "noTargetActions": "Немає цільових дій",
+    "addProductButton": "Додати продукт",
+    "addProductTitle": "Новий продукт",
+    "addProductDescription": "Заповніть базову інформацію. Цільові дії можна додати після створення.",
+    "addProductNamePlaceholder": "напр. Кредитна картка Premium",
+    "addProductDescPlaceholder": "Короткий опис джерела аналітичних даних",
+    "addProductSource": "Джерело даних",
+    "addProductConditionsPlaceholder": "Одна умова на рядок",
+    "addProductSubmit": "Створити",
+    "addProductSuccess": "Продукт додано",
+    "addTargetAction": "Додати дію",
+    "newTargetAction": "Нова цільова дія",
+    "taNamePlaceholder": "напр. Вибір категорії",
+    "taDefinitionPlaceholder": "Як визначається ця дія?",
+    "taIdentPlaceholder": "SQL або умова події",
+    "targetActionAdded": "Цільову дію додано"
   },
   "reports": {
     "breadcrumb": "Звіти · Антифрод",

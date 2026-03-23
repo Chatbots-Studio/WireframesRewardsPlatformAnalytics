@@ -13,7 +13,10 @@ import {
   SheetTitle
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { ProductDictionaryEntry } from '@/features/cashback/data/analytics-dictionaries.mock';
+import type {
+  ProductDictionaryEntry,
+  ProductTargetAction
+} from '@/features/cashback/data/analytics-dictionaries.mock';
 
 import { GeneralTab } from './general-tab';
 import { TargetActionsTab } from './target-actions-tab';
@@ -48,15 +51,25 @@ function ProductSideSheetInner({
   const handleSave = useCallback(() => {
     onSave(form);
     setEditing(false);
-    toast.success(t('saveSuccess'), {
-      description: t('demoModeNotice')
-    });
+    toast.success(t('saveSuccess'));
   }, [form, onSave, t]);
 
   const handleCancel = useCallback(() => {
     setForm(product);
     setEditing(false);
   }, [product]);
+
+  const handleAddAction = useCallback(
+    (action: ProductTargetAction) => {
+      const updated: ProductDictionaryEntry = {
+        ...product,
+        targetActions: [...product.targetActions, action]
+      };
+      onSave(updated);
+      toast.success(t('targetActionAdded'));
+    },
+    [product, onSave, t]
+  );
 
   return (
     <SheetContent
@@ -91,7 +104,10 @@ function ProductSideSheetInner({
             />
           </TabsContent>
           <TabsContent value='targetActions' className='mt-0'>
-            <TargetActionsTab targetActions={product.targetActions} />
+            <TargetActionsTab
+              targetActions={product.targetActions}
+              onAdd={handleAddAction}
+            />
           </TabsContent>
         </div>
       </Tabs>
