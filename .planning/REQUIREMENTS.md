@@ -38,38 +38,38 @@
 ## v1.1 Requirements — Редизайн довідника продуктів
 
 ### Таблиця продуктів
-- [ ] **DICT-01**: Продукти відображаються як рядки DataTable (TanStack Table) замість кнопок — колонки: назва, кількість цільових дій, джерело даних
-- [ ] **DICT-02**: Текстовий пошук по назві продукту через DataTableToolbar
-- [ ] **DICT-03**: Підсвітка обраного рядка при відкритій бічній панелі (`bg-muted` або `data-[state=selected]`)
-- [ ] **DICT-04**: Hover state на рядках таблиці (`cursor-pointer hover:bg-muted/50`) — індикація що рядок клікабельний
+- [x] **DICT-01**: Продукти відображаються як рядки DataTable (TanStack Table) замість кнопок — колонки: назва, кількість цільових дій, джерело даних
+- [x] **DICT-02**: Текстовий пошук по назві продукту через DataTableToolbar
+- [x] **DICT-03**: Підсвітка обраного рядка при відкритій бічній панелі (`bg-muted` або `data-[state=selected]`)
+- [x] **DICT-04**: Hover state на рядках таблиці (`cursor-pointer hover:bg-muted/50`) — індикація що рядок клікабельний
 
 ### Бічна панель (Side Sheet)
-- [ ] **DICT-05**: Клік по рядку таблиці відкриває Sheet (shadcn) справа з деталями продукту
-- [ ] **DICT-06**: Sheet ширина `sm:max-w-[560px]`, overlay поверх таблиці (паттерн MetricInsightDrawer)
-- [ ] **DICT-07**: Sheet Header з назвою продукту та кнопкою закриття
+- [x] **DICT-05**: Клік по рядку таблиці відкриває Sheet (shadcn) справа з деталями продукту
+- [x] **DICT-06**: Sheet ширина `sm:max-w-[560px]`, overlay поверх таблиці (паттерн MetricInsightDrawer)
+- [x] **DICT-07**: Sheet Header з назвою продукту та кнопкою закриття
 
 ### Таби в панелі
-- [ ] **DICT-08**: Tabs всередині Sheet: "Загальне" / "Цільові дії" (shadcn Tabs)
-- [ ] **DICT-09**: Tab "Загальне" — відображає: назву, опис, джерело, активні/неактивні умови
-- [ ] **DICT-10**: Tab "Цільові дії" — read-only таблиця targetActions для обраного продукту
-- [ ] **DICT-11**: Скидання scroll позиції панелі при перемиканні табів
+- [x] **DICT-08**: Tabs всередині Sheet: "Загальне" / "Цільові дії" (shadcn Tabs)
+- [x] **DICT-09**: Tab "Загальне" — відображає: назву, опис, джерело, активні/неактивні умови
+- [x] **DICT-10**: Tab "Цільові дії" — read-only таблиця targetActions для обраного продукту
+- [x] **DICT-11**: Скидання scroll позиції панелі при перемиканні табів
 
 ### Inline-редагування (Fake CRUD)
-- [ ] **DICT-12**: Кнопка "Edit" в Tab "Загальне" перемикає у режим редагування
-- [ ] **DICT-13**: Редагуються поля: назва, опис, активні/неактивні умови (textarea)
-- [ ] **DICT-14**: Кнопки Save / Cancel у footer Sheet; Save оновлює локальний стан (useState)
-- [ ] **DICT-15**: Toast (Sonner) після Save з повідомленням "demo mode — зміни не зберігаються"
-- [ ] **DICT-16**: Mock дані копіюються через `structuredClone()` в useState при mount
+- [x] **DICT-12**: Кнопка "Edit" в Tab "Загальне" перемикає у режим редагування
+- [x] **DICT-13**: Редагуються поля: назва, опис, активні/неактивні умови (textarea)
+- [x] **DICT-14**: Кнопки Save / Cancel у footer Sheet; Save оновлює локальний стан (useState)
+- [x] **DICT-15**: Toast (Sonner) після Save з повідомленням "demo mode — зміни не зберігаються"
+- [x] **DICT-16**: Mock дані копіюються через `structuredClone()` в useState при mount
 
 ### Стат-картки та очищення
-- [ ] **DICT-17**: Залишити 2 стат-картки (Products count, Target Actions count); прибрати Data Sources картку
-- [ ] **DICT-18**: Видалити секцію Data Sources з сторінки довідників
+- [x] **DICT-17**: Залишити 2 стат-картки (Products count, Target Actions count); прибрати Data Sources картку
+- [x] **DICT-18**: Видалити секцію Data Sources з сторінки довідників
 
 ### Архітектура та якість
-- [ ] **DICT-19**: Стан винесений в хук `useDictionariesState()` — page.tsx як тонкий shell
-- [ ] **DICT-20**: Feature-файли в `src/features/cashback/dictionaries/` (components, hooks, columns)
-- [ ] **DICT-21**: i18n — всі нові рядки мають ключі в `messages/en.json` та `messages/uk.json`
-- [ ] **DICT-22**: Стилі та розміри узгоджені з рештою дашборду (Card, Badge, Button sizes, spacing)
+- [x] **DICT-19**: Стан винесений в хук `useDictionariesState()` — page.tsx як тонкий shell
+- [x] **DICT-20**: Feature-файли в `src/features/cashback/dictionaries/` (components, hooks, columns)
+- [x] **DICT-21**: i18n — всі нові рядки мають ключі в `messages/en.json` та `messages/uk.json`
+- [x] **DICT-22**: Стилі та розміри узгоджені з рештою дашборду (Card, Badge, Button sizes, spacing)
 
 ---
 
@@ -114,9 +114,9 @@
 | INC-01..03 | Phase 5 | Done |
 | PORT-01, PORT-02 | Phase 6 | Done |
 | RET-01, RET-02 | Phase 7 | Done |
-| DICT-01..04 | Phase 8 | Planned |
-| DICT-05..07 | Phase 8 | Planned |
-| DICT-08..11 | Phase 9 | Planned |
-| DICT-12..16 | Phase 9 | Planned |
-| DICT-17..18 | Phase 8 | Planned |
-| DICT-19..22 | Phase 8-9 | Planned |
+| DICT-01..04 | Phase 8 | Done |
+| DICT-05..07 | Phase 8 | Done |
+| DICT-08..11 | Phase 9 | Done |
+| DICT-12..16 | Phase 9 | Done |
+| DICT-17..18 | Phase 8 | Done |
+| DICT-19..22 | Phase 8-9 | Done |
