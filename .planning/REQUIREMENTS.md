@@ -73,12 +73,17 @@
 
 ---
 
-## v2 Requirements (Deferred)
+## v2 Requirements
 
-- **PORT-01**: 2x2 матриця «Конверсія vs ROI» з 4 квадрантами та action items
-- **PORT-02**: Топ-3 категорії для інвестування і топ-3 для перегляду
-- **RET-01**: Stickiness Factor — % клієнтів, що обирають категорії 3 місяці поспіль
-- **RET-02**: Redemption Rate — співвідношення виведеного кешбеку до нарахованого
+### Портфельний аналіз (Блок 4)
+- [x] **PORT-01**: 2×2 матриця «Конверсія vs ROI» з 4 квадрантами (Stars, Potential, Efficient, Review) та action items для кожного
+- [x] **PORT-02**: Топ-3 категорії для інвестування і топ-3 для перегляду з ROI/конверсією та рекомендованими діями
+
+### Утримання та ефективність (Блок 5)
+- [x] **RET-01**: Stickiness Factor — % клієнтів, що обирають категорії 3 місяці поспіль, horizontal bar chart з кольоровим зонуванням
+- [x] **RET-02**: Redemption Rate — співвідношення виведеного кешбеку до нарахованого, grouped bar chart та таблиця з рейтами
+
+### Deferred
 - **UX-04**: Drill-down з категорії до конкретного мерчанта
 - **EXP-01**: PDF export для борду, CSV для аналітиків
 - **ALERT-01**: Авто-флаг при ROI < порогу або різкому падінні конверсії
@@ -107,9 +112,11 @@
 | ROI-01..03 | Phase 3 | Done |
 | CONV-01..02 | Phase 4 | Done |
 | INC-01..03 | Phase 5 | Done |
-| DICT-01..04 | Phase 6 | Planned |
-| DICT-05..07 | Phase 6 | Planned |
-| DICT-08..11 | Phase 7 | Planned |
-| DICT-12..16 | Phase 7 | Planned |
-| DICT-17..18 | Phase 6 | Planned |
-| DICT-19..22 | Phase 6-7 | Planned |
+| PORT-01, PORT-02 | Phase 6 | Done |
+| RET-01, RET-02 | Phase 7 | Done |
+| DICT-01..04 | Phase 8 | Planned |
+| DICT-05..07 | Phase 8 | Planned |
+| DICT-08..11 | Phase 9 | Planned |
+| DICT-12..16 | Phase 9 | Planned |
+| DICT-17..18 | Phase 8 | Planned |
+| DICT-19..22 | Phase 8-9 | Planned |

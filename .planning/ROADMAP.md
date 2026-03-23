@@ -16,10 +16,12 @@
 - [x] **Phase 3: ROI Charts** - Bar chart, scatter plot, line chart по ROI
 - [x] **Phase 4: Conversion Funnel Block** - Funnel-діаграма та теплова карта
 - [x] **Phase 5: Incrementality Block** - Before/after, cohort, canibalization
+- [x] **Phase 6: Portfolio Analysis** - 2×2 Conversion vs ROI matrix, top categories for invest/review
+- [x] **Phase 7: Retention & Efficiency** - Stickiness Factor, Redemption Rate
 
 ### v1.1 — Dictionaries Redesign (ACTIVE)
-- [ ] **Phase 6: Products DataTable + Side Sheet** - Міграція на DataTable, пошук, Sheet з read-only General tab, стат-картки, видалення Data Sources
-- [ ] **Phase 7: Sheet Tabs + Inline Edit + Fake CRUD** - Таби General/Target Actions, inline edit form, Save/Cancel, toast, i18n
+- [ ] **Phase 8: Products DataTable + Side Sheet** - Міграція на DataTable, пошук, Sheet з read-only General tab, стат-картки, видалення Data Sources
+- [ ] **Phase 9: Sheet Tabs + Inline Edit + Fake CRUD** - Таби General/Target Actions, inline edit form, Save/Cancel, toast, i18n
 
 ## Phase Details
 
@@ -74,9 +76,29 @@
   3. User sees cannibalization chart: whether spending grew or just redistributed between categories
 **Plans**: `.planning/phases/05-incrementality/PLAN.md` (1 task)
 
-### Phase 6: Products DataTable + Side Sheet
+### Phase 6: Portfolio Analysis
+**Goal**: Портфельний аналіз категорій через матрицю Конверсія vs ROI та топ-3 рекомендації
+**Depends on**: Phase 5
+**Requirements**: PORT-01, PORT-02
+**Success Criteria** (what must be TRUE):
+  1. User sees 2×2 scatter matrix with 4 labeled quadrants: Stars (high conv + high ROI), Potential (low conv + high ROI), Efficient (high conv + low ROI), Review (low conv + low ROI)
+  2. User sees action recommendation for each quadrant
+  3. User sees top-3 categories recommended for investment with ROI and conversion metrics
+  4. User sees top-3 categories recommended for review/restructuring with action items
+
+### Phase 7: Retention & Efficiency
+**Goal**: Аналіз утримання через Stickiness Factor та ефективності через Redemption Rate
+**Depends on**: Phase 6
+**Requirements**: RET-01, RET-02
+**Success Criteria** (what must be TRUE):
+  1. User sees horizontal bar chart of stickiness factor per category (% clients choosing same category 3 months in a row), sorted high to low
+  2. User sees color-coded bars: green ≥50%, yellow 30–49%, gray <30%
+  3. User sees grouped bar chart of accrued vs redeemed cashback per category
+  4. User sees table with redemption rate per category, color-coded (green ≥70%, amber 50–69%, red <50%)
+
+### Phase 8: Products DataTable + Side Sheet
 **Goal**: Сторінка довідників трансформована — продукти в DataTable з пошуком, клік по рядку відкриває Sheet з деталями продукту (read-only)
-**Depends on**: Phase 5 (v1.0 complete)
+**Depends on**: Phase 7 (v1.0 complete)
 **Requirements**: DICT-01, DICT-02, DICT-03, DICT-04, DICT-05, DICT-06, DICT-07, DICT-09, DICT-17, DICT-18, DICT-19, DICT-20, DICT-22
 **Success Criteria** (what must be TRUE):
   1. User sees products as table rows with columns: Product name, Target Actions count, Data Source
@@ -92,9 +114,9 @@ Plans:
 - [ ] 06-01-PLAN.md — Feature scaffold: hook, column defs, ProductsTable component
 - [ ] 06-02-PLAN.md — ProductSideSheet, page.tsx rewrite, i18n, Data Sources removal
 
-### Phase 7: Sheet Tabs + Inline Edit + Fake CRUD
+### Phase 9: Sheet Tabs + Inline Edit + Fake CRUD
 **Goal**: Sheet має таби General/Target Actions, inline-редагування в General tab з Save/Cancel та toast feedback
-**Depends on**: Phase 6
+**Depends on**: Phase 8
 **Requirements**: DICT-08, DICT-10, DICT-11, DICT-12, DICT-13, DICT-14, DICT-15, DICT-16, DICT-21
 **Success Criteria** (what must be TRUE):
   1. User sees two tabs in Sheet: "Загальне" and "Цільові дії"
@@ -112,7 +134,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -121,5 +143,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 3. ROI Charts | 1/1 | Done | 2026-03-05 |
 | 4. Conversion Funnel Block | 1/1 | Done | 2026-03-05 |
 | 5. Incrementality Block | 1/1 | Done | 2026-03-05 |
-| 6. Products DataTable + Side Sheet | 0/2 | Planning complete | — |
-| 7. Sheet Tabs + Inline Edit + Fake CRUD | 0/1 | Planning complete | — |
+| 6. Portfolio Analysis | 1/1 | Done | 2026-03-22 |
+| 7. Retention & Efficiency | 1/1 | Done | 2026-03-22 |
+| 8. Products DataTable + Side Sheet | 0/2 | Planning complete | — |
+| 9. Sheet Tabs + Inline Edit + Fake CRUD | 0/1 | Planning complete | — |
