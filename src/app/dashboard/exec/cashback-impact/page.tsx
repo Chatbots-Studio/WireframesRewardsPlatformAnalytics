@@ -302,7 +302,13 @@ const FUNNEL_DATA: Record<
   ]
 };
 
-const FUNNEL_CATEGORIES = ['all', 'Supermarkets', 'Restaurants', 'Gas Stations', 'Online'];
+const FUNNEL_CATEGORIES = [
+  'all',
+  'Supermarkets',
+  'Restaurants',
+  'Gas Stations',
+  'Online'
+];
 
 const HEATMAP_CHECK_RANGES = [
   '<200₴',
@@ -348,7 +354,13 @@ const BEFORE_AFTER_DATA = [
     txBefore: 6800,
     txAfter: 14200
   },
-  { category: 'Gas Stations', before: 510, after: 980, txBefore: 5100, txAfter: 9800 },
+  {
+    category: 'Gas Stations',
+    before: 510,
+    after: 980,
+    txBefore: 5100,
+    txAfter: 9800
+  },
   {
     category: 'Online',
     before: 780,
@@ -363,7 +375,13 @@ const BEFORE_AFTER_DATA = [
     txBefore: 3800,
     txAfter: 7200
   },
-  { category: 'Clothing', before: 560, after: 890, txBefore: 3900, txAfter: 6400 },
+  {
+    category: 'Clothing',
+    before: 560,
+    after: 890,
+    txBefore: 3900,
+    txAfter: 6400
+  },
   {
     category: 'Transport',
     before: 220,
@@ -461,10 +479,12 @@ function BeforeAfterTooltip({
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
       <p>
-        {t('tooltipBefore')} <strong>{row?.before?.toLocaleString('en-US')} k ₴</strong>
+        {t('tooltipBefore')}{' '}
+        <strong>{row?.before?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p>
-        {t('tooltipAfter')} <strong>{row?.after?.toLocaleString('en-US')} k ₴</strong>
+        {t('tooltipAfter')}{' '}
+        <strong>{row?.after?.toLocaleString('en-US')} k ₴</strong>
       </p>
       <p className='text-muted-foreground pt-1'>
         {t('tooltipTransactions')} {row?.txBefore?.toLocaleString('en-US')} →{' '}
@@ -540,10 +560,113 @@ function ROIBarTooltip({
   return (
     <div className={CHART_TOOLTIP_CLASS}>
       <p className='mb-1 text-sm font-semibold'>{label}</p>
-      <p className='font-bold'>{t('tooltipRoi')} {payload[0]?.value ?? 0}x</p>
+      <p className='font-bold'>
+        {t('tooltipRoi')} {payload[0]?.value ?? 0}x
+      </p>
     </div>
   );
 }
+
+const PORTFOLIO_MATRIX_DATA = ROI_CATEGORIES.map((cat) => {
+  const funnelEntry = FUNNEL_DATA[cat.name] ?? FUNNEL_DATA.all;
+  const conversion =
+    funnelEntry.length > 0
+      ? (funnelEntry[funnelEntry.length - 1]?.pct ?? 0)
+      : 0;
+  return { ...cat, conversion };
+});
+
+const PORTFOLIO_MEDIAN_ROI = 87;
+const PORTFOLIO_MEDIAN_CONV = 35;
+
+interface TopCategoryItem {
+  name: string;
+  roi: number;
+  conversion: number;
+  action: string;
+}
+
+const TOP_INVEST_CATEGORIES: TopCategoryItem[] = [
+  {
+    name: 'Supermarkets',
+    roi: 340,
+    conversion: 63.7,
+    action: 'Scale up budget +30%'
+  },
+  {
+    name: 'Restaurants',
+    roi: 280,
+    conversion: 43.0,
+    action: 'Expand partner network'
+  },
+  {
+    name: 'Gas Stations',
+    roi: 245,
+    conversion: 34.7,
+    action: 'Add premium tier offers'
+  }
+];
+
+const TOP_REVIEW_CATEGORIES: TopCategoryItem[] = [
+  {
+    name: 'Medicine',
+    roi: 15,
+    conversion: 8.2,
+    action: 'Restructure offer terms'
+  },
+  {
+    name: 'Building Materials',
+    roi: 22,
+    conversion: 12.4,
+    action: 'Reduce cashback rate'
+  },
+  {
+    name: 'Pet Supplies',
+    roi: 38,
+    conversion: 18.1,
+    action: 'Review target segment'
+  }
+];
+
+const STICKINESS_DATA = [
+  { category: 'Supermarkets', stickiness: 72, clients: 18400 },
+  { category: 'Gas Stations', stickiness: 65, clients: 9800 },
+  { category: 'Pharmacies', stickiness: 58, clients: 7200 },
+  { category: 'Transport', stickiness: 54, clients: 22100 },
+  { category: 'Restaurants', stickiness: 48, clients: 14200 },
+  { category: 'Online Shopping', stickiness: 41, clients: 11300 },
+  { category: 'Clothing & Shoes', stickiness: 34, clients: 6400 },
+  { category: 'Beauty & Care', stickiness: 29, clients: 4800 },
+  { category: 'Electronics', stickiness: 22, clients: 2100 },
+  { category: 'Entertainment', stickiness: 18, clients: 4100 },
+  { category: 'Sports & Fitness', stickiness: 15, clients: 3200 },
+  { category: "Children's Goods", stickiness: 26, clients: 3800 },
+  { category: 'Travel', stickiness: 12, clients: 1200 },
+  { category: 'Books & Education', stickiness: 8, clients: 2200 },
+  { category: 'Pet Supplies', stickiness: 21, clients: 2900 },
+  { category: 'Building Materials', stickiness: 10, clients: 890 },
+  { category: 'Medicine', stickiness: 14, clients: 1400 }
+].sort((a, b) => b.stickiness - a.stickiness);
+
+const REDEMPTION_DATA = [
+  { category: 'Supermarkets', accrued: 620, redeemed: 558, rate: 90 },
+  { category: 'Restaurants', accrued: 480, redeemed: 394, rate: 82 },
+  { category: 'Gas Stations', accrued: 400, redeemed: 340, rate: 85 },
+  { category: 'Transport', accrued: 240, redeemed: 202, rate: 84 },
+  { category: 'Online Shopping', accrued: 880, redeemed: 616, rate: 70 },
+  { category: 'Pharmacies', accrued: 300, redeemed: 231, rate: 77 },
+  { category: 'Clothing & Shoes', accrued: 680, redeemed: 442, rate: 65 },
+  { category: 'Electronics', accrued: 2270, redeemed: 1362, rate: 60 },
+  { category: 'Beauty & Care', accrued: 350, redeemed: 228, rate: 65 },
+  { category: 'Entertainment', accrued: 310, redeemed: 174, rate: 56 },
+  { category: 'Travel', accrued: 5830, redeemed: 2682, rate: 46 },
+  { category: "Children's Goods", accrued: 760, redeemed: 357, rate: 47 },
+  { category: 'Sports & Fitness', accrued: 320, redeemed: 147, rate: 46 },
+  { category: 'Pet Supplies', accrued: 470, redeemed: 197, rate: 42 },
+  { category: 'Building Materials', accrued: 2550, redeemed: 918, rate: 36 },
+  { category: 'Books & Education', accrued: 290, redeemed: 90, rate: 31 },
+  { category: 'Medicine', accrued: 1600, redeemed: 416, rate: 26 }
+].sort((a, b) => b.rate - a.rate);
 
 const ANOMALY_MESSAGES: Record<string, string> = {
   Travel: 'High turnover and cashback with low ROI',
@@ -565,9 +688,15 @@ function ROIScatterTooltip({
   return (
     <div className={cn(CHART_TOOLTIP_CLASS, 'min-w-[200px]')}>
       <p className='mb-1 text-sm font-semibold'>{d.name}</p>
-      <p>{t('tooltipTurnover')} {d.turnover.toLocaleString('en-US')} k ₴</p>
-      <p>{t('tooltipCashback')} {d.cashback.toLocaleString('en-US')} k ₴</p>
-      <p>{t('tooltipTransactions')} {d.transactions.toLocaleString('en-US')}</p>
+      <p>
+        {t('tooltipTurnover')} {d.turnover.toLocaleString('en-US')} k ₴
+      </p>
+      <p>
+        {t('tooltipCashback')} {d.cashback.toLocaleString('en-US')} k ₴
+      </p>
+      <p>
+        {t('tooltipTransactions')} {d.transactions.toLocaleString('en-US')}
+      </p>
       {d.isAnomaly && ANOMALY_MESSAGES[d.name] && (
         <p className='text-warning mt-1 font-medium'>
           ⚠️ {t('tooltipAnomaly')} {ANOMALY_MESSAGES[d.name]}
@@ -599,6 +728,100 @@ function ROILineTooltip({
   );
 }
 
+function MatrixTooltip({
+  active,
+  payload
+}: {
+  active?: boolean;
+  payload?: { payload: (typeof PORTFOLIO_MATRIX_DATA)[0] }[];
+}) {
+  const t = useTranslations('cashbackImpact');
+  if (!active || !payload?.length) return null;
+  const d = payload[0]?.payload;
+  if (!d) return null;
+  return (
+    <div className={cn(CHART_TOOLTIP_CLASS, 'min-w-[200px]')}>
+      <p className='mb-1 text-sm font-semibold'>{d.name}</p>
+      <p>
+        {t('matrixTooltipConversion')} {d.conversion}%
+      </p>
+      <p>
+        {t('matrixTooltipRoi')} {d.roi}x
+      </p>
+      <p>
+        {t('matrixTooltipTransactions')}{' '}
+        {d.transactions.toLocaleString('en-US')}
+      </p>
+    </div>
+  );
+}
+
+function StickinessTooltip({
+  active,
+  payload,
+  label
+}: {
+  active?: boolean;
+  payload?: { value: number; payload: (typeof STICKINESS_DATA)[0] }[];
+  label?: string;
+}) {
+  const t = useTranslations('cashbackImpact');
+  if (!active || !payload?.length) return null;
+  const d = payload[0]?.payload;
+  if (!d) return null;
+  return (
+    <div className={CHART_TOOLTIP_CLASS}>
+      <p className='mb-1 text-sm font-semibold'>{label}</p>
+      <p>
+        {t('stickinessTooltipStickiness')} <strong>{d.stickiness}%</strong>
+      </p>
+      <p>
+        {t('stickinessTooltipClients')} {d.clients.toLocaleString('en-US')}
+      </p>
+    </div>
+  );
+}
+
+function RedemptionTooltip({
+  active,
+  payload,
+  label
+}: {
+  active?: boolean;
+  payload?: { payload: (typeof REDEMPTION_DATA)[0] }[];
+  label?: string;
+}) {
+  const t = useTranslations('cashbackImpact');
+  if (!active || !payload?.length) return null;
+  const d = payload[0]?.payload;
+  if (!d) return null;
+  return (
+    <div className={CHART_TOOLTIP_CLASS}>
+      <p className='mb-1 text-sm font-semibold'>{label}</p>
+      <p>
+        {t('redemptionTooltipAccrued')}{' '}
+        <strong>{d.accrued.toLocaleString('en-US')} k ₴</strong>
+      </p>
+      <p>
+        {t('redemptionTooltipRedeemed')}{' '}
+        <strong>{d.redeemed.toLocaleString('en-US')} k ₴</strong>
+      </p>
+      <p className='pt-1 font-medium'>
+        {t('redemptionTooltipRate')} {d.rate}%
+      </p>
+    </div>
+  );
+}
+
+function getQuadrantColor(roi: number, conversion: number): string {
+  const highRoi = roi >= PORTFOLIO_MEDIAN_ROI;
+  const highConv = conversion >= PORTFOLIO_MEDIAN_CONV;
+  if (highRoi && highConv) return chartPalette.primary;
+  if (highRoi && !highConv) return chartPalette.chart3;
+  if (!highRoi && highConv) return chartPalette.chart4;
+  return chartPalette.danger;
+}
+
 export default function CashbackImpactPage() {
   const t = useTranslations('cashbackImpact');
   const [selectedFunnelCategory, setSelectedFunnelCategory] =
@@ -623,9 +846,7 @@ export default function CashbackImpactPage() {
             <p className='text-muted-foreground mb-1 text-xs font-medium tracking-widest uppercase'>
               {t('breadcrumb')}
             </p>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              {t('title')}
-            </h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{t('title')}</h2>
             <p className='text-muted-foreground mt-0.5 text-sm'>
               {t('description')}
             </p>
@@ -637,7 +858,10 @@ export default function CashbackImpactPage() {
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((c) => (
-                  <SelectItem key={c} value={c === 'All Categories' ? 'all' : c}>
+                  <SelectItem
+                    key={c}
+                    value={c === 'All Categories' ? 'all' : c}
+                  >
                     {c}
                   </SelectItem>
                 ))}
@@ -712,7 +936,9 @@ export default function CashbackImpactPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>{t('roiByCategoriesTitle')}</CardTitle>
+              <CardTitle className='text-base'>
+                {t('roiByCategoriesTitle')}
+              </CardTitle>
               <CardDescription>
                 {t('roiByCategoriesDescription')}
               </CardDescription>
@@ -780,7 +1006,9 @@ export default function CashbackImpactPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>{t('turnoverVsCashbackTitle')}</CardTitle>
+              <CardTitle className='text-base'>
+                {t('turnoverVsCashbackTitle')}
+              </CardTitle>
               <CardDescription>
                 {t('turnoverVsCashbackDescription')}
               </CardDescription>
@@ -911,9 +1139,7 @@ export default function CashbackImpactPage() {
           <Card>
             <CardHeader className='pb-2'>
               <CardTitle className='text-base'>{t('funnelTitle')}</CardTitle>
-              <CardDescription>
-                {t('funnelDescription')}
-              </CardDescription>
+              <CardDescription>{t('funnelDescription')}</CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
               <Select
@@ -963,12 +1189,8 @@ export default function CashbackImpactPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>
-                {t('heatmapTitle')}
-              </CardTitle>
-              <CardDescription>
-                {t('heatmapDescription')}
-              </CardDescription>
+              <CardTitle className='text-base'>{t('heatmapTitle')}</CardTitle>
+              <CardDescription>{t('heatmapDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className='overflow-x-auto'>
@@ -1025,9 +1247,7 @@ export default function CashbackImpactPage() {
               <CardTitle className='text-base'>
                 {t('beforeAfterTitle')}
               </CardTitle>
-              <CardDescription>
-                {t('beforeAfterDescription')}
-              </CardDescription>
+              <CardDescription>{t('beforeAfterDescription')}</CardDescription>
             </CardHeader>
             <CardContent className='space-y-6'>
               <div>
@@ -1121,12 +1341,8 @@ export default function CashbackImpactPage() {
 
           <Card>
             <CardHeader className='pb-2'>
-              <CardTitle className='text-base'>
-                {t('cohortTitle')}
-              </CardTitle>
-              <CardDescription>
-                {t('cohortDescription')}
-              </CardDescription>
+              <CardTitle className='text-base'>{t('cohortTitle')}</CardTitle>
+              <CardDescription>{t('cohortDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width='100%' height={260}>
@@ -1238,6 +1454,427 @@ export default function CashbackImpactPage() {
             </CardContent>
             <CardFooter className='text-muted-foreground text-xs'>
               {t('cannibalizationFooter')}
+            </CardFooter>
+          </Card>
+          {/* Block 4: Portfolio Analysis */}
+          <div className='border-border border-t pt-6'>
+            <h3 className='text-lg font-semibold tracking-tight'>
+              {t('block4Title')}
+            </h3>
+            <p className='text-muted-foreground text-sm'>
+              {t('block4Description')}
+            </p>
+          </div>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardTitle className='text-base'>{t('matrixTitle')}</CardTitle>
+              <CardDescription>{t('matrixDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width='100%' height={400}>
+                <ScatterChart
+                  margin={{ top: 16, right: 16, left: 16, bottom: 16 }}
+                >
+                  <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' />
+                  <XAxis
+                    dataKey='conversion'
+                    name={t('matrixConversionAxis')}
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(v) => `${v}%`}
+                    label={{
+                      value: t('matrixConversionAxis'),
+                      position: 'insideBottom',
+                      offset: -5,
+                      fontSize: 11
+                    }}
+                  />
+                  <YAxis
+                    dataKey='roi'
+                    name={t('matrixRoiAxis')}
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(v) => `${v}x`}
+                    label={{
+                      value: t('matrixRoiAxis'),
+                      angle: -90,
+                      position: 'insideLeft',
+                      offset: 0,
+                      fontSize: 11
+                    }}
+                  />
+                  <ZAxis
+                    dataKey='transactions'
+                    type='number'
+                    range={[40, 400]}
+                  />
+                  <ReferenceArea
+                    x1={PORTFOLIO_MEDIAN_CONV}
+                    x2={100}
+                    y1={PORTFOLIO_MEDIAN_ROI}
+                    y2={400}
+                    fill={chartPalette.primary}
+                    fillOpacity={0.06}
+                    label={{
+                      value: t('matrixQuadrantStars'),
+                      position: 'insideTopRight',
+                      fontSize: 11
+                    }}
+                  />
+                  <ReferenceArea
+                    x1={0}
+                    x2={PORTFOLIO_MEDIAN_CONV}
+                    y1={PORTFOLIO_MEDIAN_ROI}
+                    y2={400}
+                    fill={chartPalette.chart3}
+                    fillOpacity={0.06}
+                    label={{
+                      value: t('matrixQuadrantPotential'),
+                      position: 'insideTopLeft',
+                      fontSize: 11
+                    }}
+                  />
+                  <ReferenceArea
+                    x1={PORTFOLIO_MEDIAN_CONV}
+                    x2={100}
+                    y1={0}
+                    y2={PORTFOLIO_MEDIAN_ROI}
+                    fill={chartPalette.chart4}
+                    fillOpacity={0.06}
+                    label={{
+                      value: t('matrixQuadrantEfficient'),
+                      position: 'insideBottomRight',
+                      fontSize: 11
+                    }}
+                  />
+                  <ReferenceArea
+                    x1={0}
+                    x2={PORTFOLIO_MEDIAN_CONV}
+                    y1={0}
+                    y2={PORTFOLIO_MEDIAN_ROI}
+                    fill={chartPalette.danger}
+                    fillOpacity={0.06}
+                    label={{
+                      value: t('matrixQuadrantReview'),
+                      position: 'insideBottomLeft',
+                      fontSize: 11
+                    }}
+                  />
+                  <Tooltip content={<MatrixTooltip />} />
+                  <Scatter
+                    data={PORTFOLIO_MATRIX_DATA}
+                    fill={chartPalette.primary}
+                  >
+                    {PORTFOLIO_MATRIX_DATA.map((entry, i) => (
+                      <Cell
+                        key={i}
+                        fill={getQuadrantColor(entry.roi, entry.conversion)}
+                      />
+                    ))}
+                  </Scatter>
+                </ScatterChart>
+              </ResponsiveContainer>
+              <div className='mt-4 grid grid-cols-2 gap-3 md:grid-cols-4'>
+                {[
+                  {
+                    key: 'Stars',
+                    label: t('matrixQuadrantStars'),
+                    action: t('matrixQuadrantStarsAction'),
+                    color: 'bg-chart-primary/15 border-chart-primary/30'
+                  },
+                  {
+                    key: 'Potential',
+                    label: t('matrixQuadrantPotential'),
+                    action: t('matrixQuadrantPotentialAction'),
+                    color: 'bg-chart-3/15 border-chart-3/30'
+                  },
+                  {
+                    key: 'Efficient',
+                    label: t('matrixQuadrantEfficient'),
+                    action: t('matrixQuadrantEfficientAction'),
+                    color: 'bg-chart-4/15 border-chart-4/30'
+                  },
+                  {
+                    key: 'Review',
+                    label: t('matrixQuadrantReview'),
+                    action: t('matrixQuadrantReviewAction'),
+                    color: 'bg-chart-danger/15 border-chart-danger/30'
+                  }
+                ].map((q) => (
+                  <div
+                    key={q.key}
+                    className={cn('rounded-lg border p-3', q.color)}
+                  >
+                    <p className='text-sm font-semibold'>{q.label}</p>
+                    <p className='text-muted-foreground mt-1 text-xs'>
+                      {q.action}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardTitle className='text-base'>
+                {t('topCategoriesTitle')}
+              </CardTitle>
+              <CardDescription>{t('topCategoriesDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='grid gap-6 md:grid-cols-2'>
+                <div>
+                  <h4 className='mb-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400'>
+                    {t('topInvestTitle')}
+                  </h4>
+                  <p className='text-muted-foreground mb-3 text-xs'>
+                    {t('topInvestDescription')}
+                  </p>
+                  <div className='space-y-2'>
+                    {TOP_INVEST_CATEGORIES.map((cat, i) => (
+                      <div
+                        key={cat.name}
+                        className='bg-chart-success/5 border-chart-success/20 flex items-center justify-between rounded-lg border px-3 py-2'
+                      >
+                        <div className='flex items-center gap-2'>
+                          <span className='bg-chart-success/20 text-chart-success flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold'>
+                            {i + 1}
+                          </span>
+                          <div>
+                            <p className='text-sm font-medium'>{cat.name}</p>
+                            <p className='text-muted-foreground text-xs'>
+                              {cat.action}
+                            </p>
+                          </div>
+                        </div>
+                        <div className='text-right text-xs tabular-nums'>
+                          <p>
+                            {t('topCategoryRoi')}: <strong>{cat.roi}x</strong>
+                          </p>
+                          <p className='text-muted-foreground'>
+                            {t('topCategoryConversion')}: {cat.conversion}%
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className='mb-1 text-sm font-semibold text-red-600 dark:text-red-400'>
+                    {t('topReviewTitle')}
+                  </h4>
+                  <p className='text-muted-foreground mb-3 text-xs'>
+                    {t('topReviewDescription')}
+                  </p>
+                  <div className='space-y-2'>
+                    {TOP_REVIEW_CATEGORIES.map((cat, i) => (
+                      <div
+                        key={cat.name}
+                        className='bg-chart-danger/5 border-chart-danger/20 flex items-center justify-between rounded-lg border px-3 py-2'
+                      >
+                        <div className='flex items-center gap-2'>
+                          <span className='bg-chart-danger/20 text-chart-danger flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold'>
+                            {i + 1}
+                          </span>
+                          <div>
+                            <p className='text-sm font-medium'>{cat.name}</p>
+                            <p className='text-muted-foreground text-xs'>
+                              {cat.action}
+                            </p>
+                          </div>
+                        </div>
+                        <div className='text-right text-xs tabular-nums'>
+                          <p>
+                            {t('topCategoryRoi')}: <strong>{cat.roi}x</strong>
+                          </p>
+                          <p className='text-muted-foreground'>
+                            {t('topCategoryConversion')}: {cat.conversion}%
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Block 5: Retention & Efficiency */}
+          <div className='border-border border-t pt-6'>
+            <h3 className='text-lg font-semibold tracking-tight'>
+              {t('block5Title')}
+            </h3>
+            <p className='text-muted-foreground text-sm'>
+              {t('block5Description')}
+            </p>
+          </div>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardTitle className='text-base'>
+                {t('stickinessTitle')}
+              </CardTitle>
+              <CardDescription>{t('stickinessDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width='100%' height={420}>
+                <BarChart
+                  data={STICKINESS_DATA}
+                  layout='vertical'
+                  margin={{ top: 8, right: 16, left: 8, bottom: 8 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='var(--border)'
+                    horizontal={false}
+                  />
+                  <XAxis
+                    type='number'
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(v) => `${v}%`}
+                    domain={[0, 100]}
+                  />
+                  <YAxis
+                    type='category'
+                    dataKey='category'
+                    width={120}
+                    tick={{ fontSize: 11 }}
+                  />
+                  <Tooltip content={<StickinessTooltip />} />
+                  <ReferenceArea
+                    x1={50}
+                    x2={100}
+                    fill={chartPalette.primary}
+                    fillOpacity={0.06}
+                  />
+                  <Bar dataKey='stickiness' radius={[0, 3, 3, 0]}>
+                    {STICKINESS_DATA.map((entry, i) => (
+                      <Cell
+                        key={i}
+                        fill={
+                          entry.stickiness >= 50
+                            ? chartPalette.primary
+                            : entry.stickiness >= 30
+                              ? chartPalette.warning
+                              : chartPalette.neutral
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+            <CardFooter className='text-muted-foreground text-xs'>
+              {t('stickinessFooter')}
+            </CardFooter>
+          </Card>
+
+          <Card>
+            <CardHeader className='pb-2'>
+              <CardTitle className='text-base'>
+                {t('redemptionTitle')}
+              </CardTitle>
+              <CardDescription>{t('redemptionDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width='100%' height={420}>
+                <BarChart
+                  data={REDEMPTION_DATA}
+                  layout='vertical'
+                  margin={{ top: 8, right: 16, left: 8, bottom: 8 }}
+                  barCategoryGap='25%'
+                  barGap={4}
+                >
+                  <CartesianGrid
+                    strokeDasharray='3 3'
+                    stroke='var(--border)'
+                    horizontal={false}
+                  />
+                  <XAxis
+                    type='number'
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(v) => `${v}`}
+                  />
+                  <YAxis
+                    type='category'
+                    dataKey='category'
+                    width={120}
+                    tick={{ fontSize: 11 }}
+                  />
+                  <Tooltip content={<RedemptionTooltip />} />
+                  <Legend
+                    iconSize={8}
+                    iconType='square'
+                    wrapperStyle={{
+                      fontSize: '12px',
+                      color: 'var(--muted-foreground)',
+                      fontFamily: 'var(--font-sans)'
+                    }}
+                    formatter={(v) =>
+                      v === 'accrued'
+                        ? t('redemptionAccrued')
+                        : t('redemptionRedeemed')
+                    }
+                  />
+                  <Bar
+                    dataKey='accrued'
+                    name='accrued'
+                    fill={chartPalette.neutral}
+                    radius={[0, 3, 3, 0]}
+                  />
+                  <Bar
+                    dataKey='redeemed'
+                    name='redeemed'
+                    fill={chartPalette.primary}
+                    radius={[0, 3, 3, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+              <div className='mt-4 overflow-x-auto'>
+                <div className='min-w-[400px]'>
+                  <div className='mb-2 grid grid-cols-4 gap-1 text-xs font-medium'>
+                    <div />
+                    <div className='text-muted-foreground text-center'>
+                      {t('redemptionAccrued')}
+                    </div>
+                    <div className='text-muted-foreground text-center'>
+                      {t('redemptionRedeemed')}
+                    </div>
+                    <div className='text-muted-foreground text-center'>
+                      {t('redemptionRate')}
+                    </div>
+                  </div>
+                  {REDEMPTION_DATA.map((row) => (
+                    <div
+                      key={row.category}
+                      className='mb-1 grid grid-cols-4 gap-1 text-sm'
+                    >
+                      <div className='font-medium'>{row.category}</div>
+                      <div className='text-muted-foreground text-center tabular-nums'>
+                        {row.accrued.toLocaleString('en-US')} k ₴
+                      </div>
+                      <div className='text-muted-foreground text-center tabular-nums'>
+                        {row.redeemed.toLocaleString('en-US')} k ₴
+                      </div>
+                      <div
+                        className={cn(
+                          'text-center font-medium tabular-nums',
+                          row.rate >= 70
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : row.rate >= 50
+                              ? 'text-amber-600 dark:text-amber-400'
+                              : 'text-red-600 dark:text-red-400'
+                        )}
+                      >
+                        {row.rate}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className='text-muted-foreground text-xs'>
+              {t('redemptionFooter')}
             </CardFooter>
           </Card>
         </div>
